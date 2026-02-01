@@ -29,3 +29,9 @@
 - **Started**: 2026-02-01
 - **Completed**: 2026-02-01
 - **Notes**: Updated MobCrewApp.swift to use @NSApplicationDelegateAdaptor(AppDelegate.self). Uses @main and WindowGroup with ContentView. Build succeeds.
+
+### Task 4: Create AppDelegate.swift stub
+- **Status**: ✅ Complete
+- **Started**: 2026-02-01
+- **Completed**: 2026-02-01
+- **Notes**: AppDelegate.swift implements NSApplicationDelegate with applicationDidFinishLaunching and applicationWillTerminate stubs. Already created in Task 2, verified meets acceptance criteria.

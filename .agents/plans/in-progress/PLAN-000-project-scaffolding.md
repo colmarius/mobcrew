@@ -45,7 +45,7 @@ Create MobCrew Xcode project with feature-based folder structure, core model stu
     - Builds without errors
   - Notes: See research/xcode-project-scaffolding.md for template.
 
-- [ ] **Task 4: Create AppDelegate.swift stub**
+- [x] **Task 4: Create AppDelegate.swift stub**
   - Scope: `MobCrew/MobCrew/App/AppDelegate.swift`
   - Depends on: Task 2
   - Acceptance:
