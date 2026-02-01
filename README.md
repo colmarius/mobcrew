@@ -4,9 +4,19 @@ A native macOS mob programming timer app, inspired by [mobster](https://github.c
 
 ## Features
 
-- Timer with configurable turn duration
-- Roster management with driver/navigator rotation
-- Bench inactive mobsters
+- **Timer** - Configurable turn duration with audio notifications
+- **Roster management** - Driver/navigator rotation with drag-and-drop reordering
+- **Bench** - Temporarily bench inactive mobsters
+- **Floating timer** - Always-on-top window showing countdown
+- **Break timer** - Full-screen break overlay with countdown
+- **Global hotkey** - ⌘⇧M to rotate/start timer from anywhere (requires accessibility permission)
+- **Menu bar** - Quick access from the menu bar
+- **Auto-rotation** - Automatic driver/navigator swap when timer ends
+- **Tips** - Support development via tip jar
+
+## Known Limitations
+
+- **Accessibility permissions reset on rebuild**: The app is currently ad-hoc signed, so macOS treats each build as a new app. You'll need to re-grant accessibility permission after rebuilding. See [code-signing-setup plan](.agents/plans/todo/code-signing-setup.md) for the fix.
 
 ## Download
 

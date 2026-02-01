@@ -35,10 +35,20 @@ project/
     │   ├── App/                 # MobCrewApp.swift, AppDelegate.swift
     │   ├── Core/
     │   │   ├── Models/          # Mobster, Roster, TimerState
-    │   │   └── Services/        # (future: TimerService, etc.)
+    │   │   ├── Services/        # HotkeyService, SoundService, etc.
+    │   │   └── AppState.swift   # Global app state
     │   ├── Features/            # Feature-based UI modules
-    │   ├── Helpers/Extensions/  # Swift extensions
-    │   └── Resources/           # Assets, strings
+    │   │   ├── Break/           # Break timer overlay
+    │   │   ├── FloatingTimer/   # Always-on-top timer window
+    │   │   ├── MenuBar/         # Menu bar extra UI
+    │   │   ├── Roster/          # Mobster list management
+    │   │   ├── Settings/        # Preferences window
+    │   │   └── Tips/            # Tip jar / support
+    │   ├── Helpers/
+    │   │   └── Extensions/      # Swift extensions
+    │   ├── Resources/           # Assets, strings
+    │   ├── ContentView.swift    # Main content view
+    │   └── MobCrew.entitlements # App entitlements
     ├── MobCrew.xcodeproj/
     └── MobCrewTests/            # Unit tests (mirrors main structure)
 ```
