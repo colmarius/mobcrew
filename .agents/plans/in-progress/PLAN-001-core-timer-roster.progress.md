@@ -150,3 +150,8 @@ Next task: Task 6 - Create MenuBarView
 - Provides resetTimer(), toggleTimer(), skipTurn() methods
 - Added to Xcode project
 - Build succeeded
+
+### Paused after 5 tasks for review
+
+Tasks completed this session: 11, 12, 13, 14
+Next task: Task 15 - Wire up ContentView with real UI
