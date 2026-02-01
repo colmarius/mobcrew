@@ -7,6 +7,7 @@ Set up proper code signing for MobCrew so accessibility permissions persist betw
 ## Background
 
 From accessibility permission research (Task 2 of accessibility-permission-flow):
+
 - App is currently ad-hoc signed
 - This causes accessibility permissions to reset each build
 - Proper signing maintains consistent app identity
