@@ -3,8 +3,8 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-02-01 |
-| Current Task | Task 4 |
-| Tasks Completed | 3 |
+| Current Task | Task 5 |
+| Tasks Completed | 4 |
 
 ---
 
@@ -41,4 +41,14 @@
 - Transparent background (isOpaque = false, backgroundColor = .clear)
 - collectionBehavior = [.canJoinAllSpaces, .stationary]
 - isMovableByWindowBackground = true for dragging
+- Build succeeded
+
+### Task 4: Create FloatingTimerView ✅
+
+- Created `MobCrew/MobCrew/Features/FloatingTimer/FloatingTimerView.swift`
+- SwiftUI view showing MM:SS countdown
+- Shows Driver (D) and Navigator (N) names with role indicators
+- Semi-transparent dark background with rounded corners
+- White text, minimal chrome
+- Start/Stop button (play/pause icon)
 - Build succeeded

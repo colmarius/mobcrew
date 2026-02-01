@@ -53,7 +53,7 @@ Implement working mob timer with floating window, roster management, menu bar in
     - Size: ~150×100px
   - Notes: NSPanel allows non-activating click behavior.
 
-- [ ] **Task 4: Create FloatingTimerView**
+- [x] **Task 4: Create FloatingTimerView**
   - Scope: `MobCrew/MobCrew/Features/FloatingTimer/FloatingTimerView.swift`
   - Depends on: Task 3
   - Acceptance:
