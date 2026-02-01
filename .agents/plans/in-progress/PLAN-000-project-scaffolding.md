@@ -90,7 +90,7 @@ Create MobCrew Xcode project with feature-based folder structure, core model stu
     - Simple SwiftUI view with "MobCrew" text
     - Builds and displays in window
 
-- [ ] **Task 9: Update .gitignore for Xcode artifacts**
+- [x] **Task 9: Update .gitignore for Xcode artifacts**
   - Scope: `.gitignore`
   - Depends on: Task 1
   - Acceptance:

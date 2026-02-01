@@ -75,3 +75,9 @@
 - **Started**: 2026-02-01
 - **Completed**: 2026-02-01
 - **Notes**: ContentView.swift already exists with "Hello, MobCrew!" text. Meets acceptance criteria. Build and run verified.
+
+### Task 9: Update .gitignore for Xcode artifacts
+- **Status**: ✅ Complete
+- **Started**: 2026-02-01
+- **Completed**: 2026-02-01
+- **Notes**: Added ignores for xcuserdata/, DerivedData/, .build/, .swiftpm/, and project.xcworkspace/xcuserdata/. Preserved existing entries.
