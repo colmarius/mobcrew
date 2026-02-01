@@ -130,7 +130,7 @@ Add system notifications, keyboard shortcuts (local and global), shuffle roster,
     - File updated when roster shuffled
     - File updated when turn advances
 
-- [ ] **Task 13: Add ActiveMobstersFileService tests**
+- [x] **Task 13: Add ActiveMobstersFileService tests**
   - Scope: `MobCrew/MobCrewTests/Core/Services/ActiveMobstersFileServiceTests.swift`
   - Depends on: Task 11
   - Acceptance:

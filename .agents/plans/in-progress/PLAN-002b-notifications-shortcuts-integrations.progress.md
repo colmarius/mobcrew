@@ -267,3 +267,23 @@ Plan: [PLAN-002b](./PLAN-002b-notifications-shortcuts-integrations.md)
 
 ---
 
+## Task 13: Add ActiveMobstersFileService tests
+
+**Thread**: https://ampcode.com/threads/T-019c1b41-5579-71b4-9e62-17834819b7ff
+**Status**: completed
+**Iteration**: 1
+
+### Changes
+
+- `MobCrew/MobCrewTests/Core/Services/ActiveMobstersFileServiceTests.swift` - Created with 4 tests: file creation, comma-separated format, empty roster, only active mobsters
+
+### Commands Run
+
+- `./scripts/test.sh` ✓ (all tests pass)
+
+### Next
+
+- Task 14: Verify full integration
+
+---
+

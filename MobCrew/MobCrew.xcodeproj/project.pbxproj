@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		178B3CB71B99710F6F03F1F1 /* ActiveMobstersFileServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42E47F8290EBEA332E27D4CF /* ActiveMobstersFileServiceTests.swift */; };
 		8A1B2C3D0001000000000001 /* MobCrewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000001 /* MobCrewApp.swift */; };
 		8A1B2C3D0001000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000002 /* ContentView.swift */; };
 		8A1B2C3D0001000000000003 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000003 /* Assets.xcassets */; };
@@ -50,6 +51,7 @@
 
 /* Begin PBXFileReference section */
 		1C8AE184E82299B54B23084F /* ActiveMobstersFileService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ActiveMobstersFileService.swift; sourceTree = "<group>"; };
+		42E47F8290EBEA332E27D4CF /* ActiveMobstersFileServiceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ActiveMobstersFileServiceTests.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000001 /* MobCrewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobCrewApp.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000003 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -295,6 +297,7 @@
 				8A1B2C3D0002000000000131 /* NotificationServiceTests.swift */,
 				8A1B2C3D0002000000000109 /* PersistenceServiceTests.swift */,
 				8A1B2C3D0002000000000101 /* TimerEngineTests.swift */,
+				42E47F8290EBEA332E27D4CF /* ActiveMobstersFileServiceTests.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -425,6 +428,7 @@
 				8A1B2C3D0001000000000131 /* NotificationServiceTests.swift in Sources */,
 				8A1B2C3D0001000000000111 /* RosterTests.swift in Sources */,
 				8A1B2C3D0001000000000112 /* AppStateTests.swift in Sources */,
+				178B3CB71B99710F6F03F1F1 /* ActiveMobstersFileServiceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
