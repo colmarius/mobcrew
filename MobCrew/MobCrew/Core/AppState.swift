@@ -25,6 +25,7 @@ final class AppState {
     var turnsSinceBreak: Int = 0
     var isOnBreak: Bool = false
     var breakSecondsRemaining: Int = 0
+    var currentTip: Tip = Tip.random()
     var notificationsEnabled: Bool = true {
         didSet {
             persistenceService.saveNotificationsEnabled(notificationsEnabled)
@@ -132,7 +133,11 @@ final class AppState {
     
     func toggleTimer() {
         requestNotificationPermissionIfNeeded()
+        let wasRunning = timerState.isRunning
         timerEngine.toggle()
+        if !wasRunning && timerState.isRunning {
+            currentTip = Tip.random()
+        }
     }
     
     private func requestNotificationPermissionIfNeeded() {
@@ -146,5 +151,6 @@ final class AppState {
         updateActiveMobstersFile()
         timerEngine.reset(duration: timerDuration)
         timerEngine.start()
+        currentTip = Tip.random()
     }
 }

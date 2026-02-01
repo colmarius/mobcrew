@@ -29,3 +29,28 @@ Tasks: 3 total
 
 ---
 
+## Task 2: Tips Display
+
+**Thread**: https://ampcode.com/threads/T-019c1b58-0c8b-716f-8b90-62a69e0cff7f
+**Status**: completed
+**Iteration**: 1
+
+### Changes
+
+- `MobCrew/MobCrew/Features/Tips/Tip.swift` - New Tip model with 12 mob programming tips
+- `MobCrew/MobCrew/Features/Tips/TipView.swift` - SwiftUI view for tip display
+- `MobCrew/MobCrew/Core/AppState.swift` - Added currentTip property, updates on timer start/skip
+- `MobCrew/MobCrew/ContentView.swift` - Display TipView when timer is running
+- `MobCrew/MobCrew.xcodeproj/project.pbxproj` - Added new files to project
+
+### Commands Run
+
+- `xcodebuild build` ✓
+- `./scripts/test.sh` ✓
+
+### Next
+
+- Task 3: Dark Mode Verification
+
+---
+

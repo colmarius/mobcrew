@@ -39,7 +39,7 @@ Features explicitly excluded (too complex for value):
     - Toggle reflects actual system state
   - Notes: Use modern `SMAppService.mainApp` API
 
-- [ ] **Task 2: Tips Display**
+- [x] **Task 2: Tips Display**
   - Scope: `Features/Tips/`, `ContentView.swift`
   - Depends on: none
   - Acceptance:

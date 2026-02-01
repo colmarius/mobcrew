@@ -38,6 +38,8 @@
 		8A1B2C3D0001000000000131 /* NotificationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000131 /* NotificationServiceTests.swift */; };
 		8A1B2C3D0001000000000140 /* GlobalHotkeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000140 /* GlobalHotkeyService.swift */; };
 		8A1B2C3D0001000000000150 /* LaunchAtLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000150 /* LaunchAtLoginService.swift */; };
+		8A1B2C3D0001000000000160 /* Tip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000160 /* Tip.swift */; };
+		8A1B2C3D0001000000000161 /* TipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000161 /* TipView.swift */; };
 		AA7389A8EB0DEDD3D8AA9842 /* ActiveMobstersFileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C8AE184E82299B54B23084F /* ActiveMobstersFileService.swift */; };
 /* End PBXBuildFile section */
 
@@ -87,6 +89,8 @@
 		8A1B2C3D0002000000000131 /* NotificationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationServiceTests.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000140 /* GlobalHotkeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalHotkeyService.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000150 /* LaunchAtLoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchAtLoginService.swift; sourceTree = "<group>"; };
+		8A1B2C3D0002000000000160 /* Tip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tip.swift; sourceTree = "<group>"; };
+		8A1B2C3D0002000000000161 /* TipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -199,8 +203,18 @@
 				8A1B2C3D0007000000000032 /* MenuBar */,
 				8A1B2C3D0007000000000033 /* Roster */,
 				8A1B2C3D0007000000000034 /* Settings */,
+				8A1B2C3D0007000000000036 /* Tips */,
 			);
 			path = Features;
+			sourceTree = "<group>";
+		};
+		8A1B2C3D0007000000000036 /* Tips */ = {
+			isa = PBXGroup;
+			children = (
+				8A1B2C3D0002000000000160 /* Tip.swift */,
+				8A1B2C3D0002000000000161 /* TipView.swift */,
+			);
+			path = Tips;
 			sourceTree = "<group>";
 		};
 		8A1B2C3D0007000000000031 /* FloatingTimer */ = {
@@ -416,6 +430,8 @@
 				8A1B2C3D0001000000000130 /* NotificationService.swift in Sources */,
 				8A1B2C3D0001000000000140 /* GlobalHotkeyService.swift in Sources */,
 				8A1B2C3D0001000000000150 /* LaunchAtLoginService.swift in Sources */,
+				8A1B2C3D0001000000000160 /* Tip.swift in Sources */,
+				8A1B2C3D0001000000000161 /* TipView.swift in Sources */,
 				8A1B2C3D0001000000000110 /* AppState.swift in Sources */,
 				8A1B2C3D0001000000000120 /* BreakProgressView.swift in Sources */,
 				8A1B2C3D0001000000000121 /* BreakScreenView.swift in Sources */,

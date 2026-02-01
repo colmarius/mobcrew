@@ -32,6 +32,11 @@ struct ContentView: View {
             
             durationStepper
             
+            if appState.timerState.isRunning {
+                TipView(tip: appState.currentTip)
+                    .padding(.top, 8)
+            }
+            
             Spacer()
         }
         .padding()
