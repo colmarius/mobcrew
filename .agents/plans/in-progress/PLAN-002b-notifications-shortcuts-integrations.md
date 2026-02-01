@@ -53,7 +53,7 @@ Add system notifications, keyboard shortcuts (local and global), shuffle roster,
 
 ### Local Keyboard Shortcuts
 
-- [ ] **Task 5: Add Cmd+Enter shortcut for start/stop**
+- [x] **Task 5: Add Cmd+Enter shortcut for start/stop**
   - Scope: `MobCrew/MobCrew/ContentView.swift`
   - Depends on: none
   - Acceptance:

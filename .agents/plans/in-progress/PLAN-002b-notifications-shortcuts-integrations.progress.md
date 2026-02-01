@@ -92,3 +92,23 @@ Plan: [PLAN-002b](./PLAN-002b-notifications-shortcuts-integrations.md)
 
 ---
 
+## Task 5: Add Cmd+Enter shortcut for start/stop
+
+**Thread**: https://ampcode.com/threads/T-019c1b3d-38d3-74b8-b4a1-983ab280a140
+**Status**: completed
+**Iteration**: 1
+
+### Changes
+
+- `MobCrew/MobCrew/ContentView.swift` - Changed start/stop button shortcut from `.space` to `.return, modifiers: .command` (Cmd+Enter)
+
+### Commands Run
+
+- `./scripts/test.sh` ✓ (all tests pass)
+
+### Next
+
+- Task 6: Add Cmd+S shortcut for skip turn
+
+---
+

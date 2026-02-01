@@ -96,7 +96,7 @@ struct ContentView: View {
                     .frame(width: 50, height: 50)
             }
             .buttonStyle(.borderedProminent)
-            .keyboardShortcut(.space, modifiers: [])
+            .keyboardShortcut(.return, modifiers: .command)
             
             Button(action: { appState.resetTimer() }) {
                 Image(systemName: "arrow.counterclockwise")
