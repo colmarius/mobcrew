@@ -17,7 +17,7 @@ Implement working mob timer with floating window, roster management, menu bar in
 
 ### Timer Engine
 
-- [ ] **Task 1: Create TimerEngine service**
+- [x] **Task 1: Create TimerEngine service**
   - Scope: `MobCrew/MobCrew/Core/Services/TimerEngine.swift`
   - Depends on: none
   - Acceptance:
