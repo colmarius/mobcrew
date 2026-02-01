@@ -186,3 +186,32 @@
 
 ---
 
+## Task 9: Run full test suite and verify coverage
+
+**Thread**: https://ampcode.com/threads/T-019c1b1c-e2a8-7187-b885-30e8dfe3476b
+**Status**: completed
+**Iteration**: 1
+
+### Commands Run
+
+- `xcodebuild test` ✓ (64 tests pass)
+
+### Test Summary
+
+| Suite | Tests |
+|-------|-------|
+| AppStateTests | 11 |
+| RosterTests | 32 |
+| TimerEngineTests | 8 |
+| PersistenceServiceTests | 7 |
+| MobsterTests | 6 |
+| **Total** | **64** |
+
+### Result
+
+- All tests pass
+- No regressions
+- Plan complete
+
+---
+
