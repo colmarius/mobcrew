@@ -3,8 +3,8 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-02-01 |
-| Current Task | Task 5 |
-| Tasks Completed | 4 |
+| Current Task | Task 6 |
+| Tasks Completed | 5 |
 
 ---
 
@@ -52,3 +52,17 @@
 - White text, minimal chrome
 - Start/Stop button (play/pause icon)
 - Build succeeded
+
+### Task 5: Create FloatingTimerController ✅
+
+- Created `MobCrew/MobCrew/Features/FloatingTimer/FloatingTimerController.swift`
+- Manages FloatingTimerWindow lifecycle
+- show(), hide(), toggle() methods
+- Positions window at bottom-right with 20px offset
+- Hosts FloatingTimerView via NSHostingView
+- updateView() method for refreshing state
+- Build succeeded
+
+### Paused after 5 tasks for review
+
+Next task: Task 6 - Create MenuBarView
