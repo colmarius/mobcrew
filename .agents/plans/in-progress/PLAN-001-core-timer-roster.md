@@ -136,7 +136,7 @@ Implement working mob timer with floating window, roster management, menu bar in
     - Loads timer duration on app launch
     - Uses Codable for serialization
 
-- [ ] **Task 12: Create PersistenceServiceTests**
+- [x] **Task 12: Create PersistenceServiceTests**
   - Scope: `MobCrew/MobCrewTests/Core/Services/PersistenceServiceTests.swift`
   - Depends on: Task 11
   - Acceptance:

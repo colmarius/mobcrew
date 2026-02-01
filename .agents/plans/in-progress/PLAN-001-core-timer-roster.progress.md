@@ -3,8 +3,8 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-02-01 |
-| Current Task | Task 12 |
-| Tasks Completed | 11 |
+| Current Task | Task 13 |
+| Tasks Completed | 12 |
 
 ---
 
@@ -121,3 +121,13 @@ Next task: Task 6 - Create MenuBarView
 - saveTimerDuration/loadTimerDuration for timer settings
 - Supports custom UserDefaults suite for testing
 - Build succeeded
+
+### Task 12: Create PersistenceServiceTests ✅
+
+- Created `MobCrew/MobCrewTests/Core/Services/PersistenceServiceTests.swift`
+- Uses Swift Testing framework with separate UserDefaults suite per test
+- Tests roster save/load round-trip
+- Tests timer duration save/load
+- Tests handling of empty/missing data
+- Tests mobster ID preservation and overwriting
+- All 7 tests pass
