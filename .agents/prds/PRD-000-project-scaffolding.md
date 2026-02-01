@@ -28,12 +28,14 @@ Create a buildable Xcode project with feature-based folder structure, core model
 ## Proposed change
 
 ### Xcode Project
+
 - Create MobCrew.xcodeproj with SwiftUI app template
 - Target macOS 14+ (Sonoma)
 - Bundle ID: com.colmarius.MobCrew
 
 ### Folder Structure
-```
+
+```text
 MobCrew/
 ├── App/
 │   ├── MobCrewApp.swift
@@ -54,15 +56,35 @@ MobCrew/
 │   └── Extensions/
 └── Resources/
     └── Assets.xcassets
+
+MobCrewTests/
+├── Core/
+│   ├── Models/
+│   │   ├── MobsterTests.swift
+│   │   ├── RosterTests.swift
+│   │   └── TimerStateTests.swift
+│   └── Services/
+│       └── (placeholder)
+└── Helpers/
+    └── TestHelpers.swift
 ```
 
 ### Initial Files
+
 - MobCrewApp.swift with @NSApplicationDelegateAdaptor
 - AppDelegate.swift stub for AppKit bridge
 - Core models: Mobster, Roster, TimerState (from research)
 - ContentView.swift placeholder
 
+### Test Files
+
+- MobsterTests.swift with Codable/Hashable tests
+- RosterTests.swift with driver/navigator rotation tests
+- TimerStateTests.swift with displayTime/progress tests
+- Use Swift Testing framework (`import Testing`, `@Test`, `#expect`)
+
 ### Configuration
+
 - Info.plist: LSUIElement = NO (keep dock icon during development)
 - Entitlements: app sandbox enabled
 
@@ -78,6 +100,11 @@ MobCrew/
 - [ ] TimerState model uses @Observable with secondsRemaining, totalSeconds, isRunning
 - [ ] Deployment target is macOS 14.0
 - [ ] .gitignore updated for Xcode artifacts
+- [ ] Test target included with MobCrewTests folder structure
+- [ ] Tests run and pass (⌘U)
+- [ ] MobsterTests verifies Codable round-trip encoding
+- [ ] RosterTests verifies driver/navigator rotation logic
+- [ ] TimerStateTests verifies displayTime formatting (MM:SS)
 
 ## UX notes
 
@@ -91,3 +118,4 @@ N/A - infrastructure only
 
 - `../research/xcode-project-scaffolding.md` — complete scaffolding guide
 - `../research/ghostty-patterns-for-mobcrew.md` — folder structure patterns
+- `../research/testing-strategy.md` — testing approach and Swift Testing framework

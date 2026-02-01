@@ -78,6 +78,9 @@ Deliver a working mob timer that teams can use for real sessions: start a timer,
 - [ ] Roster persists between app launches
 - [ ] Timer duration setting persists between app launches
 - [ ] App targets macOS 14+ (Sonoma)
+- [ ] Unit tests pass for TimerEngine (countdown, pause/resume)
+- [ ] Unit tests pass for Roster operations (add, bench, rotate, advanceTurn)
+- [ ] Unit tests pass for PersistenceService (save/load round-trip)
 
 ## UX notes
 
@@ -97,3 +100,4 @@ Deliver a working mob timer that teams can use for real sessions: start a timer,
 - `../research/feature-prioritization.md` — MVP scope definition
 - `../research/ghostty-patterns-for-mobcrew.md` — NSPanel floating window patterns
 - `../research/xcode-project-scaffolding.md` — project structure, SwiftUI setup
+- `../research/testing-strategy.md` — unit test approach for services and models

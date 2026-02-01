@@ -72,11 +72,16 @@ Plans in `.agents/plans/` follow this workflow:
 ## Commands
 
 ```bash
-# Add your project-specific commands here
-# Examples:
-# npm install / npm run dev / npm test
-# cargo build / cargo test
-# go build / go test
+# Build
+xcodebuild -project MobCrew/MobCrew.xcodeproj -scheme MobCrew -destination 'platform=macOS' build
+
+# Run tests (fast, no simulator for macOS)
+xcodebuild test -project MobCrew/MobCrew.xcodeproj -scheme MobCrew -destination 'platform=macOS'
+
+# Run specific test class
+xcodebuild test -project MobCrew/MobCrew.xcodeproj -scheme MobCrew -destination 'platform=macOS' -only-testing:MobCrewTests/RosterTests
+
+# In Xcode: ⌘B (build), ⌘R (run), ⌘U (test)
 ```
 
 ## Git Workflow
