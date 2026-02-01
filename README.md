@@ -8,10 +8,14 @@ A native macOS mob programming timer app, inspired by [mobster](https://github.c
 - Roster management with driver/navigator rotation
 - Bench inactive mobsters
 
+## Download
+
+Get the latest release from [GitHub Releases](https://github.com/colmarius/mobcrew/releases).
+
 ## Requirements
 
 - macOS 14.0+
-- Xcode 15+
+- Xcode 15+ (for development)
 
 ## Development
 
@@ -36,6 +40,16 @@ Or open `MobCrew/MobCrew.xcodeproj` in Xcode and use ⌘B (build), ⌘R (run), �
 ## Manual Testing
 
 See [TESTING.md](TESTING.md) for the full checklist.
+
+## Releasing
+
+Prerequisites: `gh` CLI and Node.js (`brew install gh node && gh auth login`)
+
+```bash
+./scripts/release.sh <version>
+```
+
+See [docs/RELEASING.md](docs/RELEASING.md) for the full release process.
 
 ## License
 
