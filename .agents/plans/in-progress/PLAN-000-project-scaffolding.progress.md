@@ -50,3 +50,16 @@
 
 **Completed tasks**: 1, 2, 3, 4, 5
 **Next task to resume from**: Task 6 (Create Roster model)
+
+---
+
+## Session 2
+
+**Started**: 2026-02-01
+**Tasks target**: 6-10 (max_tasks: 5)
+
+### Task 6: Create Roster model
+- **Status**: ✅ Complete
+- **Started**: 2026-02-01
+- **Completed**: 2026-02-01
+- **Notes**: Created Roster.swift with @Observable macro. Has activeMobsters, inactiveMobsters, nextDriverIndex properties. Computed driver/navigator. Methods: advanceTurn(), addMobster(name:), benchMobster(at:), rotateIn(at:), shuffle(). Private adjustDriverIndex(afterRemovalAt:) helper. Build succeeds.

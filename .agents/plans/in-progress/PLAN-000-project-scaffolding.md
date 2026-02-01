@@ -62,7 +62,7 @@ Create MobCrew Xcode project with feature-based folder structure, core model stu
     - Has initializer with default UUID
   - Notes: Simple value type, no RPG data in MVP.
 
-- [ ] **Task 6: Create Roster model**
+- [x] **Task 6: Create Roster model**
   - Scope: `MobCrew/MobCrew/Core/Models/Roster.swift`
   - Depends on: Task 5
   - Acceptance:
