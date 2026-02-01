@@ -17,7 +17,7 @@ Create a static landing page for MobCrew deployed via GitHub Pages on pushes to 
     - `docs/assets/images/` directory exists for screenshots
   - Notes: No build step needed, static files only
 
-- [ ] **Task 2: Create landing page HTML**
+- [x] **Task 2: Create landing page HTML**
   - Scope: `docs/index.html`
   - Depends on: Task 1
   - Acceptance:
@@ -33,7 +33,7 @@ Create a static landing page for MobCrew deployed via GitHub Pages on pushes to 
     - Responsive layout (mobile-friendly)
   - Notes: See research doc for wireframe structure
 
-- [ ] **Task 3: Create favicon**
+- [x] **Task 3: Create favicon**
   - Scope: `docs/favicon.ico`
   - Depends on: Task 1
   - Acceptance:
@@ -41,7 +41,7 @@ Create a static landing page for MobCrew deployed via GitHub Pages on pushes to 
     - Referenced in index.html `<link rel="icon">`
   - Notes: Use existing app icon if available in MobCrew/Resources
 
-- [ ] **Task 4: Create GitHub Actions workflow for deployment**
+- [x] **Task 4: Create GitHub Actions workflow for deployment**
   - Scope: `.github/workflows/pages.yml`
   - Depends on: Task 1
   - Acceptance:
