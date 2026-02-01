@@ -2,9 +2,9 @@
 
 | Field | Value |
 |-------|-------|
-| Status | ready |
+| Status | ✅ complete |
 | Date | 2026-02-01 |
-| Plan | [`PLAN-000`](../plans/todo/PLAN-000-project-scaffolding.md) |
+| Plan | [`PLAN-000`](../plans/completed/PLAN-000-project-scaffolding.md) |
 
 ## Problem
 
@@ -90,21 +90,21 @@ MobCrewTests/
 
 ## Acceptance criteria
 
-- [ ] Xcode project builds without errors (⌘B)
-- [ ] App runs and shows placeholder window (⌘R)
-- [ ] Folder structure matches specification above
-- [ ] MobCrewApp.swift uses @NSApplicationDelegateAdaptor
-- [ ] AppDelegate.swift exists with applicationDidFinishLaunching stub
-- [ ] Mobster model is Identifiable, Codable, Hashable
-- [ ] Roster model uses @Observable with activeMobsters, inactiveMobsters, nextDriverIndex
-- [ ] TimerState model uses @Observable with secondsRemaining, totalSeconds, isRunning
-- [ ] Deployment target is macOS 14.0
-- [ ] .gitignore updated for Xcode artifacts
-- [ ] Test target included with MobCrewTests folder structure
-- [ ] Tests run and pass (⌘U)
-- [ ] MobsterTests verifies Codable round-trip encoding
-- [ ] RosterTests verifies driver/navigator rotation logic
-- [ ] TimerStateTests verifies displayTime formatting (MM:SS)
+- [x] Xcode project builds without errors (⌘B)
+- [x] App runs and shows placeholder window (⌘R)
+- [x] Folder structure matches specification above
+- [x] MobCrewApp.swift uses @NSApplicationDelegateAdaptor
+- [x] AppDelegate.swift exists with applicationDidFinishLaunching stub
+- [x] Mobster model is Identifiable, Codable, Hashable
+- [x] Roster model uses @Observable with activeMobsters, inactiveMobsters, nextDriverIndex
+- [x] TimerState model uses @Observable with secondsRemaining, totalSeconds, isRunning
+- [x] Deployment target is macOS 14.0
+- [x] .gitignore updated for Xcode artifacts
+- [x] Test target included with MobCrewTests folder structure
+- [x] Tests run and pass (⌘U)
+- [x] MobsterTests verifies Codable round-trip encoding
+- [x] RosterTests verifies driver/navigator rotation logic
+- [x] TimerStateTests verifies displayTime formatting (MM:SS)
 
 ## UX notes
 
