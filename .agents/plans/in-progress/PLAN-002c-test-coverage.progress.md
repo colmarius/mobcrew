@@ -46,3 +46,23 @@
 
 ---
 
+## Task 3: Test skipTurn behavior
+
+**Thread**: https://ampcode.com/threads/T-019c1b17-3909-72ba-89b7-3104db1ccdba
+**Status**: completed
+**Iteration**: 1
+
+### Changes
+
+- `MobCrew/MobCrewTests/Core/AppStateTests.swift` - Added 3 tests for skipTurn behavior
+
+### Commands Run
+
+- `xcodebuild test -only-testing:MobCrewTests/AppStateTests` ✓
+
+### Next
+
+- Task 4: Test timer duration persistence
+
+---
+

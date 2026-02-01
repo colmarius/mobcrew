@@ -33,7 +33,7 @@ Add missing test coverage for core components: AppState integration tests, Roste
     - Driver changes to next mobster
     - Timer resets to configured duration
 
-- [ ] **Task 3: Test skipTurn behavior**
+- [x] **Task 3: Test skipTurn behavior**
   - Scope: `MobCrew/MobCrewTests/Core/AppStateTests.swift`
   - Depends on: Task 1
   - Acceptance:

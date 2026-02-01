@@ -86,4 +86,47 @@ struct AppStateTests {
         
         #expect(appState.timerEngine.isRunning == false)
     }
+    
+    // MARK: - SkipTurn (Task 3)
+    
+    @Test("skipTurn advances turn")
+    func skipTurnAdvancesTurn() {
+        let appState = makeAppState()
+        appState.roster.addMobster(name: "Alice")
+        appState.roster.addMobster(name: "Bob")
+        
+        #expect(appState.roster.driver?.name == "Alice")
+        
+        appState.skipTurn()
+        
+        #expect(appState.roster.driver?.name == "Bob")
+    }
+    
+    @Test("skipTurn resets timer to configured duration")
+    func skipTurnResetsTimer() {
+        let appState = makeAppState()
+        appState.roster.addMobster(name: "Alice")
+        appState.timerDuration = 600
+        
+        appState.timerEngine.reset(duration: 100)
+        
+        appState.skipTurn()
+        
+        #expect(appState.timerState.secondsRemaining == 600)
+        #expect(appState.timerState.totalSeconds == 600)
+    }
+    
+    @Test("skipTurn starts timer automatically")
+    func skipTurnStartsTimer() {
+        let appState = makeAppState()
+        appState.roster.addMobster(name: "Alice")
+        
+        #expect(appState.timerEngine.isRunning == false)
+        
+        appState.skipTurn()
+        
+        #expect(appState.timerEngine.isRunning == true)
+        
+        appState.timerEngine.stop()
+    }
 }
