@@ -79,7 +79,7 @@ Implement break intervals with configurable timing, visual progress indicator, a
     - Compact design suitable for timer panel
   - Notes: Use SF Symbols `circle.fill` and `circle`
 
-- [ ] **Task 7: Create BreakScreenView**
+- [x] **Task 7: Create BreakScreenView**
   - Scope: `MobCrew/MobCrew/Features/Break/BreakScreenView.swift`
   - Depends on: Task 4
   - Acceptance:
