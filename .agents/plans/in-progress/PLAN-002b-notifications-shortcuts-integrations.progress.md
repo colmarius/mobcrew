@@ -202,3 +202,14 @@ Plan: [PLAN-002b](./PLAN-002b-notifications-shortcuts-integrations.md)
 
 ---
 
+## Session Pause
+
+**Paused after 5 tasks for review** (Tasks 5-9)
+
+**Resume command:**
+```text
+Continue ralph from Task 10 on .agents/plans/in-progress/PLAN-002b-notifications-shortcuts-integrations.md
+```
+
+---
+
