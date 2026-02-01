@@ -95,7 +95,7 @@ Implement working mob timer with floating window, roster management, menu bar in
 
 ### Roster Management UI
 
-- [ ] **Task 8: Create RosterView**
+- [x] **Task 8: Create RosterView**
   - Scope: `MobCrew/MobCrew/Features/Roster/RosterView.swift`
   - Depends on: none
   - Acceptance:
@@ -105,7 +105,7 @@ Implement working mob timer with floating window, roster management, menu bar in
     - Visual distinction between active and inactive sections
   - Notes: Use existing Roster model.
 
-- [ ] **Task 9: Create MobsterRow**
+- [x] **Task 9: Create MobsterRow**
   - Scope: `MobCrew/MobCrew/Features/Roster/MobsterRow.swift`
   - Depends on: none
   - Acceptance:
@@ -114,7 +114,7 @@ Implement working mob timer with floating window, roster management, menu bar in
     - Remove button (trash icon)
     - Bench/Activate button depending on list
 
-- [ ] **Task 10: Wire roster operations**
+- [x] **Task 10: Wire roster operations**
   - Scope: `MobCrew/MobCrew/Features/Roster/RosterView.swift`
   - Depends on: Task 8, Task 9
   - Acceptance:

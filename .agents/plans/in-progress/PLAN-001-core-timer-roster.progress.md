@@ -3,8 +3,8 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-02-01 |
-| Current Task | Task 8 |
-| Tasks Completed | 7 |
+| Current Task | Task 11 |
+| Tasks Completed | 10 |
 
 ---
 
@@ -85,3 +85,30 @@ Next task: Task 6 - Create MenuBarView
 - Connected to roster and timer state
 - Added files from Tasks 1-6 to Xcode project (pbxproj)
 - Build succeeded, all tests pass
+
+### Task 8: Create RosterView ✅
+
+- Created `MobCrew/MobCrew/Features/Roster/RosterView.swift`
+- Shows active mobsters list with Driver/Navigator indicators
+- Shows inactive (benched) mobsters list
+- Add mobster text field + button
+- Visual distinction between active and inactive sections
+- Build succeeded
+
+### Task 9: Create MobsterRow ✅
+
+- Created `MobCrew/MobCrew/Features/Roster/MobsterRow.swift`
+- Displays mobster name with role indicator if Driver or Navigator
+- Remove button (trash icon)
+- Bench/Activate button depending on list
+- Build succeeded
+
+### Task 10: Wire roster operations ✅
+
+- All operations wired in RosterView:
+  - Add mobster adds to active list
+  - Remove deletes from roster
+  - Bench moves to inactive list
+  - Activate moves from inactive to active
+  - Skip advances turn (Driver → Navigator → next)
+- Build succeeded

@@ -22,6 +22,8 @@
 		8A1B2C3D0001000000000103 /* FloatingTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000103 /* FloatingTimerView.swift */; };
 		8A1B2C3D0001000000000104 /* FloatingTimerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000104 /* FloatingTimerController.swift */; };
 		8A1B2C3D0001000000000105 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000105 /* MenuBarView.swift */; };
+		8A1B2C3D0001000000000106 /* RosterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000106 /* RosterView.swift */; };
+		8A1B2C3D0001000000000107 /* MobsterRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000107 /* MobsterRow.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +55,8 @@
 		8A1B2C3D0002000000000103 /* FloatingTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingTimerView.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000104 /* FloatingTimerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingTimerController.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000105 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
+		8A1B2C3D0002000000000106 /* RosterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RosterView.swift; sourceTree = "<group>"; };
+		8A1B2C3D0002000000000107 /* MobsterRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobsterRow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -215,6 +219,8 @@
 		8A1B2C3D0007000000000033 /* Roster */ = {
 			isa = PBXGroup;
 			children = (
+				8A1B2C3D0002000000000106 /* RosterView.swift */,
+				8A1B2C3D0002000000000107 /* MobsterRow.swift */,
 			);
 			path = Roster;
 			sourceTree = "<group>";
@@ -351,6 +357,8 @@
 				8A1B2C3D0001000000000103 /* FloatingTimerView.swift in Sources */,
 				8A1B2C3D0001000000000104 /* FloatingTimerController.swift in Sources */,
 				8A1B2C3D0001000000000105 /* MenuBarView.swift in Sources */,
+				8A1B2C3D0001000000000106 /* RosterView.swift in Sources */,
+				8A1B2C3D0001000000000107 /* MobsterRow.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
