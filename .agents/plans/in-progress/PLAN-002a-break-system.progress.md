@@ -48,3 +48,14 @@
     - turnsSinceBreak resets after break
     - skipBreak ends break immediately
 - **Tests**: ✅ All break logic tests pass
+
+### Iteration 6 - Task 6 Complete
+- **Task**: Task 6: Create BreakProgressView
+- **Status**: Complete
+- **Changes**:
+  - Created Features/Break/BreakProgressView.swift
+  - Row of circles using SF Symbols (circle.fill / circle)
+  - Filled circles for completed turns, empty for remaining
+  - Compact design with 4px spacing, 8pt font
+- **Build**: ✅ Succeeded
+- **Tests**: ✅ All tests pass

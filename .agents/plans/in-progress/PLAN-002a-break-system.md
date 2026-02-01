@@ -69,7 +69,7 @@ Implement break intervals with configurable timing, visual progress indicator, a
 
 ### Break UI
 
-- [ ] **Task 6: Create BreakProgressView**
+- [x] **Task 6: Create BreakProgressView**
   - Scope: `MobCrew/MobCrew/Features/Break/BreakProgressView.swift`
   - Depends on: Task 1
   - Acceptance:
