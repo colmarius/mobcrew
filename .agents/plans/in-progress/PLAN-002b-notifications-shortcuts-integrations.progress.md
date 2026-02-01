@@ -162,3 +162,23 @@ Plan: [PLAN-002b](./PLAN-002b-notifications-shortcuts-integrations.md)
 
 ---
 
+## Task 8: Add accessibility permission handling
+
+**Thread**: https://ampcode.com/threads/T-019c1b3d-38d3-74b8-b4a1-983ab280a140
+**Status**: completed
+**Iteration**: 1
+
+### Changes
+
+- `MobCrew/MobCrew/App/AppDelegate.swift` - Added checkAccessibilityPermission() that shows alert on app launch if permission not granted, with option to open System Settings
+
+### Commands Run
+
+- `./scripts/test.sh` ✓ (all tests pass)
+
+### Next
+
+- Task 9: Wire global hotkey to floating timer toggle
+
+---
+

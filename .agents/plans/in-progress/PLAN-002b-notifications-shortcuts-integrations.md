@@ -82,7 +82,7 @@ Add system notifications, keyboard shortcuts (local and global), shuffle roster,
     - Handles accessibility permission requirement
   - Notes: May need to use Carbon `RegisterEventHotKey` API or HotKey library
 
-- [ ] **Task 8: Add accessibility permission handling**
+- [x] **Task 8: Add accessibility permission handling**
   - Scope: `MobCrew/MobCrew/App/AppDelegate.swift`, entitlements
   - Depends on: Task 7
   - Acceptance:
