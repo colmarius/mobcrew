@@ -106,3 +106,28 @@
 
 ---
 
+## Task 6: Add shuffle tests to RosterTests
+
+**Thread**: https://ampcode.com/threads/T-019c1b1b-c500-77d9-b995-9513af08b756
+**Status**: completed
+**Iteration**: 1
+
+### Changes
+
+- `MobCrew/MobCrewTests/Core/Models/RosterTests.swift` - Added 5 shuffle tests:
+  - `shuffleRandomizesOrder` - verifies shuffle changes order
+  - `shuffleResetsDriverIndex` - confirms nextDriverIndex resets to 0
+  - `shuffleEmptyIsNoOp` - empty roster remains unchanged
+  - `shuffleSingleMobsterKeepsOrder` - single mobster stays in place
+  - `shuffleDoesNotAffectInactive` - inactive mobsters unaffected
+
+### Commands Run
+
+- `xcodebuild test -only-testing:MobCrewTests/RosterTests` ✓
+
+### Next
+
+- Task 7: Add addMobster edge case tests
+
+---
+

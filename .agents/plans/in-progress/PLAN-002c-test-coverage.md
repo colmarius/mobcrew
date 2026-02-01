@@ -58,7 +58,7 @@ Add missing test coverage for core components: AppState integration tests, Roste
 
 ### Roster Shuffle Tests
 
-- [ ] **Task 6: Add shuffle tests to RosterTests**
+- [x] **Task 6: Add shuffle tests to RosterTests**
   - Scope: `MobCrew/MobCrewTests/Core/Models/RosterTests.swift`
   - Depends on: none
   - Acceptance:

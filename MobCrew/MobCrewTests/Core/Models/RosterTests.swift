@@ -204,4 +204,70 @@ struct RosterTests {
         #expect(roster.driver?.id == charlie.id)
         #expect(roster.navigator?.id == alice.id)
     }
+    
+    // MARK: - shuffle
+    
+    @Test("shuffle randomizes order")
+    func shuffleRandomizesOrder() {
+        let mobsters = (1...10).map { Mobster(name: "Mobster \($0)") }
+        let roster = Roster(activeMobsters: mobsters)
+        let originalOrder = roster.activeMobsters.map(\.id)
+        
+        var orderChanged = false
+        for _ in 1...10 {
+            roster.shuffle()
+            let newOrder = roster.activeMobsters.map(\.id)
+            if newOrder != originalOrder {
+                orderChanged = true
+                break
+            }
+        }
+        
+        #expect(orderChanged, "Shuffle should change order at least once in 10 attempts")
+    }
+    
+    @Test("shuffle resets nextDriverIndex to 0")
+    func shuffleResetsDriverIndex() {
+        let roster = Roster(activeMobsters: [Mobster(name: "Alice"), Mobster(name: "Bob")], nextDriverIndex: 1)
+        
+        roster.shuffle()
+        
+        #expect(roster.nextDriverIndex == 0)
+    }
+    
+    @Test("shuffle with 0 mobsters is no-op")
+    func shuffleEmptyIsNoOp() {
+        let roster = Roster()
+        
+        roster.shuffle()
+        
+        #expect(roster.activeMobsters.isEmpty)
+        #expect(roster.nextDriverIndex == 0)
+    }
+    
+    @Test("shuffle with 1 mobster keeps order unchanged")
+    func shuffleSingleMobsterKeepsOrder() {
+        let alice = Mobster(name: "Alice")
+        let roster = Roster(activeMobsters: [alice])
+        
+        roster.shuffle()
+        
+        #expect(roster.activeMobsters.count == 1)
+        #expect(roster.activeMobsters.first?.id == alice.id)
+    }
+    
+    @Test("shuffle does not affect inactive mobsters")
+    func shuffleDoesNotAffectInactive() {
+        let alice = Mobster(name: "Alice")
+        let bob = Mobster(name: "Bob")
+        let inactiveCharlie = Mobster(name: "Charlie")
+        let inactiveDave = Mobster(name: "Dave")
+        let roster = Roster(activeMobsters: [alice, bob], inactiveMobsters: [inactiveCharlie, inactiveDave])
+        let inactiveOrderBefore = roster.inactiveMobsters.map(\.id)
+        
+        roster.shuffle()
+        
+        let inactiveOrderAfter = roster.inactiveMobsters.map(\.id)
+        #expect(inactiveOrderAfter == inactiveOrderBefore, "Inactive mobsters should remain in same order")
+    }
 }
