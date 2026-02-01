@@ -227,10 +227,10 @@ class Roster {
     var activeMobsters: [Mobster] = []
     var inactiveMobsters: [Mobster] = []
     var nextDriverIndex: Int = 0
-    
+
     var driver: Mobster? { ... }
     var navigator: Mobster? { ... }
-    
+
     func advanceTurn() { ... }
     func rotateOut(at index: Int) { ... }
     func rotateIn(at index: Int) { ... }
@@ -258,7 +258,7 @@ class TimerState {
     var totalSeconds: Int = 0
     var timerType: TimerType = .regular(driver: "", navigator: "")
     var isRunning: Bool = false
-    
+
     var displayTime: String { ... }
     var progress: Double { ... }
 }
@@ -271,12 +271,12 @@ class TimerState {
 @main
 struct MobsterNativeApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    
+
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
-        
+
         // Menu bar extra
         MenuBarExtra("Mobster", systemImage: "person.3.fill") {
             MenuBarView()
@@ -299,9 +299,9 @@ class FloatingTimerWindowController: NSWindowController {
         window.hasShadow = true
         window.ignoresMouseEvents = false
         window.collectionBehavior = [.canJoinAllSpaces, .stationary]
-        
+
         super.init(window: window)
-        
+
         window.contentView = NSHostingView(rootView: FloatingTimerView())
     }
 }

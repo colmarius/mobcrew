@@ -14,12 +14,14 @@ Research guide for MobCrew - a native macOS mob programming timer app.
 ### Platform-Specific Considerations
 
 **macOS-specific features** (won't translate to iOS):
+
 - Menu bar presence/icon
 - NSStatusItem for quick access
 - Keyboard shortcuts
 - Multi-window support
 
 **Shared features** (will work cross-platform):
+
 - Timer logic and state management
 - Participant/mob rotation management
 - Notifications
@@ -32,6 +34,7 @@ Research guide for MobCrew - a native macOS mob programming timer app.
 ## Overview
 
 There are two distribution paths for macOS apps:
+
 1. **Mac App Store** - Apple's curated marketplace
 2. **Direct Distribution** - Using Developer ID + Notarization
 
@@ -39,15 +42,17 @@ There are two distribution paths for macOS apps:
 
 ## Step 1: Join Apple Developer Program
 
-**Cost**: $99/year  
-**Enrollment**: https://developer.apple.com/programs/enroll/
+**Cost**: $99/year
+**Enrollment**: <https://developer.apple.com/programs/enroll/>
 
 **Requirements**:
+
 - Apple ID with two-factor authentication
 - Valid payment method
 - Legal entity info (for organizations)
 
 **What you get**:
+
 - Access to beta OS releases
 - App Store Connect
 - Developer ID certificates for distribution
@@ -59,11 +64,13 @@ There are two distribution paths for macOS apps:
 ## Step 2: Set Up Development Environment
 
 ### Required Tools
+
 - **Xcode** (latest version from Mac App Store)
 - **Apple Developer Account** signed in to Xcode
 - **Certificates & Provisioning Profiles** (managed automatically or manually)
 
 ### Signing Identities Needed
+
 | Purpose | Certificate Type |
 |---------|-----------------|
 | Development | Apple Development |
@@ -75,14 +82,16 @@ There are two distribution paths for macOS apps:
 
 ## Step 3: Configure Your App
 
-### In Xcode Project Settings:
+### In Xcode Project Settings
+
 1. Set **Bundle Identifier** (e.g., `com.yourname.MobCrew`)
 2. Enable **Hardened Runtime** (required for notarization)
 3. Configure **App Sandbox** (required for App Store)
 4. Set **Deployment Target** (minimum macOS version)
 5. Add required **Entitlements**
 
-### Info.plist Essentials:
+### Info.plist Essentials
+
 - `CFBundleName` - App name
 - `CFBundleIdentifier` - Unique bundle ID
 - `CFBundleVersion` - Build number
@@ -108,7 +117,8 @@ xcodebuild archive \
 ## Step 5A: App Store Distribution
 
 ### Prepare in App Store Connect
-1. Go to https://appstoreconnect.apple.com
+
+1. Go to <https://appstoreconnect.apple.com>
 2. Create new app record
 3. Fill in app metadata:
    - Name, subtitle, description
@@ -120,6 +130,7 @@ xcodebuild archive \
    - Pricing and availability
 
 ### Export & Upload
+
 ```bash
 # Export for App Store
 xcodebuild -exportArchive \
@@ -137,6 +148,7 @@ xcrun altool --upload-app \
 Or use **Xcode Organizer**: Window → Organizer → Distribute App
 
 ### App Review
+
 - Apps reviewed by Apple (typically 24-48 hours)
 - Must comply with [App Store Review Guidelines](https://developer.apple.com/app-store/review/guidelines/)
 - Common rejection reasons: bugs, incomplete features, misleading metadata
@@ -146,6 +158,7 @@ Or use **Xcode Organizer**: Window → Organizer → Distribute App
 ## Step 5B: Direct Distribution (Outside App Store)
 
 ### Code Sign with Developer ID
+
 ```bash
 codesign --force --options runtime \
   --sign "Developer ID Application: Your Name (TEAM_ID)" \
@@ -172,6 +185,7 @@ xcrun stapler staple "MobCrew.app"
 ```
 
 ### Create DMG for Distribution
+
 ```bash
 # Create DMG
 hdiutil create -volname "MobCrew" \
@@ -199,12 +213,14 @@ xcrun stapler staple "MobCrew.dmg"
 ## Step 6: Testing
 
 ### TestFlight (App Store path)
+
 - Upload build to App Store Connect
 - Add internal testers (team members)
 - Invite external testers (up to 10,000)
 - Collect crash reports and feedback
 
 ### Direct Testing
+
 - Share notarized app/DMG directly
 - Test on clean machines (without your dev certificates)
 - Verify Gatekeeper allows installation

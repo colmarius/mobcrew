@@ -11,7 +11,8 @@ project/
 ├── AGENTS.md                    # This file - project instructions
 ├── .agents/
 │   ├── reference/               # External repos (gitignored)
-│   │   └── mobster/             # Original dillonkearns/mobster clone
+│   │   ├── mobster/             # Original dillonkearns/mobster clone
+│   │   └── ghostty/             # Ghostty terminal app (Swift/SwiftUI patterns)
 │   ├── research/                # Research and reference material
 │   ├── prds/                    # Product requirements documents
 │   ├── plans/                   # Implementation plans
