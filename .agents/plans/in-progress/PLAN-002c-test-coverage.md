@@ -78,7 +78,7 @@ Add missing test coverage for core components: AppState integration tests, Roste
     - Test adding mobster with whitespace-only name
     - Test adding duplicate name (allowed, different IDs)
 
-- [ ] **Task 8: Add benchMobster edge cases for driver adjustment**
+- [x] **Task 8: Add benchMobster edge cases for driver adjustment**
   - Scope: `MobCrew/MobCrewTests/Core/Models/RosterTests.swift`
   - Depends on: none
   - Acceptance:

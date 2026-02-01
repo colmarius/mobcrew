@@ -159,3 +159,30 @@
 
 ---
 
+## Task 8: Add benchMobster edge cases for driver adjustment
+
+**Thread**: https://ampcode.com/threads/T-019c1b1c-e2a8-7187-b885-30e8dfe3476b
+**Status**: completed
+**Iteration**: 1
+
+### Changes
+
+- `MobCrew/MobCrewTests/Core/Models/RosterTests.swift` - Added 2 edge case tests:
+  - `benchMobsterCurrentDriverPromotesNext` - benching current driver promotes next mobster
+  - `benchMobsterLastActiveNoDriver` - benching last active results in nil driver/navigator
+
+### Commands Run
+
+- `xcodebuild test -only-testing:MobCrewTests/RosterTests` ✓
+
+### Notes
+
+- Existing tests already covered: adjusting index before current, resetting to 0 when empty, wrapping at end
+- New tests add explicit coverage for driver/navigator computed properties after benching
+
+### Next
+
+- Task 9: Run full test suite and verify coverage
+
+---
+

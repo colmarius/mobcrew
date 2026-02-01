@@ -197,6 +197,34 @@ struct RosterTests {
         #expect(roster.nextDriverIndex == 0)
     }
     
+    @Test("benchMobster benching current driver promotes next mobster to driver")
+    func benchMobsterCurrentDriverPromotesNext() {
+        let alice = Mobster(name: "Alice")
+        let bob = Mobster(name: "Bob")
+        let charlie = Mobster(name: "Charlie")
+        let roster = Roster(activeMobsters: [alice, bob, charlie], nextDriverIndex: 0)
+        
+        #expect(roster.driver?.id == alice.id)
+        
+        roster.benchMobster(at: 0)
+        
+        #expect(roster.driver?.id == bob.id)
+        #expect(roster.navigator?.id == charlie.id)
+    }
+    
+    @Test("benchMobster benching last active mobster results in no driver")
+    func benchMobsterLastActiveNoDriver() {
+        let alice = Mobster(name: "Alice")
+        let roster = Roster(activeMobsters: [alice])
+        
+        #expect(roster.driver?.id == alice.id)
+        
+        roster.benchMobster(at: 0)
+        
+        #expect(roster.driver == nil)
+        #expect(roster.navigator == nil)
+    }
+    
     // MARK: - moveMobster
     
     @Test("moveMobster reorders active mobsters")
