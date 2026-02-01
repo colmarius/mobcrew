@@ -8,7 +8,7 @@ Create a static landing page for MobCrew deployed via GitHub Pages on pushes to 
 
 ## Tasks
 
-- [ ] **Task 1: Create docs folder structure**
+- [x] **Task 1: Create docs folder structure**
   - Scope: `docs/`
   - Depends on: none
   - Acceptance:
