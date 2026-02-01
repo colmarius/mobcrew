@@ -17,3 +17,9 @@
 - **Started**: 2026-02-01
 - **Completed**: 2026-02-01
 - **Notes**: Created MobCrew.xcodeproj with SwiftUI template, Bundle ID com.colmarius.MobCrew, macOS 14.0 deployment target, MobCrewTests target included. Build and tests pass.
+
+### Task 2: Create folder structure
+- **Status**: ✅ Complete
+- **Started**: 2026-02-01
+- **Completed**: 2026-02-01
+- **Notes**: Created App/, Core/Models/, Core/Services/, Features/FloatingTimer/, Features/MenuBar/, Features/Roster/, Features/Settings/, Helpers/Extensions/, Resources/Assets.xcassets. Moved MobCrewApp.swift to App/, created AppDelegate.swift stub. Updated project.pbxproj with new group structure.

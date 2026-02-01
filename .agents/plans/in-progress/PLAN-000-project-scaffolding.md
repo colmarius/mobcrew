@@ -24,7 +24,7 @@ Create MobCrew Xcode project with feature-based folder structure, core model stu
     - Test target included
   - Notes: Use `xcodebuild` or create via Xcode CLI tools. Include MobCrewTests target.
 
-- [ ] **Task 2: Create folder structure**
+- [x] **Task 2: Create folder structure**
   - Scope: `MobCrew/MobCrew/`
   - Depends on: Task 1
   - Acceptance:
