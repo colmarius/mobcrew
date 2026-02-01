@@ -21,9 +21,17 @@ struct SettingsView: View {
 
 private struct GeneralSettingsTab: View {
     @Bindable var appState: AppState
+    @State private var launchAtLogin = LaunchAtLoginService.shared.isEnabled
     
     var body: some View {
         Form {
+            Section("App") {
+                Toggle("Launch at Login", isOn: $launchAtLogin)
+                    .onChange(of: launchAtLogin) { _, newValue in
+                        LaunchAtLoginService.shared.isEnabled = newValue
+                    }
+            }
+            
             Section("Timer") {
                 Stepper(value: Binding(
                     get: { appState.timerDuration / 60 },

@@ -12,11 +12,13 @@ Implement low-effort, high-value Phase 3 features that enhance the user experien
 ## Scope
 
 Features included:
+
 - Launch at Login
 - Tips Display
 - Dark Mode verification/polish
 
 Features explicitly excluded (too complex for value):
+
 - Configurable Hotkey
 - Timer Position Toggle
 - Multiple Keyboard Shortcuts (Alt+1-9)
@@ -27,7 +29,7 @@ Features explicitly excluded (too complex for value):
 
 ## Tasks
 
-- [ ] **Task 1: Launch at Login**
+- [x] **Task 1: Launch at Login**
   - Scope: `App/`, new `LaunchAtLoginService`
   - Depends on: none
   - Acceptance:

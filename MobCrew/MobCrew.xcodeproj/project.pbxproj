@@ -37,6 +37,7 @@
 		8A1B2C3D0001000000000130 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000130 /* NotificationService.swift */; };
 		8A1B2C3D0001000000000131 /* NotificationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000131 /* NotificationServiceTests.swift */; };
 		8A1B2C3D0001000000000140 /* GlobalHotkeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000140 /* GlobalHotkeyService.swift */; };
+		8A1B2C3D0001000000000150 /* LaunchAtLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000150 /* LaunchAtLoginService.swift */; };
 		AA7389A8EB0DEDD3D8AA9842 /* ActiveMobstersFileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C8AE184E82299B54B23084F /* ActiveMobstersFileService.swift */; };
 /* End PBXBuildFile section */
 
@@ -85,6 +86,7 @@
 		8A1B2C3D0002000000000130 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000131 /* NotificationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationServiceTests.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000140 /* GlobalHotkeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalHotkeyService.swift; sourceTree = "<group>"; };
+		8A1B2C3D0002000000000150 /* LaunchAtLoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchAtLoginService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -180,6 +182,7 @@
 			isa = PBXGroup;
 			children = (
 				8A1B2C3D0002000000000140 /* GlobalHotkeyService.swift */,
+				8A1B2C3D0002000000000150 /* LaunchAtLoginService.swift */,
 				8A1B2C3D0002000000000130 /* NotificationService.swift */,
 				8A1B2C3D0002000000000108 /* PersistenceService.swift */,
 				8A1B2C3D0002000000000100 /* TimerEngine.swift */,
@@ -412,6 +415,7 @@
 				8A1B2C3D0001000000000108 /* PersistenceService.swift in Sources */,
 				8A1B2C3D0001000000000130 /* NotificationService.swift in Sources */,
 				8A1B2C3D0001000000000140 /* GlobalHotkeyService.swift in Sources */,
+				8A1B2C3D0001000000000150 /* LaunchAtLoginService.swift in Sources */,
 				8A1B2C3D0001000000000110 /* AppState.swift in Sources */,
 				8A1B2C3D0001000000000120 /* BreakProgressView.swift in Sources */,
 				8A1B2C3D0001000000000121 /* BreakScreenView.swift in Sources */,
