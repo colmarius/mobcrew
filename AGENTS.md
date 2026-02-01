@@ -2,7 +2,7 @@
 
 ## Overview
 
-Native macOS port of [dillonkearns/mobster](https://github.com/dillonkearns/mobster) - a mob programming timer app using Swift/SwiftUI/AppKit.
+**MobCrew** - Native macOS mob programming timer app, inspired by [dillonkearns/mobster](https://github.com/dillonkearns/mobster). Built with Swift/SwiftUI/AppKit.
 
 ## Project Structure
 
@@ -20,12 +20,12 @@ project/
 │       ├── ralph/               # Autonomous implementation loops
 │       ├── research/            # Deep research workflow
 │       └── tmux/                # Background process management
-└── MobsterNative/               # Xcode project (Swift/SwiftUI)
+└── MobCrew/                     # Xcode project (Swift/SwiftUI)
 ```
 
 ## PRD → Plan → Execute Workflow
 
-```
+```text
 Research → PRD → Plan → Ralph executes
 ```
 
