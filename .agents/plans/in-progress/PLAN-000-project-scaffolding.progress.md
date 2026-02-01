@@ -115,3 +115,9 @@
 - **Started**: 2026-02-01
 - **Completed**: 2026-02-01
 - **Notes**: Created RosterTests.swift using Swift Testing framework. Tests driver/navigator computed properties, advanceTurn() rotation, addMobster, benchMobster, rotateIn, and driver index adjustment after removal. All tests pass.
+
+### Task 13: Create TimerStateTests
+- **Status**: ✅ Complete
+- **Started**: 2026-02-01
+- **Completed**: 2026-02-01
+- **Notes**: Created TimerStateTests.swift using Swift Testing framework. Tests displayTime formatting (various seconds values), progress calculation (start, halfway, end), and edge cases (0 totalSeconds, negative remaining, large values). All tests pass.

@@ -126,7 +126,7 @@ Create MobCrew Xcode project with feature-based folder structure, core model stu
     - Tests driver index adjustment after removal
     - All tests pass
 
-- [ ] **Task 13: Create TimerStateTests**
+- [x] **Task 13: Create TimerStateTests**
   - Scope: `MobCrew/MobCrewTests/Core/Models/TimerStateTests.swift`
   - Depends on: Task 7, Task 10
   - Acceptance:
