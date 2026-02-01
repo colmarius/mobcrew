@@ -2,7 +2,7 @@
 
 | Field | Value |
 |-------|-------|
-| Status | todo |
+| Status | complete |
 | Date | 2026-02-01 |
 | PRD | `../../prds/PRD-000-project-scaffolding.md` |
 
@@ -136,7 +136,7 @@ Create MobCrew Xcode project with feature-based folder structure, core model stu
     - Tests edge cases (0 seconds, 0 total)
     - All tests pass
 
-- [ ] **Task 14: Verify build and tests**
+- [x] **Task 14: Verify build and tests**
   - Scope: `MobCrew/`
   - Depends on: Tasks 1-13
   - Acceptance:
