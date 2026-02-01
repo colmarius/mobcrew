@@ -28,3 +28,23 @@
   - Added completeBreak() to reset turnsSinceBreak after break
   - Added skipBreak() method for UI skip button
 - **Build**: ✅ Succeeded
+
+### Iteration 4 - Task 4 Complete (No Changes Needed)
+- **Task**: Task 4: Create BreakTimer functionality
+- **Status**: Complete
+- **Notes**: Existing TimerEngine already provides needed functionality
+  - triggerBreak() uses reset(duration:) + start() 
+  - onComplete callback handles break completion via handleTimerComplete()
+  - No additional code needed - TimerEngine reuse as designed
+
+### Iteration 5 - Task 5 Complete
+- **Task**: Task 5: Add break logic tests
+- **Status**: Complete
+- **Changes**:
+  - Created BreakLogicTests.swift with 10 tests covering:
+    - turnsSinceBreak increment and accumulation
+    - Break triggers at correct interval
+    - Break countdown uses timer engine
+    - turnsSinceBreak resets after break
+    - skipBreak ends break immediately
+- **Tests**: ✅ All break logic tests pass

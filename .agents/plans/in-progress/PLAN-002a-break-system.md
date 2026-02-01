@@ -48,7 +48,7 @@ Implement break intervals with configurable timing, visual progress indicator, a
     - Reset `turnsSinceBreak` to 0 after break completes
     - Add `triggerBreak()` method that sets `isOnBreak = true`
 
-- [ ] **Task 4: Create BreakTimer functionality**
+- [x] **Task 4: Create BreakTimer functionality**
   - Scope: `MobCrew/MobCrew/Core/Services/TimerEngine.swift`
   - Depends on: Task 3
   - Acceptance:
@@ -57,7 +57,7 @@ Implement break intervals with configurable timing, visual progress indicator, a
     - Add `onBreakComplete` callback
     - When break completes, set `isOnBreak = false`
 
-- [ ] **Task 5: Add break logic tests**
+- [x] **Task 5: Add break logic tests**
   - Scope: `MobCrew/MobCrewTests/Core/BreakLogicTests.swift`
   - Depends on: Tasks 3, 4
   - Acceptance:
