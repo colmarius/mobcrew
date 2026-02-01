@@ -6,7 +6,6 @@ struct MenuBarView: View {
     let isRunning: Bool
     let onToggle: () -> Void
     let onSkip: () -> Void
-    let onOpenSettings: () -> Void
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -34,7 +33,7 @@ struct MenuBarView: View {
             
             Divider()
             
-            Button(action: onOpenSettings) {
+            SettingsLink {
                 Label("Settings…", systemImage: "gear")
             }
             .keyboardShortcut(",", modifiers: .command)
@@ -66,8 +65,7 @@ private struct RoleRow: View {
         navigatorName: "Bob",
         isRunning: false,
         onToggle: {},
-        onSkip: {},
-        onOpenSettings: {}
+        onSkip: {}
     )
     .frame(width: 200)
 }

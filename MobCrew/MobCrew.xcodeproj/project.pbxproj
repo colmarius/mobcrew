@@ -33,6 +33,7 @@
 		8A1B2C3D0001000000000120 /* BreakProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000120 /* BreakProgressView.swift */; };
 		8A1B2C3D0001000000000121 /* BreakScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000121 /* BreakScreenView.swift */; };
 		8A1B2C3D0001000000000122 /* BreakSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000122 /* BreakSettingsView.swift */; };
+		8A1B2C3D0001000000000123 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000123 /* SettingsView.swift */; };
 		8A1B2C3D0001000000000130 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000130 /* NotificationService.swift */; };
 		8A1B2C3D0001000000000131 /* NotificationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000131 /* NotificationServiceTests.swift */; };
 		8A1B2C3D0001000000000140 /* GlobalHotkeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000140 /* GlobalHotkeyService.swift */; };
@@ -80,6 +81,7 @@
 		8A1B2C3D0002000000000120 /* BreakProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakProgressView.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000121 /* BreakScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakScreenView.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000122 /* BreakSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakSettingsView.swift; sourceTree = "<group>"; };
+		8A1B2C3D0002000000000123 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000130 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000131 /* NotificationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationServiceTests.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000140 /* GlobalHotkeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalHotkeyService.swift; sourceTree = "<group>"; };
@@ -229,6 +231,7 @@
 			isa = PBXGroup;
 			children = (
 				8A1B2C3D0002000000000122 /* BreakSettingsView.swift */,
+				8A1B2C3D0002000000000123 /* SettingsView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -413,6 +416,7 @@
 				8A1B2C3D0001000000000120 /* BreakProgressView.swift in Sources */,
 				8A1B2C3D0001000000000121 /* BreakScreenView.swift in Sources */,
 				8A1B2C3D0001000000000122 /* BreakSettingsView.swift in Sources */,
+				8A1B2C3D0001000000000123 /* SettingsView.swift in Sources */,
 				AA7389A8EB0DEDD3D8AA9842 /* ActiveMobstersFileService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

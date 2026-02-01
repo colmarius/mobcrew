@@ -36,15 +36,12 @@ struct MobCrewApp: App {
                 },
                 onSkip: {
                     appState.skipTurn()
-                },
-                onOpenSettings: {
-                    NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
                 }
             )
         }
         
         Settings {
-            BreakSettingsView(appState: appState)
+            SettingsView(appState: appState)
         }
     }
     
