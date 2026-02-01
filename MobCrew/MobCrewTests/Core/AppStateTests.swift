@@ -39,4 +39,51 @@ struct AppStateTests {
         
         #expect(appState.timerState.isRunning == false)
     }
+    
+    // MARK: - Timer Completion (Task 2)
+    
+    @Test("timer completion advances turn")
+    func timerCompletionAdvancesTurn() async throws {
+        let appState = makeAppState()
+        appState.roster.addMobster(name: "Alice")
+        appState.roster.addMobster(name: "Bob")
+        
+        let initialDriver = appState.roster.driver
+        #expect(initialDriver?.name == "Alice")
+        
+        appState.timerEngine.reset(duration: 1)
+        appState.timerEngine.start()
+        
+        try await Task.sleep(for: .milliseconds(1500))
+        
+        #expect(appState.roster.driver?.name == "Bob")
+    }
+    
+    @Test("timer completion resets timer to configured duration")
+    func timerCompletionResetsTimer() async throws {
+        let appState = makeAppState()
+        appState.roster.addMobster(name: "Alice")
+        appState.timerDuration = 300
+        
+        appState.timerEngine.reset(duration: 1)
+        appState.timerEngine.start()
+        
+        try await Task.sleep(for: .milliseconds(1500))
+        
+        #expect(appState.timerState.secondsRemaining == 300)
+        #expect(appState.timerState.totalSeconds == 300)
+    }
+    
+    @Test("timer completion stops timer")
+    func timerCompletionStopsTimer() async throws {
+        let appState = makeAppState()
+        appState.roster.addMobster(name: "Alice")
+        
+        appState.timerEngine.reset(duration: 1)
+        appState.timerEngine.start()
+        
+        try await Task.sleep(for: .milliseconds(1500))
+        
+        #expect(appState.timerEngine.isRunning == false)
+    }
 }

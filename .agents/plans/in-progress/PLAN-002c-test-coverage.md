@@ -25,7 +25,7 @@ Add missing test coverage for core components: AppState integration tests, Roste
     - Uses mock/test PersistenceService with isolated UserDefaults
     - Build succeeds
 
-- [ ] **Task 2: Test timer completion advances turn**
+- [x] **Task 2: Test timer completion advances turn**
   - Scope: `MobCrew/MobCrewTests/Core/AppStateTests.swift`
   - Depends on: Task 1
   - Acceptance:
