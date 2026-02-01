@@ -25,7 +25,7 @@ Address usability and clarity improvements identified in UI review. Focus on red
     - Help text updated to match new icons
   - Notes: Current arrow.down.circle/arrow.up.circle not immediately clear
 
-- [ ] **Task 3: Add empty state for roster**
+- [x] **Task 3: Add empty state for roster**
   - Scope: `MobCrew/Features/Roster/RosterView.swift`
   - Depends on: Task 1
   - Acceptance:

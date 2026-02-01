@@ -40,3 +40,23 @@
 
 ---
 
+## Task 3: Add empty state for roster
+
+**Thread**: https://ampcode.com/threads/T-019c1b00-b0c4-716f-bd09-48298500de35
+**Status**: completed
+**Iteration**: 1
+
+### Changes
+
+- `MobCrew/MobCrew/Features/Roster/RosterView.swift` - Added emptyStateSection with icon, title, and helpful text
+
+### Commands Run
+
+- `xcodebuild build` ✓
+
+### Next
+
+- Task 4: Add drag-to-reorder for active mobsters
+
+---
+

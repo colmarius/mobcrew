@@ -8,17 +8,38 @@ struct RosterView: View {
         VStack(alignment: .leading, spacing: 16) {
             addMobsterSection
             
-            if !roster.activeMobsters.isEmpty {
-                activeSection
-            }
-            
-            if !roster.inactiveMobsters.isEmpty {
-                inactiveSection
+            if roster.activeMobsters.isEmpty && roster.inactiveMobsters.isEmpty {
+                emptyStateSection
+            } else {
+                if !roster.activeMobsters.isEmpty {
+                    activeSection
+                }
+                
+                if !roster.inactiveMobsters.isEmpty {
+                    inactiveSection
+                }
             }
             
             Spacer()
         }
         .padding()
+    }
+    
+    private var emptyStateSection: some View {
+        VStack(spacing: 8) {
+            Image(systemName: "person.3")
+                .font(.system(size: 40))
+                .foregroundStyle(.secondary)
+            Text("No mobsters yet")
+                .font(.headline)
+                .foregroundStyle(.secondary)
+            Text("Add your first mobster above to get started")
+                .font(.subheadline)
+                .foregroundStyle(.tertiary)
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 32)
     }
     
     private var addMobsterSection: some View {
