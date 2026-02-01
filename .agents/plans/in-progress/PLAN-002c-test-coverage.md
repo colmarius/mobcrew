@@ -48,7 +48,7 @@ Add missing test coverage for core components: AppState integration tests, Roste
     - Changing `timerDuration` triggers save to persistence
     - Duration persists across AppState instances
 
-- [ ] **Task 5: Test roster changes trigger save**
+- [x] **Task 5: Test roster changes trigger save**
   - Scope: `MobCrew/MobCrewTests/Core/AppStateTests.swift`
   - Depends on: Task 1
   - Acceptance:

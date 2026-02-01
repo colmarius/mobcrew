@@ -157,4 +157,38 @@ struct AppStateTests {
         
         #expect(appState2.timerDuration == 1200)
     }
+    
+    // MARK: - Roster Persistence (Task 5)
+    
+    @Test("saveRoster persists roster state")
+    func saveRosterPersistsState() {
+        let defaults = makeTestUserDefaults()
+        let service = PersistenceService(userDefaults: defaults)
+        let appState = AppState(persistenceService: service)
+        
+        appState.roster.addMobster(name: "Alice")
+        appState.roster.addMobster(name: "Bob")
+        appState.saveRoster()
+        
+        let loadedRoster = service.loadRoster()
+        #expect(loadedRoster.activeMobsters.count == 2)
+        #expect(loadedRoster.activeMobsters[0].name == "Alice")
+        #expect(loadedRoster.activeMobsters[1].name == "Bob")
+    }
+    
+    @Test("roster persists across AppState instances")
+    func rosterPersistsAcrossInstances() {
+        let defaults = makeTestUserDefaults()
+        
+        let service1 = PersistenceService(userDefaults: defaults)
+        let appState1 = AppState(persistenceService: service1)
+        appState1.roster.addMobster(name: "Charlie")
+        appState1.saveRoster()
+        
+        let service2 = PersistenceService(userDefaults: defaults)
+        let appState2 = AppState(persistenceService: service2)
+        
+        #expect(appState2.roster.activeMobsters.count == 1)
+        #expect(appState2.roster.activeMobsters[0].name == "Charlie")
+    }
 }

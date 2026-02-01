@@ -86,3 +86,23 @@
 
 ---
 
+## Task 5: Test roster changes trigger save
+
+**Thread**: https://ampcode.com/threads/T-019c1b17-3909-72ba-89b7-3104db1ccdba
+**Status**: completed
+**Iteration**: 1
+
+### Changes
+
+- `MobCrew/MobCrewTests/Core/AppStateTests.swift` - Added 2 tests for roster persistence
+
+### Commands Run
+
+- `xcodebuild test -only-testing:MobCrewTests/AppStateTests` ✓
+
+### Next
+
+- Task 6: Add shuffle tests to RosterTests
+
+---
+
