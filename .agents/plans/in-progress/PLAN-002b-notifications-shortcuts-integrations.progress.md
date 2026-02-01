@@ -108,7 +108,31 @@ Plan: [PLAN-002b](./PLAN-002b-notifications-shortcuts-integrations.md)
 
 ### Next
 
-- Task 6: Add Cmd+S shortcut for skip turn
+- Task 6: Add Cmd+Shift+S shortcut for skip turn
+
+---
+
+## Task 6: Add Cmd+Shift+S shortcut for skip turn
+
+**Thread**: https://ampcode.com/threads/T-019c1b3d-38d3-74b8-b4a1-983ab280a140
+**Status**: completed
+**Iteration**: 1
+
+### Changes
+
+- `MobCrew/MobCrew/ContentView.swift` - Changed skip button shortcut from Cmd+RightArrow to Cmd+Shift+S to avoid Cmd+S conflict with system save
+
+### Commands Run
+
+- `./scripts/test.sh` ✓ (all tests pass)
+
+### Notes
+
+- Used Cmd+Shift+S instead of Cmd+S to avoid conflicts with common save shortcut
+
+### Next
+
+- Task 7: Create GlobalHotkeyService
 
 ---
 

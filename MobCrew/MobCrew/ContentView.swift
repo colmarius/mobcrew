@@ -112,7 +112,7 @@ struct ContentView: View {
             }
             .buttonStyle(.bordered)
             .disabled(appState.roster.activeMobsters.count < 2)
-            .keyboardShortcut(.rightArrow, modifiers: .command)
+            .keyboardShortcut("s", modifiers: [.command, .shift])
         }
     }
     

@@ -61,7 +61,7 @@ Add system notifications, keyboard shortcuts (local and global), shuffle roster,
     - Works when main window is focused
     - Toggles timer state correctly
 
-- [ ] **Task 6: Add Cmd+S shortcut for skip turn**
+- [x] **Task 6: Add Cmd+Shift+S shortcut for skip turn**
   - Scope: `MobCrew/MobCrew/ContentView.swift`
   - Depends on: none
   - Acceptance:
