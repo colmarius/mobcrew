@@ -10,3 +10,11 @@
   - Added persistence methods for break settings in PersistenceService
   - Break settings load from UserDefaults on init
 - **Build**: ✅ Succeeded
+
+### Iteration 2 - Task 2 Complete
+- **Task**: Task 2: Add break settings persistence
+- **Status**: Complete
+- **Changes**:
+  - Persistence methods already added in Task 1
+  - Added 4 tests in PersistenceServiceTests for break settings
+- **Tests**: ✅ All 11 persistence tests pass

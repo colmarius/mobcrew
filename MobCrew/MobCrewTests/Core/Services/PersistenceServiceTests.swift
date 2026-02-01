@@ -84,6 +84,50 @@ struct PersistenceServiceTests {
         #expect(loaded == nil)
     }
     
+    // MARK: - Break Settings Persistence
+    
+    @Test("saves and loads break interval")
+    func breakIntervalRoundTrip() {
+        let defaults = makeTestUserDefaults()
+        let service = PersistenceService(userDefaults: defaults)
+        
+        service.saveBreakInterval(3)
+        let loaded = service.loadBreakInterval()
+        
+        #expect(loaded == 3)
+    }
+    
+    @Test("returns nil for break interval when no data exists")
+    func breakIntervalReturnsNilWhenNoData() {
+        let defaults = makeTestUserDefaults()
+        let service = PersistenceService(userDefaults: defaults)
+        
+        let loaded = service.loadBreakInterval()
+        
+        #expect(loaded == nil)
+    }
+    
+    @Test("saves and loads break duration")
+    func breakDurationRoundTrip() {
+        let defaults = makeTestUserDefaults()
+        let service = PersistenceService(userDefaults: defaults)
+        
+        service.saveBreakDuration(600)
+        let loaded = service.loadBreakDuration()
+        
+        #expect(loaded == 600)
+    }
+    
+    @Test("returns nil for break duration when no data exists")
+    func breakDurationReturnsNilWhenNoData() {
+        let defaults = makeTestUserDefaults()
+        let service = PersistenceService(userDefaults: defaults)
+        
+        let loaded = service.loadBreakDuration()
+        
+        #expect(loaded == nil)
+    }
+    
     // MARK: - Edge Cases
     
     @Test("handles empty roster")

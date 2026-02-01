@@ -28,7 +28,7 @@ Implement break intervals with configurable timing, visual progress indicator, a
     - Add `breakSecondsRemaining: Int` for break countdown
   - Notes: Consider grouping break-related properties in a struct
 
-- [ ] **Task 2: Add break settings persistence**
+- [x] **Task 2: Add break settings persistence**
   - Scope: `MobCrew/MobCrew/Core/Services/PersistenceService.swift`
   - Depends on: Task 1
   - Acceptance:
