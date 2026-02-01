@@ -3,13 +3,14 @@
 ## Problem
 
 When the user clicks "Open System Settings" from the accessibility permission alert:
+
 1. The app doesn't automatically appear in the Accessibility list
 2. `AXIsProcessTrustedWithOptions` with prompt only works once per app identity
 3. User must manually add the app via the + button
 
 ## Tasks
 
-- [ ] **Task 1: Research macOS accessibility permission behavior**
+- [x] **Task 1: Research macOS accessibility permission behavior**
   - Scope: Research
   - Depends on: none
   - Acceptance:
