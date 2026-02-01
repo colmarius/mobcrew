@@ -14,7 +14,7 @@ Create MobCrew Xcode project with feature-based folder structure, core model stu
 
 ## Tasks
 
-- [ ] **Task 1: Create Xcode project**
+- [x] **Task 1: Create Xcode project**
   - Scope: `MobCrew/MobCrew.xcodeproj`
   - Depends on: none
   - Acceptance:
