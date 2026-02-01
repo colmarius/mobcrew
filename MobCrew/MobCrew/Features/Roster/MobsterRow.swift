@@ -11,6 +11,9 @@ struct MobsterRow: View {
         HStack {
             if let role {
                 RoleIndicator(role: role)
+            } else {
+                Color.clear
+                    .frame(width: 18, height: 18)
             }
             
             Text(mobster.name)

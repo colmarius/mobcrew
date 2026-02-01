@@ -74,6 +74,24 @@ screencapture docs/assets/images/break-overlay.png
 
 ```text
 docs/assets/images/
-├── hero-screenshot.png  ← main hero image
-└── logo.png             ← app icon
+├── hero-screenshot.png   ✓
+├── floating-timer.png    ✓
+├── break-overlay.png     ✓
+├── settings.png          ✓
+└── logo.png              ✓
+```
+
+## 4. settings.png (optional)
+
+The settings/preferences window.
+
+**Setup:**
+
+1. Open Settings (⌘,)
+2. Show timer and hotkey preferences
+
+**Capture:**
+
+```bash
+screencapture -o -w docs/assets/images/settings.png
 ```
