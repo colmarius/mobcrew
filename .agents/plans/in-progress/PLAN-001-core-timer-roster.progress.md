@@ -3,8 +3,8 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-02-01 |
-| Current Task | Task 13 |
-| Tasks Completed | 12 |
+| Current Task | Task 14 |
+| Tasks Completed | 13 |
 
 ---
 
@@ -131,3 +131,12 @@ Next task: Task 6 - Create MenuBarView
 - Tests handling of empty/missing data
 - Tests mobster ID preservation and overwriting
 - All 7 tests pass
+
+### Task 13: Integrate persistence into app lifecycle ✅
+
+- Updated `MobCrew/MobCrew/App/MobCrewApp.swift`
+- Roster loaded from UserDefaults in App init
+- Timer duration loaded with 7-minute default
+- Added onChange handlers to save roster and timer duration on changes
+- Added PersistenceService.swift and PersistenceServiceTests.swift to Xcode project
+- Build succeeded, all tests pass

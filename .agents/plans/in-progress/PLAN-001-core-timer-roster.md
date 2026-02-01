@@ -146,7 +146,7 @@ Implement working mob timer with floating window, roster management, menu bar in
     - All tests pass
   - Notes: Use separate UserDefaults suite for tests.
 
-- [ ] **Task 13: Integrate persistence into app lifecycle**
+- [x] **Task 13: Integrate persistence into app lifecycle**
   - Scope: `MobCrew/MobCrew/App/AppDelegate.swift`, `MobCrew/MobCrew/App/MobCrewApp.swift`
   - Depends on: Task 11
   - Acceptance:
