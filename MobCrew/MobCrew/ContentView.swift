@@ -33,15 +33,16 @@ struct ContentView: View {
     }
     
     private var rolesDisplay: some View {
-        VStack(spacing: 8) {
+        VStack(alignment: .leading, spacing: 8) {
             if let driver = appState.roster.driver {
                 HStack {
-                    Text("D")
+                    Text("Driver")
                         .font(.caption.bold())
                         .foregroundStyle(.white)
-                        .frame(width: 20, height: 20)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
                         .background(Color.blue)
-                        .clipShape(Circle())
+                        .clipShape(Capsule())
                     Text(driver.name)
                         .font(.title3)
                 }
@@ -49,12 +50,13 @@ struct ContentView: View {
             
             if let navigator = appState.roster.navigator {
                 HStack {
-                    Text("N")
+                    Text("Navigator")
                         .font(.caption.bold())
                         .foregroundStyle(.white)
-                        .frame(width: 20, height: 20)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
                         .background(Color.green)
-                        .clipShape(Circle())
+                        .clipShape(Capsule())
                     Text(navigator.name)
                         .font(.title3)
                 }
