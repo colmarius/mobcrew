@@ -79,3 +79,13 @@
   - Added Break files to Xcode project (group + build phase)
 - **Build**: ✅ Succeeded
 - **Tests**: ✅ All tests pass
+
+### Iteration 9 - Task 9 Complete
+- **Task**: Task 9: Integrate BreakScreenView into app flow
+- **Status**: Complete
+- **Changes**:
+  - ContentView shows BreakScreenView when isOnBreak == true
+  - Skip button calls skipBreak() and returns to normal view
+  - Break completion returns to normal view automatically
+- **Build**: ✅ Succeeded
+- **Tests**: ✅ All tests pass

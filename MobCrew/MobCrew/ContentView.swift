@@ -4,12 +4,18 @@ struct ContentView: View {
     @Bindable var appState: AppState
     
     var body: some View {
-        HSplitView {
-            timerSection
-                .frame(minWidth: 200, maxWidth: 300)
-            
-            RosterView(roster: appState.roster)
-                .frame(minWidth: 250)
+        Group {
+            if appState.isOnBreak {
+                BreakScreenView(appState: appState)
+            } else {
+                HSplitView {
+                    timerSection
+                        .frame(minWidth: 200, maxWidth: 300)
+                    
+                    RosterView(roster: appState.roster)
+                        .frame(minWidth: 250)
+                }
+            }
         }
         .frame(minWidth: 500, minHeight: 400)
     }

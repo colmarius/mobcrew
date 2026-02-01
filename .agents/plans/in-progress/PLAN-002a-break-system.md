@@ -98,7 +98,7 @@ Implement break intervals with configurable timing, visual progress indicator, a
     - Visible in both main window and floating timer
     - Updates as turns advance
 
-- [ ] **Task 9: Integrate BreakScreenView into app flow**
+- [x] **Task 9: Integrate BreakScreenView into app flow**
   - Scope: `MobCrew/MobCrew/ContentView.swift`
   - Depends on: Task 7
   - Acceptance:
