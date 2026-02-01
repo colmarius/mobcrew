@@ -18,3 +18,13 @@
   - Persistence methods already added in Task 1
   - Added 4 tests in PersistenceServiceTests for break settings
 - **Tests**: ✅ All 11 persistence tests pass
+
+### Iteration 3 - Task 3 Complete
+- **Task**: Task 3: Implement break tracking in turn advancement
+- **Status**: Complete
+- **Changes**:
+  - Modified handleTimerComplete() to increment turnsSinceBreak
+  - Added triggerBreak() method when turnsSinceBreak >= breakInterval
+  - Added completeBreak() to reset turnsSinceBreak after break
+  - Added skipBreak() method for UI skip button
+- **Build**: ✅ Succeeded

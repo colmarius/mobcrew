@@ -39,7 +39,7 @@ Implement break intervals with configurable timing, visual progress indicator, a
 
 ### Break Logic
 
-- [ ] **Task 3: Implement break tracking in turn advancement**
+- [x] **Task 3: Implement break tracking in turn advancement**
   - Scope: `MobCrew/MobCrew/Core/AppState.swift`
   - Depends on: Task 1
   - Acceptance:

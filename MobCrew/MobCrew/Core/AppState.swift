@@ -56,8 +56,37 @@ final class AppState {
     }
     
     private func handleTimerComplete() {
-        roster.advanceTurn()
+        if isOnBreak {
+            completeBreak()
+        } else {
+            roster.advanceTurn()
+            turnsSinceBreak += 1
+            
+            if turnsSinceBreak >= breakInterval {
+                triggerBreak()
+            } else {
+                timerEngine.reset(duration: timerDuration)
+            }
+        }
+    }
+    
+    func triggerBreak() {
+        isOnBreak = true
+        breakSecondsRemaining = breakDuration
+        timerEngine.reset(duration: breakDuration)
+        timerEngine.start()
+    }
+    
+    private func completeBreak() {
+        isOnBreak = false
+        turnsSinceBreak = 0
+        breakSecondsRemaining = 0
         timerEngine.reset(duration: timerDuration)
+    }
+    
+    func skipBreak() {
+        timerEngine.stop()
+        completeBreak()
     }
     
     func saveRoster() {
