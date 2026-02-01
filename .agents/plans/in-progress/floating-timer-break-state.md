@@ -10,7 +10,7 @@ Update `FloatingTimerView` to reflect break state, matching the main app's break
 
 ## Tasks
 
-- [ ] **Task 1: Add break state conditional to FloatingTimerView**
+- [x] **Task 1: Add break state conditional to FloatingTimerView**
   - Scope: `MobCrew/Features/FloatingTimer/FloatingTimerView.swift`
   - Depends on: none
   - Acceptance:
@@ -19,7 +19,7 @@ Update `FloatingTimerView` to reflect break state, matching the main app's break
     - When not on break, displays current behavior unchanged
   - Notes: Use similar structure to `ContentView.swift` which conditionally renders `BreakScreenView`
 
-- [ ] **Task 2: Create compact break view for floating timer**
+- [x] **Task 2: Create compact break view for floating timer**
   - Scope: `MobCrew/Features/FloatingTimer/FloatingTimerView.swift`
   - Depends on: Task 1
   - Acceptance:
@@ -30,7 +30,7 @@ Update `FloatingTimerView` to reflect break state, matching the main app's break
     - Uses teal/blue gradient or accent to visually distinguish from normal timer
   - Notes: Keep it minimal - no need for full BreakScreenView, just essential info
 
-- [ ] **Task 3: Add preview for break state**
+- [x] **Task 3: Add preview for break state**
   - Scope: `MobCrew/Features/FloatingTimer/FloatingTimerView.swift`
   - Depends on: Task 2
   - Acceptance:
@@ -38,7 +38,7 @@ Update `FloatingTimerView` to reflect break state, matching the main app's break
     - Existing preview continues to show normal state
   - Notes: Follow pattern from `BreakScreenView` preview
 
-- [ ] **Task 4: Test break state in floating timer**
+- [x] **Task 4: Test break state in floating timer**
   - Scope: `MobCrewTests/Features/FloatingTimer/`
   - Depends on: Task 2
   - Acceptance:
