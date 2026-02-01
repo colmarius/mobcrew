@@ -4,11 +4,19 @@
 
 **MobCrew** - Native macOS mob programming timer app, inspired by [dillonkearns/mobster](https://github.com/dillonkearns/mobster). Built with Swift/SwiftUI/AppKit.
 
+## Tech Stack
+
+- **Language**: Swift 5
+- **UI**: SwiftUI + AppKit (via `@NSApplicationDelegateAdaptor`)
+- **Target**: macOS 14.0+
+- **Architecture**: Feature-based folder structure
+
 ## Project Structure
 
 ```text
 project/
 ├── AGENTS.md                    # This file - project instructions
+├── README.md                    # Project overview
 ├── .agents/
 │   ├── reference/               # External repos (gitignored)
 │   │   ├── mobster/             # Original dillonkearns/mobster clone
@@ -20,10 +28,17 @@ project/
 │   │   ├── in-progress/         # Currently being worked on
 │   │   └── completed/           # Finished and verified
 │   └── skills/                  # Agent skills
-│       ├── ralph/               # Autonomous implementation loops
-│       ├── research/            # Deep research workflow
-│       └── tmux/                # Background process management
-└── MobCrew/                     # Xcode project (Swift/SwiftUI)
+└── MobCrew/                     # Xcode project
+    ├── MobCrew/
+    │   ├── App/                 # MobCrewApp.swift, AppDelegate.swift
+    │   ├── Core/
+    │   │   ├── Models/          # Mobster, Roster, TimerState
+    │   │   └── Services/        # (future: TimerService, etc.)
+    │   ├── Features/            # Feature-based UI modules
+    │   ├── Helpers/Extensions/  # Swift extensions
+    │   └── Resources/           # Assets, strings
+    ├── MobCrew.xcodeproj/
+    └── MobCrewTests/            # Unit tests (mirrors main structure)
 ```
 
 ## PRD → Plan → Execute Workflow
