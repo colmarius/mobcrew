@@ -71,14 +71,22 @@ final class AppState {
             if turnsSinceBreak >= breakInterval {
                 triggerBreak()
             } else {
+                sendTimerCompleteNotification()
                 timerEngine.reset(duration: timerDuration)
             }
         }
     }
     
+    private func sendTimerCompleteNotification() {
+        let driver = roster.driver?.name ?? "Next Driver"
+        let navigator = roster.navigator?.name ?? "Next Navigator"
+        notificationService.sendTimerComplete(driver: driver, navigator: navigator)
+    }
+    
     func triggerBreak() {
         isOnBreak = true
         breakSecondsRemaining = breakDuration
+        notificationService.sendBreakStarted(duration: breakDuration)
         timerEngine.reset(duration: breakDuration)
         timerEngine.start()
     }

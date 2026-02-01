@@ -36,7 +36,7 @@ Add system notifications, keyboard shortcuts (local and global), shuffle roster,
     - Handle permission granted/denied gracefully
     - Don't repeatedly prompt if denied
 
-- [ ] **Task 3: Wire notifications to timer events**
+- [x] **Task 3: Wire notifications to timer events**
   - Scope: `MobCrew/MobCrew/Core/AppState.swift`
   - Depends on: Task 1
   - Acceptance:

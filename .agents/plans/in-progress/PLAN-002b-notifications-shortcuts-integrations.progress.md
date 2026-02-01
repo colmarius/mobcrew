@@ -46,3 +46,23 @@ Plan: [PLAN-002b](./PLAN-002b-notifications-shortcuts-integrations.md)
 
 ---
 
+## Task 3: Wire notifications to timer events
+
+**Thread**: https://ampcode.com/threads/T-019c1b37-fdd8-711a-936f-98148214a6c3
+**Status**: completed
+**Iteration**: 1
+
+### Changes
+
+- `MobCrew/MobCrew/Core/AppState.swift` - Added sendTimerCompleteNotification() and wired to handleTimerComplete(), added break notification to triggerBreak()
+
+### Commands Run
+
+- `./scripts/test.sh` ✓ (all tests pass)
+
+### Next
+
+- Task 4: Add NotificationService tests
+
+---
+
