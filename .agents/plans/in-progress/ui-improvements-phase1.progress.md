@@ -83,3 +83,24 @@
 
 ---
 
+## Task 5: Enhance role display in timer panel
+
+**Thread**: https://ampcode.com/threads/T-019c1b00-b0c4-716f-bd09-48298500de35
+**Status**: completed
+**Iteration**: 1
+
+### Changes
+
+- `MobCrew/MobCrew/Features/FloatingTimer/FloatingTimerView.swift` - Changed layout from HStack to VStack, added full "Driver"/"Navigator" labels, driver now more prominent (larger font, brighter color)
+
+### Commands Run
+
+- `xcodebuild build` ✓
+- `xcodebuild test` ✓
+
+### Next
+
+- All tasks complete!
+
+---
+

@@ -13,9 +13,9 @@ struct FloatingTimerView: View {
                 .font(.system(size: 36, weight: .bold, design: .monospaced))
                 .foregroundStyle(.white)
             
-            HStack(spacing: 12) {
-                RoleLabel(role: "D", name: driverName)
-                RoleLabel(role: "N", name: navigatorName)
+            VStack(spacing: 6) {
+                RoleLabel(role: "Driver", name: driverName, isDriver: true)
+                RoleLabel(role: "Navigator", name: navigatorName, isDriver: false)
             }
             
             Button(action: onToggle) {
@@ -39,19 +39,20 @@ struct FloatingTimerView: View {
 private struct RoleLabel: View {
     let role: String
     let name: String?
+    let isDriver: Bool
     
     var body: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: 6) {
             Text(role)
-                .font(.system(size: 10, weight: .bold))
-                .foregroundStyle(.black)
-                .frame(width: 16, height: 16)
-                .background(Circle().fill(.white))
+                .font(.system(size: isDriver ? 11 : 10, weight: .semibold))
+                .foregroundStyle(isDriver ? .green : .blue)
+                .frame(width: 60, alignment: .trailing)
             
             Text(name ?? "—")
-                .font(.system(size: 12, weight: .medium))
-                .foregroundStyle(.white.opacity(0.9))
+                .font(.system(size: isDriver ? 14 : 12, weight: isDriver ? .bold : .medium))
+                .foregroundStyle(.white.opacity(isDriver ? 1.0 : 0.7))
                 .lineLimit(1)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 }

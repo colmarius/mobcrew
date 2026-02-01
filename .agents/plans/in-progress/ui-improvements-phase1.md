@@ -46,7 +46,7 @@ Address usability and clarity improvements identified in UI review. Focus on red
     - Build and tests pass
   - Notes: Use SwiftUI's `onMove` modifier with `ForEach`; need List or explicit EditMode for drag handles
 
-- [ ] **Task 5: Enhance role display in timer panel**
+- [x] **Task 5: Enhance role display in timer panel**
   - Scope: `MobCrew/Features/FloatingTimer/FloatingTimerView.swift` or main ContentView
   - Depends on: none
   - Acceptance:
