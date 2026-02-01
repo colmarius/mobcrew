@@ -17,7 +17,8 @@
 project/
 ├── AGENTS.md                    # This file - project instructions
 ├── README.md                    # Project overview
-├── docs/                        # GitHub Pages landing page
+├── docs/                        # GitHub Pages landing page + RELEASING.md
+├── scripts/                     # Build and release scripts
 ├── .agents/
 │   ├── reference/               # External repos (gitignored)
 │   │   ├── mobster/             # Original dillonkearns/mobster clone
@@ -98,6 +99,12 @@ xcodebuild test -project MobCrew/MobCrew.xcodeproj -scheme MobCrew -destination 
 xcodebuild test -project MobCrew/MobCrew.xcodeproj -scheme MobCrew -destination 'platform=macOS' -only-testing:MobCrewTests/RosterTests
 
 # In Xcode: ⌘B (build), ⌘R (run), ⌘U (test)
+
+# Build and run
+./scripts/run.sh
+
+# Release (requires: brew install gh node && gh auth login)
+./scripts/release.sh <version>
 ```
 
 ## Git Workflow

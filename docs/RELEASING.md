@@ -30,7 +30,7 @@ This builds the app, creates a DMG, and publishes to GitHub Releases.
 ./scripts/release.sh 1.0.0 --draft
 ```
 
-- Visit the draft at https://github.com/colmarius/mobcrew/releases
+- Visit the draft at <https://github.com/colmarius/mobcrew/releases>
 - Download and test the DMG
 - Delete the draft if issues are found
 
@@ -42,7 +42,7 @@ This builds the app, creates a DMG, and publishes to GitHub Releases.
 
 ### 3. Verify
 
-- [ ] Release appears at https://github.com/colmarius/mobcrew/releases
+- [ ] Release appears at <https://github.com/colmarius/mobcrew/releases>
 - [ ] DMG downloads correctly
 - [ ] App opens and runs on a clean Mac
 
@@ -77,6 +77,7 @@ brew install node
 ### Build Fails
 
 Check Xcode is installed:
+
 ```bash
 xcode-select --install
 ```
@@ -88,6 +89,7 @@ The `create-dmg` tool is downloaded via npx on first run. Ensure you have intern
 ### Release Already Exists
 
 Delete the existing release first:
+
 ```bash
 gh release delete v1.0.0 --yes
 git tag -d v1.0.0
