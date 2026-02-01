@@ -64,6 +64,7 @@ Create a static landing page for MobCrew deployed via GitHub Pages on pushes to 
 ## Manual Steps (after plan completion)
 
 1. **Configure DNS in Namecheap** (Advanced DNS → Host Records):
+
    | Type | Host | Value |
    |------|------|-------|
    | A Record | `@` | `185.199.108.153` |

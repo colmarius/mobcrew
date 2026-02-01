@@ -178,10 +178,12 @@ Next task: Task 15 - Wire up ContentView with real UI
 ### Task 17: Verify full integration ✅
 
 Automated verification:
+
 - ✅ `xcodebuild build` succeeds
 - ✅ `xcodebuild test` succeeds (21 tests pass)
 
 Code review verification:
+
 - ✅ TimerEngine: countdown logic with Combine Timer.publish
 - ✅ FloatingTimerWindow: NSPanel with proper level/styling
 - ✅ FloatingTimerView: displays Driver/Navigator + countdown
@@ -192,6 +194,7 @@ Code review verification:
 - ✅ AppState: connects all components
 
 Manual testing required by user:
+
 - Timer counts down from configured duration
 - Floating window shows countdown + Driver/Navigator
 - Roster persists between app launches
