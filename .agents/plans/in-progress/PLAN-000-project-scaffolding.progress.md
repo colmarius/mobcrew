@@ -41,3 +41,12 @@
 - **Started**: 2026-02-01
 - **Completed**: 2026-02-01
 - **Notes**: Created Mobster.swift with id: UUID and name: String. Conforms to Identifiable, Codable, Hashable. Has initializer with default UUID. Build succeeds.
+
+---
+
+## Session 1 - Paused
+
+**Paused after 5 tasks for review**
+
+**Completed tasks**: 1, 2, 3, 4, 5
+**Next task to resume from**: Task 6 (Create Roster model)
