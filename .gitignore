@@ -4,6 +4,7 @@
 # Xcode artifacts
 xcuserdata/
 DerivedData/
+build/
 .build/
 .swiftpm/
 *.xcodeproj/project.xcworkspace/xcuserdata/
