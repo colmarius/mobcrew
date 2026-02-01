@@ -83,7 +83,7 @@ Create MobCrew Xcode project with feature-based folder structure, core model stu
     - Computed `progress: Double` returns 0.0-1.0
   - Notes: Include `TimerType` enum (regular/breakTimer).
 
-- [ ] **Task 8: Create ContentView placeholder**
+- [x] **Task 8: Create ContentView placeholder**
   - Scope: `MobCrew/MobCrew/ContentView.swift`
   - Depends on: Task 2
   - Acceptance:
