@@ -42,6 +42,10 @@ struct MobCrewApp: App {
                 }
             )
         }
+        
+        Settings {
+            BreakSettingsView(appState: appState)
+        }
     }
     
     private func configureAppDelegate() {

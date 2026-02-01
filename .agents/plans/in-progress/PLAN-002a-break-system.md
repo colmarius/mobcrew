@@ -108,7 +108,7 @@ Implement break intervals with configurable timing, visual progress indicator, a
 
 ### Break Settings UI
 
-- [ ] **Task 10: Add break settings to settings view**
+- [x] **Task 10: Add break settings to settings view**
   - Scope: `MobCrew/MobCrew/Features/Settings/` (create if needed)
   - Depends on: Task 2
   - Acceptance:
