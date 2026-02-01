@@ -17,6 +17,7 @@
 project/
 ├── AGENTS.md                    # This file - project instructions
 ├── README.md                    # Project overview
+├── docs/                        # GitHub Pages landing page
 ├── .agents/
 │   ├── reference/               # External repos (gitignored)
 │   │   ├── mobster/             # Original dillonkearns/mobster clone

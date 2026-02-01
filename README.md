@@ -28,6 +28,9 @@ Or open `MobCrew/MobCrew.xcodeproj` in Xcode and use ⌘B (build), ⌘R (run), �
 ```bash
 # Build and run
 ./scripts/run.sh
+
+# Serve docs locally
+./scripts/serve-docs.sh
 ```
 
 ## Manual Testing
