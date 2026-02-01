@@ -44,7 +44,7 @@ Add system notifications, keyboard shortcuts (local and global), shuffle roster,
     - Send break started notification when break triggers
     - Notification shows Driver/Navigator names
 
-- [ ] **Task 4: Add NotificationService tests**
+- [x] **Task 4: Add NotificationService tests**
   - Scope: `MobCrew/MobCrewTests/Core/Services/NotificationServiceTests.swift`
   - Depends on: Task 1
   - Acceptance:

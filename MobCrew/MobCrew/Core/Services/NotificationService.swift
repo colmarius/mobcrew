@@ -1,13 +1,20 @@
 import Foundation
 import UserNotifications
 
+protocol NotificationCenterProtocol {
+    func requestAuthorization(options: UNAuthorizationOptions, completionHandler: @escaping (Bool, Error?) -> Void)
+    func add(_ request: UNNotificationRequest, withCompletionHandler completionHandler: ((Error?) -> Void)?)
+}
+
+extension UNUserNotificationCenter: NotificationCenterProtocol {}
+
 final class NotificationService {
     static let shared = NotificationService()
     
-    private let notificationCenter: UNUserNotificationCenter
+    private let notificationCenter: NotificationCenterProtocol
     private var permissionRequested = false
     
-    init(notificationCenter: UNUserNotificationCenter = .current()) {
+    init(notificationCenter: NotificationCenterProtocol = UNUserNotificationCenter.current()) {
         self.notificationCenter = notificationCenter
     }
     

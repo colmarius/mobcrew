@@ -66,3 +66,29 @@ Plan: [PLAN-002b](./PLAN-002b-notifications-shortcuts-integrations.md)
 
 ---
 
+## Task 4: Add NotificationService tests
+
+**Thread**: https://ampcode.com/threads/T-019c1b37-fdd8-711a-936f-98148214a6c3
+**Status**: completed
+**Iteration**: 1
+
+### Changes
+
+- `MobCrew/MobCrew/Core/Services/NotificationService.swift` - Added NotificationCenterProtocol for testability
+- `MobCrew/MobCrewTests/Core/Services/NotificationServiceTests.swift` - Created with 4 tests for notification content and permission
+- `MobCrew/MobCrew.xcodeproj/project.pbxproj` - Added test file to build
+
+### Commands Run
+
+- `./scripts/test.sh` ✓ (all tests pass)
+
+### Learnings
+
+- UNUserNotificationCenter cannot be easily subclassed; use protocol abstraction for testability
+
+### Next
+
+- Task 5: Add Cmd+Enter shortcut for start/stop
+
+---
+
