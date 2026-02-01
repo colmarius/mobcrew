@@ -33,6 +33,12 @@ Or open `MobCrew/MobCrew.xcodeproj` in Xcode and use ⌘B (build), ⌘R (run), �
 # Build and run
 ./scripts/run.sh
 
+# Run tests
+./scripts/test.sh
+
+# Run specific test class
+./scripts/test.sh RosterTests
+
 # Serve docs locally
 ./scripts/serve-docs.sh
 ```

@@ -103,6 +103,12 @@ xcodebuild test -project MobCrew/MobCrew.xcodeproj -scheme MobCrew -destination 
 # Build and run
 ./scripts/run.sh
 
+# Run tests
+./scripts/test.sh
+
+# Run specific test class
+./scripts/test.sh RosterTests
+
 # Build release app (outputs to build/Release/MobCrew.app)
 ./scripts/build-release.sh [version]
 
