@@ -75,7 +75,7 @@ Implement working mob timer with floating window, roster management, menu bar in
 
 ### Menu Bar
 
-- [ ] **Task 6: Create MenuBarView**
+- [x] **Task 6: Create MenuBarView**
   - Scope: `MobCrew/MobCrew/Features/MenuBar/MenuBarView.swift`
   - Depends on: none
   - Acceptance:

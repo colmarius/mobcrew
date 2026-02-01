@@ -3,8 +3,8 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-02-01 |
-| Current Task | Task 6 |
-| Tasks Completed | 5 |
+| Current Task | Task 7 |
+| Tasks Completed | 6 |
 
 ---
 
@@ -66,3 +66,13 @@
 ### Paused after 5 tasks for review
 
 Next task: Task 6 - Create MenuBarView
+
+### Task 6: Create MenuBarView ✅
+
+- Created `MobCrew/MobCrew/Features/MenuBar/MenuBarView.swift`
+- Shows current Driver/Navigator with role labels
+- Start/Stop timer button with keyboard shortcut (Space)
+- Skip turn button with keyboard shortcut (⌘→)
+- Link to open settings with keyboard shortcut (⌘,)
+- Clean layout with dividers
+- Build succeeded
