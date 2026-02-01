@@ -5,16 +5,14 @@ final class FloatingTimerController {
     private var window: FloatingTimerWindow?
     private var hostingView: NSHostingView<AnyView>?
     
-    private let timerEngine: TimerEngine
-    private let roster: Roster
+    private let appState: AppState
     
     var isVisible: Bool {
         window?.isVisible ?? false
     }
     
-    init(timerEngine: TimerEngine, roster: Roster) {
-        self.timerEngine = timerEngine
-        self.roster = roster
+    init(appState: AppState) {
+        self.appState = appState
     }
     
     func show() {
@@ -41,12 +39,12 @@ final class FloatingTimerController {
         let window = FloatingTimerWindow()
         
         let view = FloatingTimerView(
-            displayTime: timerEngine.state.displayTime,
-            driverName: roster.driver?.name,
-            navigatorName: roster.navigator?.name,
-            isRunning: timerEngine.isRunning,
+            displayTime: appState.timerState.displayTime,
+            driverName: appState.roster.driver?.name,
+            navigatorName: appState.roster.navigator?.name,
+            isRunning: appState.timerState.isRunning,
             onToggle: { [weak self] in
-                self?.timerEngine.toggle()
+                self?.appState.toggleTimer()
             }
         )
         
@@ -64,12 +62,12 @@ final class FloatingTimerController {
         guard let hostingView = hostingView else { return }
         
         let view = FloatingTimerView(
-            displayTime: timerEngine.state.displayTime,
-            driverName: roster.driver?.name,
-            navigatorName: roster.navigator?.name,
-            isRunning: timerEngine.isRunning,
+            displayTime: appState.timerState.displayTime,
+            driverName: appState.roster.driver?.name,
+            navigatorName: appState.roster.navigator?.name,
+            isRunning: appState.timerState.isRunning,
             onToggle: { [weak self] in
-                self?.timerEngine.toggle()
+                self?.appState.toggleTimer()
             }
         )
         

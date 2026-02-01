@@ -172,7 +172,7 @@ Implement working mob timer with floating window, roster management, menu bar in
     - Shows timer display with controls
     - Functional start/stop/skip
 
-- [ ] **Task 16: Initialize FloatingTimerController in AppDelegate**
+- [x] **Task 16: Initialize FloatingTimerController in AppDelegate**
   - Scope: `MobCrew/MobCrew/App/AppDelegate.swift`
   - Depends on: Task 5
   - Acceptance:

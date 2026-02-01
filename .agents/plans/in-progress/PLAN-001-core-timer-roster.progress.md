@@ -165,3 +165,12 @@ Next task: Task 15 - Wire up ContentView with real UI
 - Duration stepper (1-30 min)
 - Updated `MobCrewApp.swift` to use centralized AppState
 - Build succeeded, all 21 tests pass
+
+### Task 16: Initialize FloatingTimerController in AppDelegate ✅
+
+- Updated `AppDelegate.swift` with floatingTimerController property
+- Updated `FloatingTimerController` to accept AppState instead of individual components
+- MobCrewApp configures AppDelegate via onAppear
+- FloatingTimer shows automatically on launch
+- Added toggleFloatingTimer() method for accessibility
+- Build succeeded, all 21 tests pass

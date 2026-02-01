@@ -1,11 +1,21 @@
 import AppKit
 
 class AppDelegate: NSObject, NSApplicationDelegate {
+    var floatingTimerController: FloatingTimerController?
+    var appState: AppState?
+    
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // Setup that requires AppKit
+        if let appState = appState {
+            floatingTimerController = FloatingTimerController(appState: appState)
+            floatingTimerController?.show()
+        }
     }
 
     func applicationWillTerminate(_ notification: Notification) {
-        // Cleanup
+        floatingTimerController?.hide()
+    }
+    
+    func toggleFloatingTimer() {
+        floatingTimerController?.toggle()
     }
 }
