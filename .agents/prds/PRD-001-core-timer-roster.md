@@ -4,7 +4,7 @@
 |-------|-------|
 | Status | ready |
 | Date | 2026-02-01 |
-| Plan | `../plans/todo/PLAN-001-core-timer-roster.md` |
+| Plan | [`PLAN-001`](../plans/todo/PLAN-001-core-timer-roster.md) |
 | Depends on | PRD-000-project-scaffolding |
 
 ## Problem

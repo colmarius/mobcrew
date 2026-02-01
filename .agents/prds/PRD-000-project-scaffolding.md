@@ -4,7 +4,7 @@
 |-------|-------|
 | Status | ready |
 | Date | 2026-02-01 |
-| Plan | `../plans/todo/PLAN-000-project-scaffolding.md` |
+| Plan | [`PLAN-000`](../plans/todo/PLAN-000-project-scaffolding.md) |
 
 ## Problem
 
