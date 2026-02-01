@@ -27,6 +27,8 @@
 		8A1B2C3D0001000000000108 /* PersistenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000108 /* PersistenceService.swift */; };
 		8A1B2C3D0001000000000109 /* PersistenceServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000109 /* PersistenceServiceTests.swift */; };
 		8A1B2C3D0001000000000110 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000110 /* AppState.swift */; };
+		8A1B2C3D0001000000000111 /* RosterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000111 /* RosterTests.swift */; };
+		8A1B2C3D0001000000000112 /* AppStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000112 /* AppStateTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +65,8 @@
 		8A1B2C3D0002000000000108 /* PersistenceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceService.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000109 /* PersistenceServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceServiceTests.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000110 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		8A1B2C3D0002000000000111 /* RosterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RosterTests.swift; sourceTree = "<group>"; };
+		8A1B2C3D0002000000000112 /* AppStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +123,7 @@
 		8A1B2C3D0007000000000060 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				8A1B2C3D0002000000000112 /* AppStateTests.swift */,
 				8A1B2C3D0007000000000062 /* Models */,
 				8A1B2C3D0007000000000063 /* Services */,
 			);
@@ -145,6 +150,7 @@
 		8A1B2C3D0007000000000062 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				8A1B2C3D0002000000000111 /* RosterTests.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -381,6 +387,8 @@
 				8A1B2C3D0001000000000030 /* TestHelpers.swift in Sources */,
 				8A1B2C3D0001000000000101 /* TimerEngineTests.swift in Sources */,
 				8A1B2C3D0001000000000109 /* PersistenceServiceTests.swift in Sources */,
+				8A1B2C3D0001000000000111 /* RosterTests.swift in Sources */,
+				8A1B2C3D0001000000000112 /* AppStateTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -2,7 +2,7 @@
 
 | Field | Value |
 |-------|-------|
-| Status | todo |
+| Status | in-progress |
 | Date | 2026-02-01 |
 | PRD | N/A (technical debt) |
 | Depends on | PLAN-001 |
@@ -17,7 +17,7 @@ Add missing test coverage for core components: AppState integration tests, Roste
 
 ### AppState Tests
 
-- [ ] **Task 1: Create AppStateTests**
+- [x] **Task 1: Create AppStateTests**
   - Scope: `MobCrew/MobCrewTests/Core/AppStateTests.swift`
   - Depends on: none
   - Acceptance:
