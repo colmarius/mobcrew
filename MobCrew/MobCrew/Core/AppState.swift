@@ -27,9 +27,15 @@ final class AppState {
     var breakSecondsRemaining: Int = 0
     
     private let persistenceService: PersistenceService
+    private let notificationService: NotificationService
+    private var hasRequestedNotificationPermission = false
     
-    init(persistenceService: PersistenceService = PersistenceService()) {
+    init(
+        persistenceService: PersistenceService = PersistenceService(),
+        notificationService: NotificationService = .shared
+    ) {
         self.persistenceService = persistenceService
+        self.notificationService = notificationService
         
         let loadedRoster = persistenceService.loadRoster()
         let loadedDuration = persistenceService.loadTimerDuration() ?? 420 // 7 minutes default
@@ -98,7 +104,14 @@ final class AppState {
     }
     
     func toggleTimer() {
+        requestNotificationPermissionIfNeeded()
         timerEngine.toggle()
+    }
+    
+    private func requestNotificationPermissionIfNeeded() {
+        guard !hasRequestedNotificationPermission else { return }
+        hasRequestedNotificationPermission = true
+        notificationService.requestPermission()
     }
     
     func skipTurn() {

@@ -28,7 +28,7 @@ Add system notifications, keyboard shortcuts (local and global), shuffle roster,
     - Notifications include app icon
   - Notes: Request permission on first timer start
 
-- [ ] **Task 2: Request notification permission on first use**
+- [x] **Task 2: Request notification permission on first use**
   - Scope: `MobCrew/MobCrew/App/AppDelegate.swift`
   - Depends on: Task 1
   - Acceptance:
