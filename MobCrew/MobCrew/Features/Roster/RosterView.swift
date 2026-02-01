@@ -63,15 +63,26 @@ struct RosterView: View {
                 .font(.headline)
                 .foregroundStyle(.secondary)
             
-            ForEach(Array(roster.activeMobsters.enumerated()), id: \.element.id) { index, mobster in
-                MobsterRow(
-                    mobster: mobster,
-                    role: role(for: index),
-                    isActive: true,
-                    onRemove: { removeMobster(at: index) },
-                    onToggleActive: { roster.benchMobster(at: index) }
-                )
+            List {
+                ForEach(Array(roster.activeMobsters.enumerated()), id: \.element.id) { index, mobster in
+                    MobsterRow(
+                        mobster: mobster,
+                        role: role(for: index),
+                        isActive: true,
+                        onRemove: { removeMobster(at: index) },
+                        onToggleActive: { roster.benchMobster(at: index) }
+                    )
+                    .listRowInsets(EdgeInsets())
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Color.clear)
+                }
+                .onMove { source, destination in
+                    roster.moveMobster(from: source, to: destination)
+                }
             }
+            .listStyle(.plain)
+            .frame(minHeight: CGFloat(roster.activeMobsters.count) * 44)
+            .scrollDisabled(true)
         }
     }
     

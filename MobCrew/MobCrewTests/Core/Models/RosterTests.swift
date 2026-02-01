@@ -166,4 +166,42 @@ struct RosterTests {
         
         #expect(roster.nextDriverIndex == 0)
     }
+    
+    // MARK: - moveMobster
+    
+    @Test("moveMobster reorders active mobsters")
+    func moveMobsterReordersActive() {
+        let alice = Mobster(name: "Alice")
+        let bob = Mobster(name: "Bob")
+        let charlie = Mobster(name: "Charlie")
+        let roster = Roster(activeMobsters: [alice, bob, charlie])
+        
+        roster.moveMobster(from: IndexSet(integer: 2), to: 0)
+        
+        #expect(roster.activeMobsters[0].id == charlie.id)
+        #expect(roster.activeMobsters[1].id == alice.id)
+        #expect(roster.activeMobsters[2].id == bob.id)
+    }
+    
+    @Test("moveMobster resets driver index to 0")
+    func moveMobsterResetsDriverIndex() {
+        let roster = Roster(activeMobsters: [Mobster(name: "Alice"), Mobster(name: "Bob")], nextDriverIndex: 1)
+        
+        roster.moveMobster(from: IndexSet(integer: 1), to: 0)
+        
+        #expect(roster.nextDriverIndex == 0)
+    }
+    
+    @Test("moveMobster updates driver and navigator based on new positions")
+    func moveMobsterUpdatesRoles() {
+        let alice = Mobster(name: "Alice")
+        let bob = Mobster(name: "Bob")
+        let charlie = Mobster(name: "Charlie")
+        let roster = Roster(activeMobsters: [alice, bob, charlie])
+        
+        roster.moveMobster(from: IndexSet(integer: 2), to: 0)
+        
+        #expect(roster.driver?.id == charlie.id)
+        #expect(roster.navigator?.id == alice.id)
+    }
 }

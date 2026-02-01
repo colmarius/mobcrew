@@ -51,6 +51,11 @@ final class Roster {
         activeMobsters.shuffle()
         nextDriverIndex = 0
     }
+    
+    func moveMobster(from source: IndexSet, to destination: Int) {
+        activeMobsters.move(fromOffsets: source, toOffset: destination)
+        nextDriverIndex = 0
+    }
 
     private func adjustDriverIndex(afterRemovalAt removedIndex: Int) {
         guard !activeMobsters.isEmpty else {

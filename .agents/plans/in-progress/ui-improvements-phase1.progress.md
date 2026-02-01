@@ -60,3 +60,26 @@
 
 ---
 
+## Task 4: Add drag-to-reorder for active mobsters
+
+**Thread**: https://ampcode.com/threads/T-019c1b00-b0c4-716f-bd09-48298500de35
+**Status**: completed
+**Iteration**: 1
+
+### Changes
+
+- `MobCrew/MobCrew/Core/Models/Roster.swift` - Added moveMobster(from:to:) method
+- `MobCrew/MobCrew/Features/Roster/RosterView.swift` - Converted active section to List with onMove support
+- `MobCrew/MobCrewTests/Core/Models/RosterTests.swift` - Added 3 tests for moveMobster
+
+### Commands Run
+
+- `xcodebuild build` ✓
+- `xcodebuild test` ✓
+
+### Next
+
+- Task 5: Enhance role display in timer panel
+
+---
+

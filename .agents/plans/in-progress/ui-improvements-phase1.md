@@ -34,7 +34,7 @@ Address usability and clarity improvements identified in UI review. Focus on red
     - Placeholder is styled appropriately (secondary color, centered)
   - Notes: Currently shows nothing when roster is empty
 
-- [ ] **Task 4: Add drag-to-reorder for active mobsters**
+- [x] **Task 4: Add drag-to-reorder for active mobsters**
   - Scope: `MobCrew/Features/Roster/RosterView.swift`, `MobCrew/Core/Models/Roster.swift`
   - Depends on: Task 1
   - Acceptance:
