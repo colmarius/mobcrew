@@ -16,6 +16,12 @@
 		8A1B2C3D0001000000000020 /* Mobster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000020 /* Mobster.swift */; };
 		8A1B2C3D0001000000000021 /* Roster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000021 /* Roster.swift */; };
 		8A1B2C3D0001000000000022 /* TimerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000022 /* TimerState.swift */; };
+		8A1B2C3D0001000000000100 /* TimerEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000100 /* TimerEngine.swift */; };
+		8A1B2C3D0001000000000101 /* TimerEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000101 /* TimerEngineTests.swift */; };
+		8A1B2C3D0001000000000102 /* FloatingTimerWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000102 /* FloatingTimerWindow.swift */; };
+		8A1B2C3D0001000000000103 /* FloatingTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000103 /* FloatingTimerView.swift */; };
+		8A1B2C3D0001000000000104 /* FloatingTimerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000104 /* FloatingTimerController.swift */; };
+		8A1B2C3D0001000000000105 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000105 /* MenuBarView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,6 +47,12 @@
 		8A1B2C3D0002000000000021 /* Roster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Roster.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000022 /* TimerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerState.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000030 /* TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHelpers.swift; sourceTree = "<group>"; };
+		8A1B2C3D0002000000000100 /* TimerEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerEngine.swift; sourceTree = "<group>"; };
+		8A1B2C3D0002000000000101 /* TimerEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerEngineTests.swift; sourceTree = "<group>"; };
+		8A1B2C3D0002000000000102 /* FloatingTimerWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingTimerWindow.swift; sourceTree = "<group>"; };
+		8A1B2C3D0002000000000103 /* FloatingTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingTimerView.swift; sourceTree = "<group>"; };
+		8A1B2C3D0002000000000104 /* FloatingTimerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingTimerController.swift; sourceTree = "<group>"; };
+		8A1B2C3D0002000000000105 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,8 +110,17 @@
 			isa = PBXGroup;
 			children = (
 				8A1B2C3D0007000000000062 /* Models */,
+				8A1B2C3D0007000000000063 /* Services */,
 			);
 			path = Core;
+			sourceTree = "<group>";
+		};
+		8A1B2C3D0007000000000063 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				8A1B2C3D0002000000000101 /* TimerEngineTests.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 		8A1B2C3D0007000000000061 /* Helpers */ = {
@@ -157,6 +178,7 @@
 		8A1B2C3D0007000000000022 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				8A1B2C3D0002000000000100 /* TimerEngine.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -175,6 +197,9 @@
 		8A1B2C3D0007000000000031 /* FloatingTimer */ = {
 			isa = PBXGroup;
 			children = (
+				8A1B2C3D0002000000000102 /* FloatingTimerWindow.swift */,
+				8A1B2C3D0002000000000103 /* FloatingTimerView.swift */,
+				8A1B2C3D0002000000000104 /* FloatingTimerController.swift */,
 			);
 			path = FloatingTimer;
 			sourceTree = "<group>";
@@ -182,6 +207,7 @@
 		8A1B2C3D0007000000000032 /* MenuBar */ = {
 			isa = PBXGroup;
 			children = (
+				8A1B2C3D0002000000000105 /* MenuBarView.swift */,
 			);
 			path = MenuBar;
 			sourceTree = "<group>";
@@ -320,6 +346,11 @@
 				8A1B2C3D0001000000000020 /* Mobster.swift in Sources */,
 				8A1B2C3D0001000000000021 /* Roster.swift in Sources */,
 				8A1B2C3D0001000000000022 /* TimerState.swift in Sources */,
+				8A1B2C3D0001000000000100 /* TimerEngine.swift in Sources */,
+				8A1B2C3D0001000000000102 /* FloatingTimerWindow.swift in Sources */,
+				8A1B2C3D0001000000000103 /* FloatingTimerView.swift in Sources */,
+				8A1B2C3D0001000000000104 /* FloatingTimerController.swift in Sources */,
+				8A1B2C3D0001000000000105 /* MenuBarView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -329,6 +360,7 @@
 			files = (
 				8A1B2C3D0001000000000004 /* MobCrewTests.swift in Sources */,
 				8A1B2C3D0001000000000030 /* TestHelpers.swift in Sources */,
+				8A1B2C3D0001000000000101 /* TimerEngineTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

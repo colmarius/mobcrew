@@ -85,7 +85,7 @@ Implement working mob timer with floating window, roster management, menu bar in
     - Link to open main window/settings
   - Notes: Will be used in MenuBarExtra.
 
-- [ ] **Task 7: Add MenuBarExtra to MobCrewApp**
+- [x] **Task 7: Add MenuBarExtra to MobCrewApp**
   - Scope: `MobCrew/MobCrew/App/MobCrewApp.swift`
   - Depends on: Task 6
   - Acceptance:

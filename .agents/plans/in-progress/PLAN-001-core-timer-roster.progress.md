@@ -3,8 +3,8 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-02-01 |
-| Current Task | Task 7 |
-| Tasks Completed | 6 |
+| Current Task | Task 8 |
+| Tasks Completed | 7 |
 
 ---
 
@@ -76,3 +76,12 @@ Next task: Task 6 - Create MenuBarView
 - Link to open settings with keyboard shortcut (⌘,)
 - Clean layout with dividers
 - Build succeeded
+
+### Task 7: Add MenuBarExtra to MobCrewApp ✅
+
+- Updated `MobCrew/MobCrew/App/MobCrewApp.swift`
+- Added MenuBarExtra with `person.3.fill` system image
+- Shows MenuBarView in popover
+- Connected to roster and timer state
+- Added files from Tasks 1-6 to Xcode project (pbxproj)
+- Build succeeded, all tests pass
