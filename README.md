@@ -25,6 +25,15 @@ xcodebuild test -project MobCrew/MobCrew.xcodeproj -scheme MobCrew -destination 
 
 Or open `MobCrew/MobCrew.xcodeproj` in Xcode and use ⌘B (build), ⌘R (run), ⌘U (test).
 
+```bash
+# Build and run
+./scripts/run.sh
+```
+
+## Manual Testing
+
+See [TESTING.md](TESTING.md) for the full checklist.
+
 ## License
 
 MIT
