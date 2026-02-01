@@ -222,3 +222,23 @@ Plan: [PLAN-002b](./PLAN-002b-notifications-shortcuts-integrations.md)
 
 ---
 
+## Task 11: Create ActiveMobstersFileService
+
+**Thread**: https://ampcode.com/threads/T-019c1b41-5579-71b4-9e62-17834819b7ff
+**Status**: completed
+**Iteration**: 1
+
+### Changes
+
+- `MobCrew/MobCrew/Core/Services/ActiveMobstersFileService.swift` - Created with FileManagerProtocol, writes comma-separated names to ~/Library/Application Support/MobCrew/active-mobsters
+
+### Commands Run
+
+- `./scripts/test.sh` ✓ (all tests pass)
+
+### Next
+
+- Task 12: Wire file export to roster changes
+
+---
+

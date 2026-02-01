@@ -112,7 +112,7 @@ Add system notifications, keyboard shortcuts (local and global), shuffle roster,
 
 ### Active Mobsters File
 
-- [ ] **Task 11: Create ActiveMobstersFileService**
+- [x] **Task 11: Create ActiveMobstersFileService**
   - Scope: `MobCrew/MobCrew/Core/Services/ActiveMobstersFileService.swift`
   - Depends on: none
   - Acceptance:

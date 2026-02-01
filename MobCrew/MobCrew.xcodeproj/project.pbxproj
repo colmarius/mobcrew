@@ -11,11 +11,11 @@
 		8A1B2C3D0001000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000002 /* ContentView.swift */; };
 		8A1B2C3D0001000000000003 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000003 /* Assets.xcassets */; };
 		8A1B2C3D0001000000000004 /* MobCrewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000004 /* MobCrewTests.swift */; };
-		8A1B2C3D0001000000000030 /* TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000030 /* TestHelpers.swift */; };
 		8A1B2C3D0001000000000010 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000010 /* AppDelegate.swift */; };
 		8A1B2C3D0001000000000020 /* Mobster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000020 /* Mobster.swift */; };
 		8A1B2C3D0001000000000021 /* Roster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000021 /* Roster.swift */; };
 		8A1B2C3D0001000000000022 /* TimerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000022 /* TimerState.swift */; };
+		8A1B2C3D0001000000000030 /* TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000030 /* TestHelpers.swift */; };
 		8A1B2C3D0001000000000100 /* TimerEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000100 /* TimerEngine.swift */; };
 		8A1B2C3D0001000000000101 /* TimerEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000101 /* TimerEngineTests.swift */; };
 		8A1B2C3D0001000000000102 /* FloatingTimerWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000102 /* FloatingTimerWindow.swift */; };
@@ -25,16 +25,17 @@
 		8A1B2C3D0001000000000106 /* RosterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000106 /* RosterView.swift */; };
 		8A1B2C3D0001000000000107 /* MobsterRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000107 /* MobsterRow.swift */; };
 		8A1B2C3D0001000000000108 /* PersistenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000108 /* PersistenceService.swift */; };
-		8A1B2C3D0001000000000130 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000130 /* NotificationService.swift */; };
-		8A1B2C3D0001000000000140 /* GlobalHotkeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000140 /* GlobalHotkeyService.swift */; };
 		8A1B2C3D0001000000000109 /* PersistenceServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000109 /* PersistenceServiceTests.swift */; };
-		8A1B2C3D0001000000000131 /* NotificationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000131 /* NotificationServiceTests.swift */; };
 		8A1B2C3D0001000000000110 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000110 /* AppState.swift */; };
 		8A1B2C3D0001000000000111 /* RosterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000111 /* RosterTests.swift */; };
 		8A1B2C3D0001000000000112 /* AppStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000112 /* AppStateTests.swift */; };
 		8A1B2C3D0001000000000120 /* BreakProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000120 /* BreakProgressView.swift */; };
 		8A1B2C3D0001000000000121 /* BreakScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000121 /* BreakScreenView.swift */; };
 		8A1B2C3D0001000000000122 /* BreakSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000122 /* BreakSettingsView.swift */; };
+		8A1B2C3D0001000000000130 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000130 /* NotificationService.swift */; };
+		8A1B2C3D0001000000000131 /* NotificationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000131 /* NotificationServiceTests.swift */; };
+		8A1B2C3D0001000000000140 /* GlobalHotkeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000140 /* GlobalHotkeyService.swift */; };
+		AA7389A8EB0DEDD3D8AA9842 /* ActiveMobstersFileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C8AE184E82299B54B23084F /* ActiveMobstersFileService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1C8AE184E82299B54B23084F /* ActiveMobstersFileService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ActiveMobstersFileService.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000001 /* MobCrewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobCrewApp.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000003 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -69,16 +71,16 @@
 		8A1B2C3D0002000000000106 /* RosterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RosterView.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000107 /* MobsterRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobsterRow.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000108 /* PersistenceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceService.swift; sourceTree = "<group>"; };
-		8A1B2C3D0002000000000130 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
-		8A1B2C3D0002000000000140 /* GlobalHotkeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalHotkeyService.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000109 /* PersistenceServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceServiceTests.swift; sourceTree = "<group>"; };
-		8A1B2C3D0002000000000131 /* NotificationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationServiceTests.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000110 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000111 /* RosterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RosterTests.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000112 /* AppStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateTests.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000120 /* BreakProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakProgressView.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000121 /* BreakScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakScreenView.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000122 /* BreakSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakSettingsView.swift; sourceTree = "<group>"; };
+		8A1B2C3D0002000000000130 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		8A1B2C3D0002000000000131 /* NotificationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationServiceTests.swift; sourceTree = "<group>"; };
+		8A1B2C3D0002000000000140 /* GlobalHotkeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalHotkeyService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,42 +134,6 @@
 			path = MobCrewTests;
 			sourceTree = "<group>";
 		};
-		8A1B2C3D0007000000000060 /* Core */ = {
-			isa = PBXGroup;
-			children = (
-				8A1B2C3D0002000000000112 /* AppStateTests.swift */,
-				8A1B2C3D0007000000000062 /* Models */,
-				8A1B2C3D0007000000000063 /* Services */,
-			);
-			path = Core;
-			sourceTree = "<group>";
-		};
-		8A1B2C3D0007000000000063 /* Services */ = {
-			isa = PBXGroup;
-			children = (
-				8A1B2C3D0002000000000131 /* NotificationServiceTests.swift */,
-				8A1B2C3D0002000000000109 /* PersistenceServiceTests.swift */,
-				8A1B2C3D0002000000000101 /* TimerEngineTests.swift */,
-			);
-			path = Services;
-			sourceTree = "<group>";
-		};
-		8A1B2C3D0007000000000061 /* Helpers */ = {
-			isa = PBXGroup;
-			children = (
-				8A1B2C3D0002000000000030 /* TestHelpers.swift */,
-			);
-			path = Helpers;
-			sourceTree = "<group>";
-		};
-		8A1B2C3D0007000000000062 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				8A1B2C3D0002000000000111 /* RosterTests.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
 		8A1B2C3D0007000000000004 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -213,6 +179,7 @@
 				8A1B2C3D0002000000000130 /* NotificationService.swift */,
 				8A1B2C3D0002000000000108 /* PersistenceService.swift */,
 				8A1B2C3D0002000000000100 /* TimerEngine.swift */,
+				1C8AE184E82299B54B23084F /* ActiveMobstersFileService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -227,15 +194,6 @@
 				8A1B2C3D0007000000000034 /* Settings */,
 			);
 			path = Features;
-			sourceTree = "<group>";
-		};
-		8A1B2C3D0007000000000035 /* Break */ = {
-			isa = PBXGroup;
-			children = (
-				8A1B2C3D0002000000000120 /* BreakProgressView.swift */,
-				8A1B2C3D0002000000000121 /* BreakScreenView.swift */,
-			);
-			path = Break;
 			sourceTree = "<group>";
 		};
 		8A1B2C3D0007000000000031 /* FloatingTimer */ = {
@@ -273,6 +231,15 @@
 			path = Settings;
 			sourceTree = "<group>";
 		};
+		8A1B2C3D0007000000000035 /* Break */ = {
+			isa = PBXGroup;
+			children = (
+				8A1B2C3D0002000000000120 /* BreakProgressView.swift */,
+				8A1B2C3D0002000000000121 /* BreakScreenView.swift */,
+			);
+			path = Break;
+			sourceTree = "<group>";
+		};
 		8A1B2C3D0007000000000040 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -294,6 +261,42 @@
 				8A1B2C3D0002000000000003 /* Assets.xcassets */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		8A1B2C3D0007000000000060 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				8A1B2C3D0002000000000112 /* AppStateTests.swift */,
+				8A1B2C3D0007000000000062 /* Models */,
+				8A1B2C3D0007000000000063 /* Services */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		8A1B2C3D0007000000000061 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				8A1B2C3D0002000000000030 /* TestHelpers.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		8A1B2C3D0007000000000062 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				8A1B2C3D0002000000000111 /* RosterTests.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		8A1B2C3D0007000000000063 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				8A1B2C3D0002000000000131 /* NotificationServiceTests.swift */,
+				8A1B2C3D0002000000000109 /* PersistenceServiceTests.swift */,
+				8A1B2C3D0002000000000101 /* TimerEngineTests.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -407,6 +410,7 @@
 				8A1B2C3D0001000000000120 /* BreakProgressView.swift in Sources */,
 				8A1B2C3D0001000000000121 /* BreakScreenView.swift in Sources */,
 				8A1B2C3D0001000000000122 /* BreakSettingsView.swift in Sources */,
+				AA7389A8EB0DEDD3D8AA9842 /* ActiveMobstersFileService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
