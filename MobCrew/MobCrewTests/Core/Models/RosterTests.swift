@@ -4,273 +4,273 @@ import Foundation
 
 @Suite("Roster Tests")
 struct RosterTests {
-    
+
     // MARK: - Driver/Navigator Computed Properties
-    
+
     @Test("driver returns nil when no active mobsters")
     func driverReturnsNilWhenEmpty() {
         let roster = Roster()
         #expect(roster.driver == nil)
     }
-    
+
     @Test("driver returns first mobster at index 0")
     func driverReturnsFirstMobster() {
         let alice = Mobster(name: "Alice")
         let bob = Mobster(name: "Bob")
         let roster = Roster(activeMobsters: [alice, bob])
-        
+
         #expect(roster.driver?.id == alice.id)
     }
-    
+
     @Test("navigator returns nil when less than 2 active mobsters")
     func navigatorReturnsNilWhenTooFew() {
         let roster = Roster(activeMobsters: [Mobster(name: "Alice")])
         #expect(roster.navigator == nil)
     }
-    
+
     @Test("navigator returns second mobster after driver")
     func navigatorReturnsSecondMobster() {
         let alice = Mobster(name: "Alice")
         let bob = Mobster(name: "Bob")
         let roster = Roster(activeMobsters: [alice, bob])
-        
+
         #expect(roster.navigator?.id == bob.id)
     }
-    
+
     @Test("driver and navigator wrap around correctly")
     func driverNavigatorWrapAround() {
         let alice = Mobster(name: "Alice")
         let bob = Mobster(name: "Bob")
         let charlie = Mobster(name: "Charlie")
         let roster = Roster(activeMobsters: [alice, bob, charlie], nextDriverIndex: 2)
-        
+
         #expect(roster.driver?.id == charlie.id)
         #expect(roster.navigator?.id == alice.id)
     }
-    
+
     // MARK: - advanceTurn()
-    
+
     @Test("advanceTurn increments driver index")
     func advanceTurnIncrementsIndex() {
         let roster = Roster(activeMobsters: [Mobster(name: "Alice"), Mobster(name: "Bob")])
         #expect(roster.nextDriverIndex == 0)
-        
+
         roster.advanceTurn()
         #expect(roster.nextDriverIndex == 1)
     }
-    
+
     @Test("advanceTurn wraps around to 0")
     func advanceTurnWrapsAround() {
         let roster = Roster(activeMobsters: [Mobster(name: "Alice"), Mobster(name: "Bob")], nextDriverIndex: 1)
-        
+
         roster.advanceTurn()
         #expect(roster.nextDriverIndex == 0)
     }
-    
+
     @Test("advanceTurn does nothing when empty")
     func advanceTurnEmptyDoesNothing() {
         let roster = Roster()
         roster.advanceTurn()
         #expect(roster.nextDriverIndex == 0)
     }
-    
+
     // MARK: - addMobster
-    
+
     @Test("addMobster appends to active mobsters")
     func addMobsterAppendsToActive() {
         let roster = Roster()
         roster.addMobster(name: "Alice")
-        
+
         #expect(roster.activeMobsters.count == 1)
         #expect(roster.activeMobsters.first?.name == "Alice")
     }
-    
+
     @Test("addMobster with empty name still adds mobster")
     func addMobsterEmptyNameAdds() {
         let roster = Roster()
         roster.addMobster(name: "")
-        
+
         #expect(roster.activeMobsters.count == 1)
         #expect(roster.activeMobsters.first?.name == "")
     }
-    
+
     @Test("addMobster with whitespace-only name still adds mobster")
     func addMobsterWhitespaceNameAdds() {
         let roster = Roster()
         roster.addMobster(name: "   ")
-        
+
         #expect(roster.activeMobsters.count == 1)
         #expect(roster.activeMobsters.first?.name == "   ")
     }
-    
+
     @Test("addMobster with duplicate name creates separate mobsters with different IDs")
     func addMobsterDuplicateNameCreatesSeparate() {
         let roster = Roster()
         roster.addMobster(name: "Alice")
         roster.addMobster(name: "Alice")
-        
+
         #expect(roster.activeMobsters.count == 2)
         #expect(roster.activeMobsters[0].name == "Alice")
         #expect(roster.activeMobsters[1].name == "Alice")
         #expect(roster.activeMobsters[0].id != roster.activeMobsters[1].id)
     }
-    
+
     // MARK: - benchMobster
-    
+
     @Test("benchMobster moves mobster to inactive")
     func benchMobsterMovesToInactive() {
         let alice = Mobster(name: "Alice")
         let bob = Mobster(name: "Bob")
         let roster = Roster(activeMobsters: [alice, bob])
-        
+
         roster.benchMobster(at: 0)
-        
+
         #expect(roster.activeMobsters.count == 1)
         #expect(roster.inactiveMobsters.count == 1)
         #expect(roster.inactiveMobsters.first?.id == alice.id)
     }
-    
+
     @Test("benchMobster with invalid index does nothing")
     func benchMobsterInvalidIndexDoesNothing() {
         let roster = Roster(activeMobsters: [Mobster(name: "Alice")])
         roster.benchMobster(at: 5)
-        
+
         #expect(roster.activeMobsters.count == 1)
         #expect(roster.inactiveMobsters.isEmpty)
     }
-    
+
     // MARK: - rotateIn
-    
+
     @Test("rotateIn moves mobster from inactive to active")
     func rotateInMovesToActive() {
         let alice = Mobster(name: "Alice")
         let roster = Roster(inactiveMobsters: [alice])
-        
+
         roster.rotateIn(at: 0)
-        
+
         #expect(roster.activeMobsters.count == 1)
         #expect(roster.inactiveMobsters.isEmpty)
         #expect(roster.activeMobsters.first?.id == alice.id)
     }
-    
+
     @Test("rotateIn with invalid index does nothing")
     func rotateInInvalidIndexDoesNothing() {
         let roster = Roster(inactiveMobsters: [Mobster(name: "Alice")])
         roster.rotateIn(at: 5)
-        
+
         #expect(roster.inactiveMobsters.count == 1)
         #expect(roster.activeMobsters.isEmpty)
     }
-    
+
     // MARK: - Driver Index Adjustment
-    
+
     @Test("benchMobster adjusts driver index when removing before current driver")
     func benchMobsterAdjustsIndexBeforeCurrent() {
         let alice = Mobster(name: "Alice")
         let bob = Mobster(name: "Bob")
         let charlie = Mobster(name: "Charlie")
         let roster = Roster(activeMobsters: [alice, bob, charlie], nextDriverIndex: 2)
-        
+
         roster.benchMobster(at: 0)
-        
+
         #expect(roster.nextDriverIndex == 1)
         #expect(roster.driver?.id == charlie.id)
     }
-    
+
     @Test("benchMobster adjusts driver index to 0 when all removed")
     func benchMobsterResetIndexWhenEmpty() {
         let roster = Roster(activeMobsters: [Mobster(name: "Alice")])
         roster.benchMobster(at: 0)
-        
+
         #expect(roster.nextDriverIndex == 0)
         #expect(roster.activeMobsters.isEmpty)
     }
-    
+
     @Test("benchMobster wraps driver index when at end")
     func benchMobsterWrapsIndexAtEnd() {
         let alice = Mobster(name: "Alice")
         let bob = Mobster(name: "Bob")
         let roster = Roster(activeMobsters: [alice, bob], nextDriverIndex: 1)
-        
+
         roster.benchMobster(at: 1)
-        
+
         #expect(roster.nextDriverIndex == 0)
     }
-    
+
     @Test("benchMobster benching current driver promotes next mobster to driver")
     func benchMobsterCurrentDriverPromotesNext() {
         let alice = Mobster(name: "Alice")
         let bob = Mobster(name: "Bob")
         let charlie = Mobster(name: "Charlie")
         let roster = Roster(activeMobsters: [alice, bob, charlie], nextDriverIndex: 0)
-        
+
         #expect(roster.driver?.id == alice.id)
-        
+
         roster.benchMobster(at: 0)
-        
+
         #expect(roster.driver?.id == bob.id)
         #expect(roster.navigator?.id == charlie.id)
     }
-    
+
     @Test("benchMobster benching last active mobster results in no driver")
     func benchMobsterLastActiveNoDriver() {
         let alice = Mobster(name: "Alice")
         let roster = Roster(activeMobsters: [alice])
-        
+
         #expect(roster.driver?.id == alice.id)
-        
+
         roster.benchMobster(at: 0)
-        
+
         #expect(roster.driver == nil)
         #expect(roster.navigator == nil)
     }
-    
+
     // MARK: - moveMobster
-    
+
     @Test("moveMobster reorders active mobsters")
     func moveMobsterReordersActive() {
         let alice = Mobster(name: "Alice")
         let bob = Mobster(name: "Bob")
         let charlie = Mobster(name: "Charlie")
         let roster = Roster(activeMobsters: [alice, bob, charlie])
-        
+
         roster.moveMobster(from: IndexSet(integer: 2), to: 0)
-        
+
         #expect(roster.activeMobsters[0].id == charlie.id)
         #expect(roster.activeMobsters[1].id == alice.id)
         #expect(roster.activeMobsters[2].id == bob.id)
     }
-    
+
     @Test("moveMobster resets driver index to 0")
     func moveMobsterResetsDriverIndex() {
         let roster = Roster(activeMobsters: [Mobster(name: "Alice"), Mobster(name: "Bob")], nextDriverIndex: 1)
-        
+
         roster.moveMobster(from: IndexSet(integer: 1), to: 0)
-        
+
         #expect(roster.nextDriverIndex == 0)
     }
-    
+
     @Test("moveMobster updates driver and navigator based on new positions")
     func moveMobsterUpdatesRoles() {
         let alice = Mobster(name: "Alice")
         let bob = Mobster(name: "Bob")
         let charlie = Mobster(name: "Charlie")
         let roster = Roster(activeMobsters: [alice, bob, charlie])
-        
+
         roster.moveMobster(from: IndexSet(integer: 2), to: 0)
-        
+
         #expect(roster.driver?.id == charlie.id)
         #expect(roster.navigator?.id == alice.id)
     }
-    
+
     // MARK: - shuffle
-    
+
     @Test("shuffle randomizes order")
     func shuffleRandomizesOrder() {
         let mobsters = (1...10).map { Mobster(name: "Mobster \($0)") }
         let roster = Roster(activeMobsters: mobsters)
         let originalOrder = roster.activeMobsters.map(\.id)
-        
+
         var orderChanged = false
         for _ in 1...10 {
             roster.shuffle()
@@ -280,40 +280,40 @@ struct RosterTests {
                 break
             }
         }
-        
+
         #expect(orderChanged, "Shuffle should change order at least once in 10 attempts")
     }
-    
+
     @Test("shuffle resets nextDriverIndex to 0")
     func shuffleResetsDriverIndex() {
         let roster = Roster(activeMobsters: [Mobster(name: "Alice"), Mobster(name: "Bob")], nextDriverIndex: 1)
-        
+
         roster.shuffle()
-        
+
         #expect(roster.nextDriverIndex == 0)
     }
-    
+
     @Test("shuffle with 0 mobsters is no-op")
     func shuffleEmptyIsNoOp() {
         let roster = Roster()
-        
+
         roster.shuffle()
-        
+
         #expect(roster.activeMobsters.isEmpty)
         #expect(roster.nextDriverIndex == 0)
     }
-    
+
     @Test("shuffle with 1 mobster keeps order unchanged")
     func shuffleSingleMobsterKeepsOrder() {
         let alice = Mobster(name: "Alice")
         let roster = Roster(activeMobsters: [alice])
-        
+
         roster.shuffle()
-        
+
         #expect(roster.activeMobsters.count == 1)
         #expect(roster.activeMobsters.first?.id == alice.id)
     }
-    
+
     @Test("shuffle does not affect inactive mobsters")
     func shuffleDoesNotAffectInactive() {
         let alice = Mobster(name: "Alice")
@@ -322,9 +322,9 @@ struct RosterTests {
         let inactiveDave = Mobster(name: "Dave")
         let roster = Roster(activeMobsters: [alice, bob], inactiveMobsters: [inactiveCharlie, inactiveDave])
         let inactiveOrderBefore = roster.inactiveMobsters.map(\.id)
-        
+
         roster.shuffle()
-        
+
         let inactiveOrderAfter = roster.inactiveMobsters.map(\.id)
         #expect(inactiveOrderAfter == inactiveOrderBefore, "Inactive mobsters should remain in same order")
     }
