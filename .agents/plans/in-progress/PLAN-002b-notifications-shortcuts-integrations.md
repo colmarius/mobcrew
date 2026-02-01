@@ -2,7 +2,7 @@
 
 | Field | Value |
 |-------|-------|
-| Status | todo |
+| Status | in-progress |
 | Date | 2026-02-01 |
 | PRD | [`PRD-002`](../../prds/PRD-002-breaks-and-polish.md) |
 | Depends on | PLAN-001, PLAN-002a |
@@ -17,7 +17,7 @@ Add system notifications, keyboard shortcuts (local and global), shuffle roster,
 
 ### System Notifications
 
-- [ ] **Task 1: Create NotificationService**
+- [x] **Task 1: Create NotificationService**
   - Scope: `MobCrew/MobCrew/Core/Services/NotificationService.swift`
   - Depends on: none
   - Acceptance:
