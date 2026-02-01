@@ -2,7 +2,7 @@
 
 | Field | Value |
 |-------|-------|
-| Status | todo |
+| Status | in-progress |
 | Date | 2026-02-01 |
 | PRD | [`PRD-002`](../../prds/PRD-002-breaks-and-polish.md) |
 | Depends on | PLAN-001 |
@@ -17,7 +17,7 @@ Implement break intervals with configurable timing, visual progress indicator, a
 
 ### Break State Model
 
-- [ ] **Task 1: Add BreakState to AppState**
+- [x] **Task 1: Add BreakState to AppState**
   - Scope: `MobCrew/MobCrew/Core/AppState.swift`
   - Depends on: none
   - Acceptance:

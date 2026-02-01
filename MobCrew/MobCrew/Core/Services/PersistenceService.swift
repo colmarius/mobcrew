@@ -12,6 +12,8 @@ final class PersistenceService {
     private enum Keys {
         static let roster = "mobcrew.roster"
         static let timerDuration = "mobcrew.timerDuration"
+        static let breakInterval = "mobcrew.breakInterval"
+        static let breakDuration = "mobcrew.breakDuration"
     }
     
     init(userDefaults: UserDefaults = .standard) {
@@ -61,6 +63,26 @@ final class PersistenceService {
     
     func loadTimerDuration() -> Int? {
         let value = userDefaults.integer(forKey: Keys.timerDuration)
+        return value > 0 ? value : nil
+    }
+    
+    // MARK: - Break Settings Persistence
+    
+    func saveBreakInterval(_ interval: Int) {
+        userDefaults.set(interval, forKey: Keys.breakInterval)
+    }
+    
+    func loadBreakInterval() -> Int? {
+        let value = userDefaults.integer(forKey: Keys.breakInterval)
+        return value > 0 ? value : nil
+    }
+    
+    func saveBreakDuration(_ duration: Int) {
+        userDefaults.set(duration, forKey: Keys.breakDuration)
+    }
+    
+    func loadBreakDuration() -> Int? {
+        let value = userDefaults.integer(forKey: Keys.breakDuration)
         return value > 0 ? value : nil
     }
 }

@@ -11,6 +11,21 @@ final class AppState {
         }
     }
     
+    // Break system properties
+    var breakInterval: Int = 5 {
+        didSet {
+            persistenceService.saveBreakInterval(breakInterval)
+        }
+    }
+    var breakDuration: Int = 300 {
+        didSet {
+            persistenceService.saveBreakDuration(breakDuration)
+        }
+    }
+    var turnsSinceBreak: Int = 0
+    var isOnBreak: Bool = false
+    var breakSecondsRemaining: Int = 0
+    
     private let persistenceService: PersistenceService
     
     init(persistenceService: PersistenceService = PersistenceService()) {
@@ -18,9 +33,13 @@ final class AppState {
         
         let loadedRoster = persistenceService.loadRoster()
         let loadedDuration = persistenceService.loadTimerDuration() ?? 420 // 7 minutes default
+        let loadedBreakInterval = persistenceService.loadBreakInterval() ?? 5
+        let loadedBreakDuration = persistenceService.loadBreakDuration() ?? 300 // 5 minutes default
         
         self.roster = loadedRoster
         self.timerDuration = loadedDuration
+        self.breakInterval = loadedBreakInterval
+        self.breakDuration = loadedBreakDuration
         self.timerState = TimerState(
             secondsRemaining: loadedDuration,
             totalSeconds: loadedDuration
