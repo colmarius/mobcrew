@@ -27,7 +27,7 @@ When the user clicks "Open System Settings" from the accessibility permission al
     - Verify if signed apps auto-appear in list
     - Document findings
 
-- [ ] **Task 3: Improve permission UX**
+- [x] **Task 3: Improve permission UX**
   - Scope: `MobCrew/MobCrew/App/AppDelegate.swift`, `GlobalHotkeyService.swift`
   - Depends on: Task 1
   - Acceptance:

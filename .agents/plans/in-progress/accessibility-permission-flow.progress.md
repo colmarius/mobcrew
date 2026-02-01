@@ -114,3 +114,27 @@ The current entitlements enable sandboxing:
 
 See: `.agents/research/accessibility-permissions.md` for detailed reference.
 
+---
+
+### Task 3: Improve permission UX
+**Status**: ✅ Completed  
+**Date**: 2026-02-01
+
+#### Changes Made
+
+**AppDelegate.swift**:
+- Added persistent `hasRequestedPermissionBefore` flag using UserDefaults
+- First-time users see simpler message explaining the system prompt
+- Repeat users see detailed step-by-step instructions:
+  1. Click "Open System Settings"
+  2. Click the + button
+  3. Navigate to and select MobCrew
+  4. Enable the toggle
+
+- Uses symbolic hotkey display (⌘⇧L) for better readability
+- Handles "already denied" case by showing manual add instructions
+
+#### Verification
+- Build: ✅ Succeeded
+- Tests: ✅ All 28 tests pass
+
