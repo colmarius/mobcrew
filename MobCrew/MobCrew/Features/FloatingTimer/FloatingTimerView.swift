@@ -1,29 +1,25 @@
 import SwiftUI
 
 struct FloatingTimerView: View {
-    let displayTime: String
-    let driverName: String?
-    let navigatorName: String?
-    let isRunning: Bool
-    let onToggle: () -> Void
+    let appState: AppState
     
     var body: some View {
         VStack(spacing: 8) {
-            Text(displayTime)
+            Text(appState.timerState.displayTime)
                 .font(.system(size: 36, weight: .bold, design: .monospaced))
                 .foregroundStyle(.white)
             
             VStack(spacing: 6) {
-                RoleLabel(role: "Driver", name: driverName, isDriver: true)
-                RoleLabel(role: "Navigator", name: navigatorName, isDriver: false)
+                RoleLabel(role: "Driver", name: appState.roster.driver?.name, isDriver: true)
+                RoleLabel(role: "Navigator", name: appState.roster.navigator?.name, isDriver: false)
             }
             
-            Button(action: onToggle) {
-                Image(systemName: isRunning ? "pause.fill" : "play.fill")
+            Button(action: { appState.toggleTimer() }) {
+                Image(systemName: appState.timerState.isRunning ? "pause.fill" : "play.fill")
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(.white)
                     .frame(width: 32, height: 32)
-                    .background(isRunning ? Color.orange : Color.green)
+                    .background(appState.timerState.isRunning ? Color.orange : Color.green)
                     .clipShape(Circle())
             }
             .buttonStyle(.plain)
@@ -58,13 +54,7 @@ private struct RoleLabel: View {
 }
 
 #Preview {
-    FloatingTimerView(
-        displayTime: "05:00",
-        driverName: "Alice",
-        navigatorName: "Bob",
-        isRunning: false,
-        onToggle: {}
-    )
-    .padding()
-    .background(Color.gray)
+    FloatingTimerView(appState: AppState())
+        .padding()
+        .background(Color.gray)
 }

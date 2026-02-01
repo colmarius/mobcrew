@@ -2,7 +2,7 @@ import AppKit
 
 final class FloatingTimerWindow: NSPanel {
     
-    init(contentRect: NSRect = NSRect(x: 0, y: 0, width: 150, height: 100)) {
+    init(contentRect: NSRect = NSRect(x: 0, y: 0, width: 180, height: 160)) {
         super.init(
             contentRect: contentRect,
             styleMask: [.borderless, .nonactivatingPanel],

@@ -3,7 +3,7 @@ import SwiftUI
 
 final class FloatingTimerController {
     private var window: FloatingTimerWindow?
-    private var hostingView: NSHostingView<AnyView>?
+    private var hostingView: NSHostingView<FloatingTimerView>?
     
     private let appState: AppState
     
@@ -38,17 +38,9 @@ final class FloatingTimerController {
     private func createWindow() {
         let window = FloatingTimerWindow()
         
-        let view = FloatingTimerView(
-            displayTime: appState.timerState.displayTime,
-            driverName: appState.roster.driver?.name,
-            navigatorName: appState.roster.navigator?.name,
-            isRunning: appState.timerState.isRunning,
-            onToggle: { [weak self] in
-                self?.appState.toggleTimer()
-            }
-        )
+        let view = FloatingTimerView(appState: appState)
         
-        let hostingView = NSHostingView(rootView: AnyView(view))
+        let hostingView = NSHostingView(rootView: view)
         hostingView.frame = window.contentView?.bounds ?? .zero
         hostingView.autoresizingMask = [.width, .height]
         
@@ -56,22 +48,6 @@ final class FloatingTimerController {
         
         self.window = window
         self.hostingView = hostingView
-    }
-    
-    func updateView() {
-        guard let hostingView = hostingView else { return }
-        
-        let view = FloatingTimerView(
-            displayTime: appState.timerState.displayTime,
-            driverName: appState.roster.driver?.name,
-            navigatorName: appState.roster.navigator?.name,
-            isRunning: appState.timerState.isRunning,
-            onToggle: { [weak self] in
-                self?.appState.toggleTimer()
-            }
-        )
-        
-        hostingView.rootView = AnyView(view)
     }
     
     private func positionWindow() {
