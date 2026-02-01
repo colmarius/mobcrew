@@ -25,6 +25,11 @@ final class AppState {
     var turnsSinceBreak: Int = 0
     var isOnBreak: Bool = false
     var breakSecondsRemaining: Int = 0
+    var notificationsEnabled: Bool = true {
+        didSet {
+            persistenceService.saveNotificationsEnabled(notificationsEnabled)
+        }
+    }
     
     private let persistenceService: PersistenceService
     private let notificationService: NotificationService
@@ -44,8 +49,10 @@ final class AppState {
         let loadedDuration = persistenceService.loadTimerDuration() ?? 420 // 7 minutes default
         let loadedBreakInterval = persistenceService.loadBreakInterval() ?? 5
         let loadedBreakDuration = persistenceService.loadBreakDuration() ?? 300 // 5 minutes default
+        let loadedNotificationsEnabled = persistenceService.loadNotificationsEnabled() ?? true
         
         self.roster = loadedRoster
+        self.notificationsEnabled = loadedNotificationsEnabled
         self.timerDuration = loadedDuration
         self.breakInterval = loadedBreakInterval
         self.breakDuration = loadedBreakDuration
@@ -82,6 +89,7 @@ final class AppState {
     }
     
     private func sendTimerCompleteNotification() {
+        guard notificationsEnabled else { return }
         let driver = roster.driver?.name ?? "Next Driver"
         let navigator = roster.navigator?.name ?? "Next Navigator"
         notificationService.sendTimerComplete(driver: driver, navigator: navigator)
@@ -90,7 +98,9 @@ final class AppState {
     func triggerBreak() {
         isOnBreak = true
         breakSecondsRemaining = breakDuration
-        notificationService.sendBreakStarted(duration: breakDuration)
+        if notificationsEnabled {
+            notificationService.sendBreakStarted(duration: breakDuration)
+        }
         timerEngine.reset(duration: breakDuration)
         timerEngine.start()
     }

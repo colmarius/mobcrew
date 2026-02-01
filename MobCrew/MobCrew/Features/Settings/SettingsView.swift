@@ -15,7 +15,7 @@ struct SettingsView: View {
                     Label("Breaks", systemImage: "cup.and.saucer")
                 }
         }
-        .frame(width: 400, height: 200)
+        .frame(width: 450, height: 320)
     }
 }
 
@@ -37,9 +37,49 @@ private struct GeneralSettingsTab: View {
                             .foregroundStyle(.secondary)
                     }
                 }
+                
+                Toggle("Notifications", isOn: Binding(
+                    get: { appState.notificationsEnabled },
+                    set: { appState.notificationsEnabled = $0 }
+                ))
+            }
+            
+            Section("Keyboard Shortcuts") {
+                ShortcutRow(shortcut: "⌘⇧L", description: "Toggle floating timer", note: "Global")
+                ShortcutRow(shortcut: "⌘↩", description: "Start/Pause timer")
+                ShortcutRow(shortcut: "⌘⇧S", description: "Skip turn")
+                ShortcutRow(shortcut: "⌘,", description: "Open Settings")
+                ShortcutRow(shortcut: "Esc", description: "Dismiss break screen")
             }
         }
         .formStyle(.grouped)
+    }
+}
+
+private struct ShortcutRow: View {
+    let shortcut: String
+    let description: String
+    var note: String? = nil
+    
+    var body: some View {
+        HStack {
+            Text(shortcut)
+                .font(.system(.body, design: .monospaced))
+                .padding(.horizontal, 6)
+                .padding(.vertical, 2)
+                .background(Color.secondary.opacity(0.2))
+                .cornerRadius(4)
+            
+            Text(description)
+            
+            Spacer()
+            
+            if let note {
+                Text(note)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
     }
 }
 
