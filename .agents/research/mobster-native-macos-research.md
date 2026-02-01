@@ -21,6 +21,7 @@ This document provides comprehensive research for porting [dillonkearns/mobster]
 ### 1.2 Core Features
 
 #### Timer System
+
 - **Regular Timer**: Configurable 1-180 minute mob sessions
 - **Break Timer**: Automatic break suggestion after N intervals
 - **Timer Display**: Minimal, transparent, always-on-top overlay window (150×130px)
@@ -28,6 +29,7 @@ This document provides comprehensive research for porting [dillonkearns/mobster]
 - **Display Format**: `MM:SS` countdown with Driver/Navigator names
 
 #### Roster Management
+
 - **Active Mobsters**: Currently in rotation (draggable, reorderable)
 - **Inactive Mobsters**: Benched members (click to rotate in)
 - **Operations**: Add, remove, bench, rotate in, reorder, shuffle
@@ -35,6 +37,7 @@ This document provides comprehensive research for porting [dillonkearns/mobster]
 - **Automatic Rotation**: Driver → Navigator → next person per turn
 
 #### Break System
+
 - Configurable intervals before break (0-20, 0 = disabled)
 - Break duration (1-180 minutes)
 - Visual progress indicator (circles)
@@ -42,6 +45,7 @@ This document provides comprehensive research for porting [dillonkearns/mobster]
 - 20-minute auto-reset timer for stale break data
 
 #### RPG Mode (Gamification)
+
 Port of [Willem Larsen's Mob Programming RPG](https://github.com/willemlarsen/mobprogrammingrpg):
 
 | Role | Description |
@@ -58,10 +62,12 @@ Port of [Willem Larsen's Mob Programming RPG](https://github.com/willemlarsen/mo
 - Next-up view showing role assignments
 
 #### Educational Content
+
 - Random tips from Agile Manifesto and mob programming best practices
 - Tips refresh on timer start
 
 #### Keyboard Shortcuts
+
 | Shortcut | Action |
 |----------|--------|
 | Ctrl/Cmd+Enter | Start Timer |
@@ -73,6 +79,7 @@ Port of [Willem Larsen's Mob Programming RPG](https://github.com/willemlarsen/mo
 | **Global Hotkey** | Cmd+Shift+L (customizable) - Show/hide window |
 
 #### Persistence
+
 - **Settings**: localStorage (JSON) for timer duration, break settings, roster
 - **Active Mobsters File**: `~/Library/Application Support/mobster/active-mobsters`
   - Comma-separated names for shell script integration
@@ -88,7 +95,7 @@ Port of [Willem Larsen's Mob Programming RPG](https://github.com/willemlarsen/mo
 
 ### 1.4 Architecture Pattern
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                    Main Process (Electron)                   │
 │  - Window management                                         │
@@ -122,7 +129,7 @@ Port of [Willem Larsen's Mob Programming RPG](https://github.com/willemlarsen/mo
 
 ### 2.2 Recommended Stack
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                    Swift + SwiftUI + AppKit                  │
 ├─────────────────────────────────────────────────────────────┤
@@ -166,7 +173,7 @@ Port of [Willem Larsen's Mob Programming RPG](https://github.com/willemlarsen/mo
 
 ### 3.1 Application Structure
 
-```
+```text
 MobsterNative/
 ├── App/
 │   ├── MobsterNativeApp.swift      # @main entry point
@@ -325,12 +332,14 @@ class FloatingTimerWindowController: NSWindowController {
 ## 5. Implementation Phases
 
 ### Phase 1: Core Infrastructure
+
 - [ ] Project setup with SwiftUI app lifecycle
 - [ ] Data models (Mobster, Roster, Settings, TimerState)
 - [ ] Persistence service (UserDefaults + active-mobsters file)
 - [ ] Basic app window with navigation
 
 ### Phase 2: Roster Management
+
 - [ ] Active/inactive mobster lists
 - [ ] Add, remove, bench, rotate operations
 - [ ] Drag-and-drop reordering
@@ -338,17 +347,20 @@ class FloatingTimerWindowController: NSWindowController {
 - [ ] Shuffle with animation
 
 ### Phase 3: Timer System
+
 - [ ] Timer logic with Combine/Foundation.Timer
 - [ ] Floating timer window (transparent, always-on-top)
 - [ ] Timer display with Driver/Navigator
 - [ ] Break detection and break timer
 
 ### Phase 4: Menu Bar Integration
+
 - [ ] Menu bar icon and popover
 - [ ] Quick controls (start/stop, skip)
 - [ ] Status display
 
 ### Phase 5: Advanced Features
+
 - [ ] Global hotkey registration
 - [ ] System notifications on timer complete
 - [ ] RPG mode with goal tracking
@@ -356,6 +368,7 @@ class FloatingTimerWindowController: NSWindowController {
 - [ ] Keyboard shortcuts
 
 ### Phase 6: Polish
+
 - [ ] Animations (shuffle, transitions)
 - [ ] Dark mode support
 - [ ] Accessibility
