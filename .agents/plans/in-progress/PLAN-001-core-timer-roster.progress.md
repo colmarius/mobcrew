@@ -3,8 +3,8 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-02-01 |
-| Current Task | Task 1 |
-| Tasks Completed | 0 |
+| Current Task | Task 3 |
+| Tasks Completed | 2 |
 
 ---
 
@@ -24,3 +24,11 @@
 - Updates `TimerState.secondsRemaining` each second
 - Fires callback on completion
 - Build succeeded
+
+### Task 2: Create TimerEngineTests ✅
+
+- Created `MobCrew/MobCrewTests/Core/Services/TimerEngineTests.swift`
+- Uses Swift Testing framework (`@Suite`, `@Test`, `#expect`)
+- Tests initial state, reset, start/stop, toggle, pause/resume
+- Async tests for countdown decrement and completion callback
+- All tests pass

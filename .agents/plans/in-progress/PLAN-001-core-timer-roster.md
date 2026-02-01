@@ -29,7 +29,7 @@ Implement working mob timer with floating window, roster management, menu bar in
     - Fires callback/notification when timer completes
   - Notes: Keep timer logic separate from UI. Consider using Combine.
 
-- [ ] **Task 2: Create TimerEngineTests**
+- [x] **Task 2: Create TimerEngineTests**
   - Scope: `MobCrew/MobCrewTests/Core/Services/TimerEngineTests.swift`
   - Depends on: Task 1
   - Acceptance:
