@@ -136,3 +136,29 @@ Plan: [PLAN-002b](./PLAN-002b-notifications-shortcuts-integrations.md)
 
 ---
 
+## Task 7: Create GlobalHotkeyService
+
+**Thread**: https://ampcode.com/threads/T-019c1b3d-38d3-74b8-b4a1-983ab280a140
+**Status**: completed
+**Iteration**: 1
+
+### Changes
+
+- `MobCrew/MobCrew/Core/Services/GlobalHotkeyService.swift` - Created using Carbon RegisterEventHotKey API for Cmd+Shift+L global hotkey
+- `MobCrew/MobCrew.xcodeproj/project.pbxproj` - Added GlobalHotkeyService.swift to build
+
+### Commands Run
+
+- `./scripts/test.sh` ✓ (all tests pass)
+
+### Notes
+
+- Uses Carbon API (RegisterEventHotKey) for reliable global hotkey registration
+- Includes hasAccessibilityPermission check and requestAccessibilityPermission() for permission handling
+
+### Next
+
+- Task 8: Add accessibility permission handling
+
+---
+

@@ -72,7 +72,7 @@ Add system notifications, keyboard shortcuts (local and global), shuffle roster,
 
 ### Global Hotkey
 
-- [ ] **Task 7: Create GlobalHotkeyService**
+- [x] **Task 7: Create GlobalHotkeyService**
   - Scope: `MobCrew/MobCrew/Core/Services/GlobalHotkeyService.swift`
   - Depends on: none
   - Acceptance:
