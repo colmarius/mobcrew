@@ -81,3 +81,18 @@
 - **Started**: 2026-02-01
 - **Completed**: 2026-02-01
 - **Notes**: Added ignores for xcuserdata/, DerivedData/, .build/, .swiftpm/, and project.xcworkspace/xcuserdata/. Preserved existing entries.
+
+### Task 10: Create MobCrewTests folder structure
+- **Status**: ✅ Complete
+- **Started**: 2026-02-01
+- **Completed**: 2026-02-01
+- **Notes**: Created Core/Models/ subfolder and Helpers/TestHelpers.swift. Updated project.pbxproj with new groups and file references. Build succeeds.
+
+---
+
+## Session 2 - Paused
+
+**Paused after 5 tasks for review**
+
+**Completed tasks**: 6, 7, 8, 9, 10
+**Next task to resume from**: Task 11 (Create MobsterTests)

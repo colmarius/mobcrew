@@ -98,7 +98,7 @@ Create MobCrew Xcode project with feature-based folder structure, core model stu
     - Ignores `project.xcworkspace/` user data
     - Existing entries preserved
 
-- [ ] **Task 10: Create MobCrewTests folder structure**
+- [x] **Task 10: Create MobCrewTests folder structure**
   - Scope: `MobCrew/MobCrewTests/`
   - Depends on: Task 1
   - Acceptance:

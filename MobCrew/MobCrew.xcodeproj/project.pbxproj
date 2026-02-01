@@ -11,6 +11,7 @@
 		8A1B2C3D0001000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000002 /* ContentView.swift */; };
 		8A1B2C3D0001000000000003 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000003 /* Assets.xcassets */; };
 		8A1B2C3D0001000000000004 /* MobCrewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000004 /* MobCrewTests.swift */; };
+		8A1B2C3D0001000000000030 /* TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000030 /* TestHelpers.swift */; };
 		8A1B2C3D0001000000000010 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000010 /* AppDelegate.swift */; };
 		8A1B2C3D0001000000000020 /* Mobster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000020 /* Mobster.swift */; };
 		8A1B2C3D0001000000000021 /* Roster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000021 /* Roster.swift */; };
@@ -39,6 +40,7 @@
 		8A1B2C3D0002000000000020 /* Mobster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mobster.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000021 /* Roster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Roster.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000022 /* TimerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerState.swift; sourceTree = "<group>"; };
+		8A1B2C3D0002000000000030 /* TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHelpers.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,9 +87,34 @@
 		8A1B2C3D0007000000000003 /* MobCrewTests */ = {
 			isa = PBXGroup;
 			children = (
+				8A1B2C3D0007000000000060 /* Core */,
+				8A1B2C3D0007000000000061 /* Helpers */,
 				8A1B2C3D0002000000000004 /* MobCrewTests.swift */,
 			);
 			path = MobCrewTests;
+			sourceTree = "<group>";
+		};
+		8A1B2C3D0007000000000060 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				8A1B2C3D0007000000000062 /* Models */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		8A1B2C3D0007000000000061 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				8A1B2C3D0002000000000030 /* TestHelpers.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		8A1B2C3D0007000000000062 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		8A1B2C3D0007000000000004 /* Products */ = {
@@ -301,6 +328,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8A1B2C3D0001000000000004 /* MobCrewTests.swift in Sources */,
+				8A1B2C3D0001000000000030 /* TestHelpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
