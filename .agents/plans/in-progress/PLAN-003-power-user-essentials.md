@@ -1,7 +1,7 @@
 # PLAN-003: Power User Essentials
 
 **PRD Reference**: PRD-003 (Phase 3 - Nice to Have)
-**Status**: TODO
+**Status**: COMPLETED
 **Priority**: Low
 **Estimated Effort**: 1-2 days
 
@@ -49,7 +49,7 @@ Features explicitly excluded (too complex for value):
     - Tip changes on each timer start
   - Notes: Check `.agents/reference/mobster/` for original tips
 
-- [ ] **Task 3: Dark Mode Verification**
+- [x] **Task 3: Dark Mode Verification**
   - Scope: All UI views
   - Depends on: none
   - Acceptance:
