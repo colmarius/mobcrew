@@ -2,7 +2,7 @@
 
 | Field | Value |
 |-------|-------|
-| Status | todo |
+| Status | complete |
 | Date | 2026-02-01 |
 | PRD | `../../prds/PRD-001-core-timer-roster.md` |
 | Depends on | PLAN-000 |
@@ -179,7 +179,7 @@ Implement working mob timer with floating window, roster management, menu bar in
     - Creates and shows floating timer on launch
     - FloatingTimerController accessible for toggle
 
-- [ ] **Task 17: Verify full integration**
+- [x] **Task 17: Verify full integration**
   - Scope: `MobCrew/`
   - Depends on: Tasks 1-16
   - Acceptance:

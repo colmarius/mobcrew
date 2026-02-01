@@ -174,3 +174,30 @@ Next task: Task 15 - Wire up ContentView with real UI
 - FloatingTimer shows automatically on launch
 - Added toggleFloatingTimer() method for accessibility
 - Build succeeded, all 21 tests pass
+
+### Task 17: Verify full integration ✅
+
+Automated verification:
+- ✅ `xcodebuild build` succeeds
+- ✅ `xcodebuild test` succeeds (21 tests pass)
+
+Code review verification:
+- ✅ TimerEngine: countdown logic with Combine Timer.publish
+- ✅ FloatingTimerWindow: NSPanel with proper level/styling
+- ✅ FloatingTimerView: displays Driver/Navigator + countdown
+- ✅ RosterView: add/remove/bench/activate operations wired
+- ✅ Skip: calls roster.advanceTurn() and resets timer
+- ✅ MenuBarExtra: shows MenuBarView with controls
+- ✅ PersistenceService: saves/loads roster and timer duration via UserDefaults
+- ✅ AppState: connects all components
+
+Manual testing required by user:
+- Timer counts down from configured duration
+- Floating window shows countdown + Driver/Navigator
+- Roster persists between app launches
+
+---
+
+## PLAN-001 COMPLETE 🎉
+
+All 17 tasks completed successfully.
