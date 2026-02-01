@@ -10,7 +10,6 @@ struct RosterView: View {
             
             if !roster.activeMobsters.isEmpty {
                 activeSection
-                skipButton
             }
             
             if !roster.inactiveMobsters.isEmpty {
@@ -20,13 +19,6 @@ struct RosterView: View {
             Spacer()
         }
         .padding()
-    }
-    
-    private var skipButton: some View {
-        Button(action: { roster.advanceTurn() }) {
-            Label("Skip Turn", systemImage: "forward.fill")
-        }
-        .disabled(roster.activeMobsters.count < 2)
     }
     
     private var addMobsterSection: some View {

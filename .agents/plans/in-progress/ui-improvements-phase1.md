@@ -6,7 +6,7 @@ Address usability and clarity improvements identified in UI review. Focus on red
 
 ## Tasks
 
-- [ ] **Task 1: Remove redundant Skip Turn button from roster panel**
+- [x] **Task 1: Remove redundant Skip Turn button from roster panel**
   - Scope: `MobCrew/Features/Roster/RosterView.swift`
   - Depends on: none
   - Acceptance:
