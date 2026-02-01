@@ -172,3 +172,23 @@ See: `.agents/research/accessibility-permissions.md` for detailed reference.
 - Build: ✅ Succeeded
 - Tests: ✅ All 28 tests pass
 
+---
+
+## Session Summary
+
+**Completed**: Tasks 1, 3, 4 (3 of 4 tasks)
+**Remaining**: Task 2 (manual-verify)
+
+### What was done:
+1. **Research** - Documented how macOS accessibility permissions work, when apps auto-appear in the list, and how other apps handle this
+2. **Improved UX** - Better alert messaging with step-by-step instructions for manual add
+3. **Added polling** - Auto-detect when permission is granted and enable hotkey
+
+### What requires manual action:
+Task 2 requires setting up proper code signing in Xcode:
+1. Open Xcode → MobCrew project → Signing & Capabilities
+2. Set **Team** to your Apple Developer account
+3. Set **Signing Certificate** to "Development" or "Developer ID Application"
+
+This ensures the app maintains a consistent identity so permissions persist between builds.
+
