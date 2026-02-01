@@ -63,3 +63,9 @@
 - **Started**: 2026-02-01
 - **Completed**: 2026-02-01
 - **Notes**: Created Roster.swift with @Observable macro. Has activeMobsters, inactiveMobsters, nextDriverIndex properties. Computed driver/navigator. Methods: advanceTurn(), addMobster(name:), benchMobster(at:), rotateIn(at:), shuffle(). Private adjustDriverIndex(afterRemovalAt:) helper. Build succeeds.
+
+### Task 7: Create TimerState model
+- **Status**: ✅ Complete
+- **Started**: 2026-02-01
+- **Completed**: 2026-02-01
+- **Notes**: Created TimerState.swift with @Observable macro. Has secondsRemaining, totalSeconds, isRunning, timerType properties. Computed displayTime (MM:SS format) and progress (0.0-1.0). Includes TimerType enum (regular/breakTimer). Build succeeds.

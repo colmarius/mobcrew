@@ -73,7 +73,7 @@ Create MobCrew Xcode project with feature-based folder structure, core model stu
     - Private `adjustDriverIndex(afterRemovalAt:)` helper
   - Notes: Core rotation logic from research doc.
 
-- [ ] **Task 7: Create TimerState model**
+- [x] **Task 7: Create TimerState model**
   - Scope: `MobCrew/MobCrew/Core/Models/TimerState.swift`
   - Depends on: Task 2
   - Acceptance:
