@@ -58,3 +58,59 @@
 - Apps don't auto-add to list - user must click + and find the app
 - For signed apps, the app appears with proper name after first prompt
 
+---
+
+### Task 2: Test code-signed release build
+**Status**: ⚠️ Documented - requires manual action  
+**Date**: 2026-02-01
+
+#### Current State
+
+The release build is currently **ad-hoc signed** (not properly signed):
+
+```
+Signature=adhoc
+TeamIdentifier=not set
+```
+
+This means:
+- App identity changes between builds
+- Accessibility permissions don't persist
+- App won't auto-appear in Accessibility list on subsequent runs
+
+#### Solution Required
+
+To enable proper signing:
+
+1. **Open Xcode** → MobCrew project → Signing & Capabilities tab
+2. **Set Team**: Select your Apple Developer account team
+3. **Set Signing Certificate**: "Development" (for dev) or "Developer ID Application" (for release)
+
+After signing, verify with:
+```bash
+codesign -d -vv build/Release/MobCrew.app
+```
+
+Should show:
+- `Authority = Apple Development: Your Name (XXXXXXXX)`
+- `TeamIdentifier = XXXXXXXXXX`
+
+#### Additional Finding: Sandbox Conflict
+
+The current entitlements enable sandboxing:
+```xml
+<key>com.apple.security.app-sandbox</key>
+<true/>
+```
+
+**Potential issue**: Sandboxed apps have limited accessibility capabilities. Most accessibility apps (Alt-Tab, Raycast, Rectangle) are **not sandboxed**.
+
+**Recommendation**: For MobCrew's global hotkey feature to work reliably, consider:
+1. Disabling sandbox (set to `false` or remove the entitlement)
+2. This means the app cannot be distributed on the Mac App Store
+3. Distribute via direct download, Homebrew, or similar
+
+#### Research Document Created
+
+See: `.agents/research/accessibility-permissions.md` for detailed reference.
+

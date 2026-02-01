@@ -19,7 +19,7 @@ When the user clicks "Open System Settings" from the accessibility permission al
     - Understand app identity/signing requirements
   - Notes: Check how Mobster, Raycast, and other apps handle this
 
-- [ ] **Task 2: Test code-signed release build**
+- [ ] (manual-verify) **Task 2: Test code-signed release build**
   - Scope: Build/signing configuration
   - Depends on: Task 1
   - Acceptance:
