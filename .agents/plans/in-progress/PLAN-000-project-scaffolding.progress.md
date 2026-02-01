@@ -35,3 +35,9 @@
 - **Started**: 2026-02-01
 - **Completed**: 2026-02-01
 - **Notes**: AppDelegate.swift implements NSApplicationDelegate with applicationDidFinishLaunching and applicationWillTerminate stubs. Already created in Task 2, verified meets acceptance criteria.
+
+### Task 5: Create Mobster model
+- **Status**: ✅ Complete
+- **Started**: 2026-02-01
+- **Completed**: 2026-02-01
+- **Notes**: Created Mobster.swift with id: UUID and name: String. Conforms to Identifiable, Codable, Hashable. Has initializer with default UUID. Build succeeds.

@@ -53,7 +53,7 @@ Create MobCrew Xcode project with feature-based folder structure, core model stu
     - Has `applicationDidFinishLaunching` stub
     - Builds without errors
 
-- [ ] **Task 5: Create Mobster model**
+- [x] **Task 5: Create Mobster model**
   - Scope: `MobCrew/MobCrew/Core/Models/Mobster.swift`
   - Depends on: Task 2
   - Acceptance:
