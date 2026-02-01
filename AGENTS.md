@@ -103,8 +103,18 @@ xcodebuild test -project MobCrew/MobCrew.xcodeproj -scheme MobCrew -destination 
 # Build and run
 ./scripts/run.sh
 
-# Release (requires: brew install gh node && gh auth login)
-./scripts/release.sh <version>
+# Build release app (outputs to build/Release/MobCrew.app)
+./scripts/build-release.sh [version]
+
+# Create DMG package (outputs to build/MobCrew-<version>.dmg)
+./scripts/create-dmg.sh <version>
+
+# Full release: build + DMG + GitHub release + upload
+# Prerequisites: brew install gh node && gh auth login
+./scripts/release.sh <version> [--draft]
+
+# Serve docs locally
+./scripts/serve-docs.sh
 ```
 
 ## Git Workflow
