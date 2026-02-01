@@ -73,6 +73,12 @@ struct ContentView: View {
             ProgressView(value: appState.timerState.progress)
                 .progressViewStyle(.linear)
                 .frame(maxWidth: 200)
+            
+            BreakProgressView(
+                breakInterval: appState.breakInterval,
+                turnsSinceBreak: appState.turnsSinceBreak
+            )
+            .padding(EdgeInsets(top: 8, leading: 0, bottom: 0, trailing: 0))
         }
     }
     

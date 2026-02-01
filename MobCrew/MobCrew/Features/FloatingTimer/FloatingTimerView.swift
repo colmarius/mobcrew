@@ -14,6 +14,11 @@ struct FloatingTimerView: View {
                 RoleLabel(role: "Navigator", name: appState.roster.navigator?.name, isDriver: false)
             }
             
+            BreakProgressView(
+                breakInterval: appState.breakInterval,
+                turnsSinceBreak: appState.turnsSinceBreak
+            )
+            
             Button(action: { appState.toggleTimer() }) {
                 Image(systemName: appState.timerState.isRunning ? "pause.fill" : "play.fill")
                     .font(.system(size: 16, weight: .semibold))

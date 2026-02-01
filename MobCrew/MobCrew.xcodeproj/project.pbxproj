@@ -29,6 +29,8 @@
 		8A1B2C3D0001000000000110 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000110 /* AppState.swift */; };
 		8A1B2C3D0001000000000111 /* RosterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000111 /* RosterTests.swift */; };
 		8A1B2C3D0001000000000112 /* AppStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000112 /* AppStateTests.swift */; };
+		8A1B2C3D0001000000000120 /* BreakProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000120 /* BreakProgressView.swift */; };
+		8A1B2C3D0001000000000121 /* BreakScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D0002000000000121 /* BreakScreenView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +69,8 @@
 		8A1B2C3D0002000000000110 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000111 /* RosterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RosterTests.swift; sourceTree = "<group>"; };
 		8A1B2C3D0002000000000112 /* AppStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateTests.swift; sourceTree = "<group>"; };
+		8A1B2C3D0002000000000120 /* BreakProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakProgressView.swift; sourceTree = "<group>"; };
+		8A1B2C3D0002000000000121 /* BreakScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakScreenView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -205,12 +209,22 @@
 		8A1B2C3D0007000000000030 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				8A1B2C3D0007000000000035 /* Break */,
 				8A1B2C3D0007000000000031 /* FloatingTimer */,
 				8A1B2C3D0007000000000032 /* MenuBar */,
 				8A1B2C3D0007000000000033 /* Roster */,
 				8A1B2C3D0007000000000034 /* Settings */,
 			);
 			path = Features;
+			sourceTree = "<group>";
+		};
+		8A1B2C3D0007000000000035 /* Break */ = {
+			isa = PBXGroup;
+			children = (
+				8A1B2C3D0002000000000120 /* BreakProgressView.swift */,
+				8A1B2C3D0002000000000121 /* BreakScreenView.swift */,
+			);
+			path = Break;
 			sourceTree = "<group>";
 		};
 		8A1B2C3D0007000000000031 /* FloatingTimer */ = {
@@ -376,6 +390,8 @@
 				8A1B2C3D0001000000000107 /* MobsterRow.swift in Sources */,
 				8A1B2C3D0001000000000108 /* PersistenceService.swift in Sources */,
 				8A1B2C3D0001000000000110 /* AppState.swift in Sources */,
+				8A1B2C3D0001000000000120 /* BreakProgressView.swift in Sources */,
+				8A1B2C3D0001000000000121 /* BreakScreenView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

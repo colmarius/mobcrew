@@ -90,7 +90,7 @@ Implement break intervals with configurable timing, visual progress indicator, a
     - "Skip Break" button
     - "Break complete" transitions back to normal timer
 
-- [ ] **Task 8: Integrate BreakProgressView into timer display**
+- [x] **Task 8: Integrate BreakProgressView into timer display**
   - Scope: `MobCrew/MobCrew/ContentView.swift`, `MobCrew/MobCrew/Features/FloatingTimer/FloatingTimerView.swift`
   - Depends on: Task 6
   - Acceptance:

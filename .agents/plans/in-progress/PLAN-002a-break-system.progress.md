@@ -69,3 +69,13 @@
   - "Break Time!" heading with MM:SS countdown
   - Progress bar and "Skip Break" button (Escape key)
 - **Build**: ✅ Succeeded
+
+### Iteration 8 - Task 8 Complete
+- **Task**: Task 8: Integrate BreakProgressView into timer display
+- **Status**: Complete
+- **Changes**:
+  - Added BreakProgressView to ContentView timerDisplay
+  - Added BreakProgressView to FloatingTimerView
+  - Added Break files to Xcode project (group + build phase)
+- **Build**: ✅ Succeeded
+- **Tests**: ✅ All tests pass
