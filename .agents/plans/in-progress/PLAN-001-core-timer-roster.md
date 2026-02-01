@@ -156,7 +156,7 @@ Implement working mob timer with floating window, roster management, menu bar in
 
 ### Integration
 
-- [ ] **Task 14: Create shared AppState**
+- [x] **Task 14: Create shared AppState**
   - Scope: `MobCrew/MobCrew/Core/AppState.swift`
   - Depends on: Tasks 1-13
   - Acceptance:

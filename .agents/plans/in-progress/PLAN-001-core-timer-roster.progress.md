@@ -3,8 +3,8 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-02-01 |
-| Current Task | Task 14 |
-| Tasks Completed | 13 |
+| Current Task | Task 15 |
+| Tasks Completed | 14 |
 
 ---
 
@@ -140,3 +140,13 @@ Next task: Task 6 - Create MenuBarView
 - Added onChange handlers to save roster and timer duration on changes
 - Added PersistenceService.swift and PersistenceServiceTests.swift to Xcode project
 - Build succeeded, all tests pass
+
+### Task 14: Create shared AppState ✅
+
+- Created `MobCrew/MobCrew/Core/AppState.swift`
+- Single `@Observable` class holding Roster, TimerState, TimerEngine
+- Connects timer completion to roster.advanceTurn()
+- Handles persistence via PersistenceService
+- Provides resetTimer(), toggleTimer(), skipTurn() methods
+- Added to Xcode project
+- Build succeeded
