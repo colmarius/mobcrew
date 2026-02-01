@@ -106,7 +106,7 @@ Create MobCrew Xcode project with feature-based folder structure, core model stu
     - `Helpers/TestHelpers.swift` exists with placeholder
   - Notes: Mirror main target structure for organization.
 
-- [ ] **Task 11: Create MobsterTests**
+- [x] **Task 11: Create MobsterTests**
   - Scope: `MobCrew/MobCrewTests/Core/Models/MobsterTests.swift`
   - Depends on: Task 5, Task 10
   - Acceptance:
