@@ -85,6 +85,36 @@ struct RosterTests {
         #expect(roster.activeMobsters.first?.name == "Alice")
     }
     
+    @Test("addMobster with empty name still adds mobster")
+    func addMobsterEmptyNameAdds() {
+        let roster = Roster()
+        roster.addMobster(name: "")
+        
+        #expect(roster.activeMobsters.count == 1)
+        #expect(roster.activeMobsters.first?.name == "")
+    }
+    
+    @Test("addMobster with whitespace-only name still adds mobster")
+    func addMobsterWhitespaceNameAdds() {
+        let roster = Roster()
+        roster.addMobster(name: "   ")
+        
+        #expect(roster.activeMobsters.count == 1)
+        #expect(roster.activeMobsters.first?.name == "   ")
+    }
+    
+    @Test("addMobster with duplicate name creates separate mobsters with different IDs")
+    func addMobsterDuplicateNameCreatesSeparate() {
+        let roster = Roster()
+        roster.addMobster(name: "Alice")
+        roster.addMobster(name: "Alice")
+        
+        #expect(roster.activeMobsters.count == 2)
+        #expect(roster.activeMobsters[0].name == "Alice")
+        #expect(roster.activeMobsters[1].name == "Alice")
+        #expect(roster.activeMobsters[0].id != roster.activeMobsters[1].id)
+    }
+    
     // MARK: - benchMobster
     
     @Test("benchMobster moves mobster to inactive")

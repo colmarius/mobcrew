@@ -70,7 +70,7 @@ Add missing test coverage for core components: AppState integration tests, Roste
 
 ### Edge Case Tests
 
-- [ ] **Task 7: Add addMobster edge case tests**
+- [x] **Task 7: Add addMobster edge case tests**
   - Scope: `MobCrew/MobCrewTests/Core/Models/RosterTests.swift`
   - Depends on: none
   - Acceptance:

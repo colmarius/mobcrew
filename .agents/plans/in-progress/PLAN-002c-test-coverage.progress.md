@@ -131,3 +131,31 @@
 
 ---
 
+## Task 7: Add addMobster edge case tests
+
+**Thread**: https://ampcode.com/threads/T-019c1b1c-e2a8-7187-b885-30e8dfe3476b
+**Status**: completed
+**Iteration**: 1
+
+### Changes
+
+- `MobCrew/MobCrewTests/Core/Models/RosterTests.swift` - Added 3 edge case tests for addMobster:
+  - `addMobsterEmptyNameAdds` - empty name is allowed (documents current behavior)
+  - `addMobsterWhitespaceNameAdds` - whitespace-only name is allowed
+  - `addMobsterDuplicateNameCreatesSeparate` - duplicate names allowed, different IDs
+
+### Commands Run
+
+- `xcodebuild test -only-testing:MobCrewTests/RosterTests` ✓
+
+### Notes
+
+- Current implementation has no validation - tests document actual behavior
+- Validation could be added later if requirements change
+
+### Next
+
+- Task 8: Add benchMobster edge cases for driver adjustment
+
+---
+
