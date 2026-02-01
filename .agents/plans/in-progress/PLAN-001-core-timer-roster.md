@@ -126,7 +126,7 @@ Implement working mob timer with floating window, roster management, menu bar in
 
 ### Persistence
 
-- [ ] **Task 11: Create PersistenceService**
+- [x] **Task 11: Create PersistenceService**
   - Scope: `MobCrew/MobCrew/Core/Services/PersistenceService.swift`
   - Depends on: none
   - Acceptance:

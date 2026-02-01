@@ -3,8 +3,8 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-02-01 |
-| Current Task | Task 11 |
-| Tasks Completed | 10 |
+| Current Task | Task 12 |
+| Tasks Completed | 11 |
 
 ---
 
@@ -111,4 +111,13 @@ Next task: Task 6 - Create MenuBarView
   - Bench moves to inactive list
   - Activate moves from inactive to active
   - Skip advances turn (Driver → Navigator → next)
+- Build succeeded
+
+### Task 11: Create PersistenceService ✅
+
+- Created `MobCrew/MobCrew/Core/Services/PersistenceService.swift`
+- Uses Codable PersistedRoster struct for roster serialization
+- saveRoster/loadRoster with JSONEncoder/JSONDecoder to UserDefaults
+- saveTimerDuration/loadTimerDuration for timer settings
+- Supports custom UserDefaults suite for testing
 - Build succeeded
