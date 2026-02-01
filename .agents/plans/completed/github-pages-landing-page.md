@@ -51,7 +51,7 @@ Create a static landing page for MobCrew deployed via GitHub Pages on pushes to 
     - Configures proper permissions for Pages deployment
   - Notes: No build step needed, just deploy static files
 
-- [ ] **Task 5: Verify deployment setup**
+- [x] **Task 5: Verify deployment setup**
   - Scope: `.github/workflows/pages.yml`, `docs/`
   - Depends on: Task 2, Task 4
   - Acceptance:
