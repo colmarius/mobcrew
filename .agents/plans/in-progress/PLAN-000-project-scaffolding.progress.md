@@ -23,3 +23,9 @@
 - **Started**: 2026-02-01
 - **Completed**: 2026-02-01
 - **Notes**: Created App/, Core/Models/, Core/Services/, Features/FloatingTimer/, Features/MenuBar/, Features/Roster/, Features/Settings/, Helpers/Extensions/, Resources/Assets.xcassets. Moved MobCrewApp.swift to App/, created AppDelegate.swift stub. Updated project.pbxproj with new group structure.
+
+### Task 3: Create MobCrewApp.swift with AppDelegate adaptor
+- **Status**: ✅ Complete
+- **Started**: 2026-02-01
+- **Completed**: 2026-02-01
+- **Notes**: Updated MobCrewApp.swift to use @NSApplicationDelegateAdaptor(AppDelegate.self). Uses @main and WindowGroup with ContentView. Build succeeds.

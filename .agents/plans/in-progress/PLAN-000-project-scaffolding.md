@@ -36,7 +36,7 @@ Create MobCrew Xcode project with feature-based folder structure, core model stu
     - `Resources/Assets.xcassets` exists
   - Notes: Create placeholder files where needed to maintain folder structure.
 
-- [ ] **Task 3: Create MobCrewApp.swift with AppDelegate adaptor**
+- [x] **Task 3: Create MobCrewApp.swift with AppDelegate adaptor**
   - Scope: `MobCrew/MobCrew/App/MobCrewApp.swift`
   - Depends on: Task 2
   - Acceptance:
