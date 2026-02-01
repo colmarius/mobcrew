@@ -17,7 +17,7 @@ struct ContentView: View {
                 }
             }
         }
-        .frame(minWidth: 500, minHeight: 400)
+        .frame(minWidth: 500, minHeight: 450)
     }
     
     private var timerSection: some View {
@@ -32,8 +32,9 @@ struct ContentView: View {
             
             durationStepper
             
-            if appState.timerState.isRunning {
+            if appState.showTips && appState.timerState.isRunning {
                 TipView(tip: appState.currentTip)
+                    .frame(maxHeight: 120)
                     .padding(.top, 8)
             }
             

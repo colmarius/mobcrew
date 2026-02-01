@@ -50,6 +50,11 @@ private struct GeneralSettingsTab: View {
                     get: { appState.notificationsEnabled },
                     set: { appState.notificationsEnabled = $0 }
                 ))
+                
+                Toggle("Show Tips", isOn: Binding(
+                    get: { appState.showTips },
+                    set: { appState.showTips = $0 }
+                ))
             }
             
             Section("Keyboard Shortcuts") {

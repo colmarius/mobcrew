@@ -31,6 +31,11 @@ final class AppState {
             persistenceService.saveNotificationsEnabled(notificationsEnabled)
         }
     }
+    var showTips: Bool = false {
+        didSet {
+            persistenceService.saveShowTips(showTips)
+        }
+    }
     
     private let persistenceService: PersistenceService
     private let notificationService: NotificationService
@@ -51,9 +56,11 @@ final class AppState {
         let loadedBreakInterval = persistenceService.loadBreakInterval() ?? 5
         let loadedBreakDuration = persistenceService.loadBreakDuration() ?? 300 // 5 minutes default
         let loadedNotificationsEnabled = persistenceService.loadNotificationsEnabled() ?? true
+        let loadedShowTips = persistenceService.loadShowTips() ?? false
         
         self.roster = loadedRoster
         self.notificationsEnabled = loadedNotificationsEnabled
+        self.showTips = loadedShowTips
         self.timerDuration = loadedDuration
         self.breakInterval = loadedBreakInterval
         self.breakDuration = loadedBreakDuration

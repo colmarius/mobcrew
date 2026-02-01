@@ -15,6 +15,7 @@ final class PersistenceService {
         static let breakInterval = "mobcrew.breakInterval"
         static let breakDuration = "mobcrew.breakDuration"
         static let notificationsEnabled = "mobcrew.notificationsEnabled"
+        static let showTips = "mobcrew.showTips"
     }
     
     init(userDefaults: UserDefaults = .standard) {
@@ -98,5 +99,18 @@ final class PersistenceService {
             return nil
         }
         return userDefaults.bool(forKey: Keys.notificationsEnabled)
+    }
+    
+    // MARK: - Tips Settings Persistence
+    
+    func saveShowTips(_ show: Bool) {
+        userDefaults.set(show, forKey: Keys.showTips)
+    }
+    
+    func loadShowTips() -> Bool? {
+        if userDefaults.object(forKey: Keys.showTips) == nil {
+            return nil
+        }
+        return userDefaults.bool(forKey: Keys.showTips)
     }
 }
