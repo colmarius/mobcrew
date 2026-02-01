@@ -72,35 +72,9 @@ Research for creating a presentational GitHub Pages website for MobCrew at `http
    - MIT License mention
    - Contact/social links
 
-## Technology Recommendation
+## Technology
 
-### Static HTML vs Astro
-
-**Simple Static HTML (Recommended for v1)**
-
-- Pros:
-  - Zero build step
-  - Fastest to deploy
-  - Easy to maintain
-  - No dependencies
-  - Perfect for single-page landing
-- Cons:
-  - Manual HTML/CSS management
-  - No component reuse
-
-**Astro**
-
-- Pros:
-  - Component-based (if site grows)
-  - Markdown content
-  - Built-in optimizations
-  - Great DX
-- Cons:
-  - Build step required
-  - Overkill for single landing page
-  - More complexity
-
-**Recommendation**: Start with **simple static HTML + Tailwind CSS** (via CDN). If the site grows to include documentation, blog, etc., migrate to Astro.
+**Static HTML + Tailwind CSS** (via CDN) - zero build step, fast to deploy, perfect for a single landing page.
 
 ## GitHub Pages + Custom Domain Setup
 
@@ -245,7 +219,6 @@ Value: colmarius.github.io
 
 ## Resources
 
-- [Astro GitHub Pages Deploy](https://docs.astro.build/en/guides/deploy/github/)
 - [GitHub Pages Custom Domain](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site)
 - [CleanShot X](https://cleanshot.com/) - Design inspiration
 - [Raycast](https://raycast.com/) - Design inspiration
