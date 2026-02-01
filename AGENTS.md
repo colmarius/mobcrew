@@ -10,6 +10,8 @@
 project/
 ├── AGENTS.md                    # This file - project instructions
 ├── .agents/
+│   ├── reference/               # External repos (gitignored)
+│   │   └── mobster/             # Original dillonkearns/mobster clone
 │   ├── research/                # Research and reference material
 │   ├── prds/                    # Product requirements documents
 │   ├── plans/                   # Implementation plans
