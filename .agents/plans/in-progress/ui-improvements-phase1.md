@@ -15,7 +15,7 @@ Address usability and clarity improvements identified in UI review. Focus on red
     - Build succeeds with no warnings
   - Notes: The timer panel already has skip control; roster skip is redundant
 
-- [ ] **Task 2: Improve toggle active/bench icons**
+- [x] **Task 2: Improve toggle active/bench icons**
   - Scope: `MobCrew/Features/Roster/MobsterRow.swift`
   - Depends on: none
   - Acceptance:

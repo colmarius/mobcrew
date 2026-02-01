@@ -19,11 +19,11 @@ struct MobsterRow: View {
             Spacer()
             
             Button(action: onToggleActive) {
-                Image(systemName: isActive ? "arrow.down.circle" : "arrow.up.circle")
-                    .foregroundStyle(.blue)
+                Image(systemName: isActive ? "person.badge.minus" : "person.badge.plus")
+                    .foregroundStyle(isActive ? .orange : .green)
             }
             .buttonStyle(.borderless)
-            .help(isActive ? "Bench" : "Activate")
+            .help(isActive ? "Move to bench" : "Add to active rotation")
             
             Button(action: onRemove) {
                 Image(systemName: "trash")
