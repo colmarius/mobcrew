@@ -26,7 +26,7 @@ struct MobCrewApp: App {
             appState.saveRoster()
         }
         
-        MenuBarExtra("MobCrew", systemImage: "person.3.fill") {
+        MenuBarExtra("MobCrew", systemImage: "stopwatch") {
             MenuBarView(
                 driverName: appState.roster.driver?.name,
                 navigatorName: appState.roster.navigator?.name,
