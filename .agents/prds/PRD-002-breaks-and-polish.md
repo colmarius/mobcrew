@@ -4,7 +4,7 @@
 |-------|-------|
 | Status | draft |
 | Date | 2026-02-01 |
-| Plan | [`PLAN-002`](../plans/todo/PLAN-002-breaks-and-polish.md) |
+| Plans | [`PLAN-002a`](../plans/todo/PLAN-002a-break-system.md), [`PLAN-002b`](../plans/todo/PLAN-002b-notifications-shortcuts-integrations.md) |
 | Depends on | PRD-001-core-timer-roster |
 
 ## Problem
