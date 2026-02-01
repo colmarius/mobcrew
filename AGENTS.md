@@ -2,7 +2,7 @@
 
 ## Overview
 
-[Brief project description - update this for your project]
+Native macOS port of [dillonkearns/mobster](https://github.com/dillonkearns/mobster) - a mob programming timer app using Swift/SwiftUI/AppKit.
 
 ## Project Structure
 
@@ -11,6 +11,7 @@ project/
 ├── AGENTS.md                    # This file - project instructions
 ├── .agents/
 │   ├── research/                # Research and reference material
+│   ├── prds/                    # Product requirements documents
 │   ├── plans/                   # Implementation plans
 │   │   ├── todo/                # Planned but not started
 │   │   ├── in-progress/         # Currently being worked on
@@ -19,8 +20,20 @@ project/
 │       ├── ralph/               # Autonomous implementation loops
 │       ├── research/            # Deep research workflow
 │       └── tmux/                # Background process management
-└── src/                         # Source code
+└── MobsterNative/               # Xcode project (Swift/SwiftUI)
 ```
+
+## PRD → Plan → Execute Workflow
+
+```
+Research → PRD → Plan → Ralph executes
+```
+
+1. **Create PRD**: `Create a PRD for [feature] based on .agents/research/[doc].md`
+2. **Generate Plan**: PRD acceptance criteria → Ralph task format
+3. **Execute**: `Run ralph on .agents/plans/in-progress/[plan].md`
+
+PRD template and rules in `.agents/prds/AGENTS.md`.
 
 ## Plan Management
 
