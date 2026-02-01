@@ -1,18 +1,26 @@
 import Foundation
 import Carbon
 import AppKit
+import Combine
 
-final class GlobalHotkeyService {
+final class GlobalHotkeyService: ObservableObject {
     static let shared = GlobalHotkeyService()
     
     private var hotkeyRef: EventHotKeyRef?
     private var eventHandler: EventHandlerRef?
     private var callback: (() -> Void)?
     
-    private init() {}
+    @Published private(set) var isAccessibilityGranted: Bool = false
+    private var permissionPollingTimer: DispatchSourceTimer?
+    private var onPermissionGranted: (() -> Void)?
+    
+    private init() {
+        isAccessibilityGranted = AXIsProcessTrusted()
+    }
     
     deinit {
         unregister()
+        stopPolling()
     }
     
     /// Registers Cmd+Shift+L as a global hotkey
@@ -105,6 +113,41 @@ final class GlobalHotkeyService {
         // Also open System Settings directly for convenience
         if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility") {
             NSWorkspace.shared.open(url)
+        }
+    }
+    
+    /// Starts polling for accessibility permission changes
+    /// - Parameter onGranted: Called once when permission is granted
+    func startPollingForPermission(onGranted: @escaping () -> Void) {
+        guard !isAccessibilityGranted else {
+            onGranted()
+            return
+        }
+        
+        onPermissionGranted = onGranted
+        
+        permissionPollingTimer = DispatchSource.makeTimerSource(queue: .main)
+        permissionPollingTimer?.schedule(deadline: .now() + 0.5, repeating: 0.5)
+        permissionPollingTimer?.setEventHandler { [weak self] in
+            self?.checkPermissionStatus()
+        }
+        permissionPollingTimer?.resume()
+    }
+    
+    /// Stops polling for permission changes
+    func stopPolling() {
+        permissionPollingTimer?.cancel()
+        permissionPollingTimer = nil
+        onPermissionGranted = nil
+    }
+    
+    private func checkPermissionStatus() {
+        let wasGranted = isAccessibilityGranted
+        isAccessibilityGranted = AXIsProcessTrusted()
+        
+        if isAccessibilityGranted && !wasGranted {
+            stopPolling()
+            onPermissionGranted?()
         }
     }
 }

@@ -73,6 +73,27 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if response == .alertFirstButtonReturn {
             hasRequestedPermissionBefore = true
             GlobalHotkeyService.requestAccessibilityPermission()
+            startPollingForPermission()
         }
+    }
+    
+    private func startPollingForPermission() {
+        GlobalHotkeyService.shared.startPollingForPermission { [weak self] in
+            self?.onAccessibilityPermissionGranted()
+        }
+    }
+    
+    private func onAccessibilityPermissionGranted() {
+        registerGlobalHotkey()
+        showPermissionGrantedNotification()
+    }
+    
+    private func showPermissionGrantedNotification() {
+        let alert = NSAlert()
+        alert.messageText = "Global Hotkey Enabled"
+        alert.informativeText = "Accessibility permission granted. You can now use ⌘⇧L to toggle the floating timer."
+        alert.alertStyle = .informational
+        alert.addButton(withTitle: "OK")
+        alert.runModal()
     }
 }

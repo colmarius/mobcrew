@@ -138,3 +138,37 @@ See: `.agents/research/accessibility-permissions.md` for detailed reference.
 - Build: ✅ Succeeded
 - Tests: ✅ All 28 tests pass
 
+---
+
+### Task 4: Add permission status polling
+**Status**: ✅ Completed  
+**Date**: 2026-02-01
+
+#### Changes Made
+
+**GlobalHotkeyService.swift**:
+- Added `ObservableObject` conformance with `@Published isAccessibilityGranted`
+- Added `startPollingForPermission(onGranted:)` method
+  - Polls every 0.5 seconds using `DispatchSourceTimer`
+  - Automatically stops when permission is granted
+  - Calls callback once when permission detected
+- Added `stopPolling()` method for cleanup
+- Added `checkPermissionStatus()` private method
+
+**AppDelegate.swift**:
+- Starts polling after user clicks "Open System Settings"
+- On permission granted:
+  - Re-registers the global hotkey
+  - Shows confirmation alert to user
+
+#### User Flow
+1. User clicks "Open System Settings"
+2. App polls `AXIsProcessTrusted()` every 0.5s
+3. User grants permission in System Settings
+4. App detects change, stops polling
+5. App registers hotkey and shows confirmation
+
+#### Verification
+- Build: ✅ Succeeded
+- Tests: ✅ All 28 tests pass
+

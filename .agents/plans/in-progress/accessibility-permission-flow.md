@@ -36,7 +36,7 @@ When the user clicks "Open System Settings" from the accessibility permission al
     - Handle "already denied" case gracefully
   - Notes: May need different messaging for first-time vs repeat prompts
 
-- [ ] **Task 4: Add permission status polling**
+- [x] **Task 4: Add permission status polling**
   - Scope: `MobCrew/MobCrew/Core/Services/GlobalHotkeyService.swift`
   - Depends on: Task 3
   - Acceptance:
