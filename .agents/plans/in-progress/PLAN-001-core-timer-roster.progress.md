@@ -155,3 +155,13 @@ Next task: Task 6 - Create MenuBarView
 
 Tasks completed this session: 11, 12, 13, 14
 Next task: Task 15 - Wire up ContentView with real UI
+
+### Task 15: Wire up ContentView with real UI ✅
+
+- Updated `MobCrew/MobCrew/ContentView.swift`
+- HSplitView layout: timer section + RosterView
+- Timer section shows Driver/Navigator, MM:SS countdown, progress bar
+- Timer controls: play/pause, reset, skip with keyboard shortcuts
+- Duration stepper (1-30 min)
+- Updated `MobCrewApp.swift` to use centralized AppState
+- Build succeeded, all 21 tests pass

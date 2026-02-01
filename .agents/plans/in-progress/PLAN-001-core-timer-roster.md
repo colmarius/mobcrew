@@ -164,7 +164,7 @@ Implement working mob timer with floating window, roster management, menu bar in
     - Injected into views via `@Environment` or passed directly
     - Connects timer completion to roster advanceTurn
 
-- [ ] **Task 15: Wire up ContentView with real UI**
+- [x] **Task 15: Wire up ContentView with real UI**
   - Scope: `MobCrew/MobCrew/ContentView.swift`
   - Depends on: Task 8, Task 14
   - Acceptance:
