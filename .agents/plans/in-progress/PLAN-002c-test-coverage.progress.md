@@ -66,3 +66,23 @@
 
 ---
 
+## Task 4: Test timer duration persistence
+
+**Thread**: https://ampcode.com/threads/T-019c1b17-3909-72ba-89b7-3104db1ccdba
+**Status**: completed
+**Iteration**: 1
+
+### Changes
+
+- `MobCrew/MobCrewTests/Core/AppStateTests.swift` - Added 2 tests for duration persistence
+
+### Commands Run
+
+- `xcodebuild test -only-testing:MobCrewTests/AppStateTests` ✓
+
+### Next
+
+- Task 5: Test roster changes trigger save
+
+---
+

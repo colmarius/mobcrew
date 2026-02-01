@@ -129,4 +129,32 @@ struct AppStateTests {
         
         appState.timerEngine.stop()
     }
+    
+    // MARK: - Timer Duration Persistence (Task 4)
+    
+    @Test("changing timer duration triggers save")
+    func changingTimerDurationTriggersSave() {
+        let defaults = makeTestUserDefaults()
+        let service = PersistenceService(userDefaults: defaults)
+        let appState = AppState(persistenceService: service)
+        
+        appState.timerDuration = 900
+        
+        let savedDuration = service.loadTimerDuration()
+        #expect(savedDuration == 900)
+    }
+    
+    @Test("timer duration persists across AppState instances")
+    func timerDurationPersistsAcrossInstances() {
+        let defaults = makeTestUserDefaults()
+        
+        let service1 = PersistenceService(userDefaults: defaults)
+        let appState1 = AppState(persistenceService: service1)
+        appState1.timerDuration = 1200
+        
+        let service2 = PersistenceService(userDefaults: defaults)
+        let appState2 = AppState(persistenceService: service2)
+        
+        #expect(appState2.timerDuration == 1200)
+    }
 }

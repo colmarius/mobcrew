@@ -41,7 +41,7 @@ Add missing test coverage for core components: AppState integration tests, Roste
     - Timer resets to configured duration
     - Timer starts automatically after skip
 
-- [ ] **Task 4: Test timer duration persistence**
+- [x] **Task 4: Test timer duration persistence**
   - Scope: `MobCrew/MobCrewTests/Core/AppStateTests.swift`
   - Depends on: Task 1
   - Acceptance:
