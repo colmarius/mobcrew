@@ -2,7 +2,7 @@
 
 | Field | Value |
 |-------|-------|
-| Status | in-progress |
+| Status | completed |
 | Date | 2026-02-01 |
 | PRD | [`PRD-002`](../../prds/PRD-002-breaks-and-polish.md) |
 | Depends on | PLAN-001, PLAN-002a |
@@ -141,7 +141,7 @@ Add system notifications, keyboard shortcuts (local and global), shuffle roster,
 
 ### Final Verification
 
-- [ ] **Task 14: Verify full integration**
+- [x] **Task 14: Verify full integration**
   - Scope: `MobCrew/`
   - Depends on: Tasks 1-13
   - Acceptance:
