@@ -12,6 +12,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         
         checkAccessibilityPermission()
+        registerGlobalHotkey()
+    }
+    
+    private func registerGlobalHotkey() {
+        GlobalHotkeyService.shared.register { [weak self] in
+            DispatchQueue.main.async {
+                self?.toggleFloatingTimer()
+            }
+        }
     }
 
     func applicationWillTerminate(_ notification: Notification) {

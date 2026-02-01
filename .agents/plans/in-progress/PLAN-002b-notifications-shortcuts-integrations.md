@@ -90,7 +90,7 @@ Add system notifications, keyboard shortcuts (local and global), shuffle roster,
     - Show alert directing user to System Preferences if not
     - Gracefully degrade if permission denied
 
-- [ ] **Task 9: Wire global hotkey to floating timer toggle**
+- [x] **Task 9: Wire global hotkey to floating timer toggle**
   - Scope: `MobCrew/MobCrew/App/AppDelegate.swift`
   - Depends on: Tasks 7, 8
   - Acceptance:

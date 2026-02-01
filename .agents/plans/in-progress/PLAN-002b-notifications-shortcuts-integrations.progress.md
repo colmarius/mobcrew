@@ -182,3 +182,23 @@ Plan: [PLAN-002b](./PLAN-002b-notifications-shortcuts-integrations.md)
 
 ---
 
+## Task 9: Wire global hotkey to floating timer toggle
+
+**Thread**: https://ampcode.com/threads/T-019c1b3d-38d3-74b8-b4a1-983ab280a140
+**Status**: completed
+**Iteration**: 1
+
+### Changes
+
+- `MobCrew/MobCrew/App/AppDelegate.swift` - Added registerGlobalHotkey() that registers Cmd+Shift+L to toggle floating timer on app launch
+
+### Commands Run
+
+- `./scripts/test.sh` ✓ (all tests pass)
+
+### Next
+
+- Task 10: Add shuffle button to RosterView
+
+---
+
