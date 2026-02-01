@@ -115,7 +115,7 @@ Create MobCrew Xcode project with feature-based folder structure, core model stu
     - Tests Hashable conformance
     - All tests pass
 
-- [ ] **Task 12: Create RosterTests**
+- [x] **Task 12: Create RosterTests**
   - Scope: `MobCrew/MobCrewTests/Core/Models/RosterTests.swift`
   - Depends on: Task 6, Task 10
   - Acceptance:

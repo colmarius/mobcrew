@@ -109,3 +109,9 @@
 - **Started**: 2026-02-01
 - **Completed**: 2026-02-01
 - **Notes**: Created MobsterTests.swift using Swift Testing framework. Tests Codable round-trip encoding/decoding, Hashable conformance, and default UUID generation. All tests pass.
+
+### Task 12: Create RosterTests
+- **Status**: ✅ Complete
+- **Started**: 2026-02-01
+- **Completed**: 2026-02-01
+- **Notes**: Created RosterTests.swift using Swift Testing framework. Tests driver/navigator computed properties, advanceTurn() rotation, addMobster, benchMobster, rotateIn, and driver index adjustment after removal. All tests pass.
