@@ -28,14 +28,17 @@ final class AppState {
     
     private let persistenceService: PersistenceService
     private let notificationService: NotificationService
+    private let activeMobstersFileService: ActiveMobstersFileService
     private var hasRequestedNotificationPermission = false
     
     init(
         persistenceService: PersistenceService = PersistenceService(),
-        notificationService: NotificationService = .shared
+        notificationService: NotificationService = .shared,
+        activeMobstersFileService: ActiveMobstersFileService = ActiveMobstersFileService()
     ) {
         self.persistenceService = persistenceService
         self.notificationService = notificationService
+        self.activeMobstersFileService = activeMobstersFileService
         
         let loadedRoster = persistenceService.loadRoster()
         let loadedDuration = persistenceService.loadTimerDuration() ?? 420 // 7 minutes default
@@ -66,6 +69,7 @@ final class AppState {
             completeBreak()
         } else {
             roster.advanceTurn()
+            updateActiveMobstersFile()
             turnsSinceBreak += 1
             
             if turnsSinceBreak >= breakInterval {
@@ -105,6 +109,11 @@ final class AppState {
     
     func saveRoster() {
         persistenceService.saveRoster(roster)
+        activeMobstersFileService.writeActiveMobsters(roster)
+    }
+    
+    func updateActiveMobstersFile() {
+        activeMobstersFileService.writeActiveMobsters(roster)
     }
     
     func resetTimer() {
@@ -124,6 +133,7 @@ final class AppState {
     
     func skipTurn() {
         roster.advanceTurn()
+        updateActiveMobstersFile()
         timerEngine.reset(duration: timerDuration)
         timerEngine.start()
     }

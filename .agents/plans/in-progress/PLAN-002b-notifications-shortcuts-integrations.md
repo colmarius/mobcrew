@@ -121,7 +121,7 @@ Add system notifications, keyboard shortcuts (local and global), shuffle roster,
     - Format: comma-separated names (e.g., `Jim Kirk, Spock, McCoy`)
     - Only includes active mobsters in current order
 
-- [ ] **Task 12: Wire file export to roster changes**
+- [x] **Task 12: Wire file export to roster changes**
   - Scope: `MobCrew/MobCrew/Core/AppState.swift`
   - Depends on: Task 11
   - Acceptance:
