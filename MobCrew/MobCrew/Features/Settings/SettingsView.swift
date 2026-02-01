@@ -14,6 +14,11 @@ struct SettingsView: View {
                 .tabItem {
                     Label("Breaks", systemImage: "cup.and.saucer")
                 }
+            
+            ShortcutsSettingsTab()
+                .tabItem {
+                    Label("Shortcuts", systemImage: "keyboard")
+                }
         }
         .frame(width: 450, height: 320)
     }
@@ -57,6 +62,15 @@ private struct GeneralSettingsTab: View {
                 ))
             }
             
+
+        }
+        .formStyle(.grouped)
+    }
+}
+
+private struct ShortcutsSettingsTab: View {
+    var body: some View {
+        Form {
             Section("Keyboard Shortcuts") {
                 ShortcutRow(shortcut: "⌘⇧L", description: "Toggle floating timer", note: "Global")
                 ShortcutRow(shortcut: "⌘↩", description: "Start/Pause timer")
