@@ -41,7 +41,7 @@ Implement working mob timer with floating window, roster management, menu bar in
 
 ### Floating Timer Window
 
-- [ ] **Task 3: Create FloatingTimerWindow (NSPanel)**
+- [x] **Task 3: Create FloatingTimerWindow (NSPanel)**
   - Scope: `MobCrew/MobCrew/Features/FloatingTimer/FloatingTimerWindow.swift`
   - Depends on: none
   - Acceptance:

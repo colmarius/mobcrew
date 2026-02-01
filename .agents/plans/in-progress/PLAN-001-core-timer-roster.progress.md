@@ -3,8 +3,8 @@
 | Field | Value |
 |-------|-------|
 | Started | 2026-02-01 |
-| Current Task | Task 3 |
-| Tasks Completed | 2 |
+| Current Task | Task 4 |
+| Tasks Completed | 3 |
 
 ---
 
@@ -32,3 +32,13 @@
 - Tests initial state, reset, start/stop, toggle, pause/resume
 - Async tests for countdown decrement and completion callback
 - All tests pass
+
+### Task 3: Create FloatingTimerWindow (NSPanel) ✅
+
+- Created `MobCrew/MobCrew/Features/FloatingTimer/FloatingTimerWindow.swift`
+- NSPanel subclass with borderless, nonactivatingPanel style
+- level = .floating (always on top)
+- Transparent background (isOpaque = false, backgroundColor = .clear)
+- collectionBehavior = [.canJoinAllSpaces, .stationary]
+- isMovableByWindowBackground = true for dragging
+- Build succeeded
