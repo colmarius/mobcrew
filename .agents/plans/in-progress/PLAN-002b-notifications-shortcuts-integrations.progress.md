@@ -202,14 +202,23 @@ Plan: [PLAN-002b](./PLAN-002b-notifications-shortcuts-integrations.md)
 
 ---
 
-## Session Pause
+## Task 10: Add shuffle button to RosterView
 
-**Paused after 5 tasks for review** (Tasks 5-9)
+**Thread**: https://ampcode.com/threads/T-019c1b41-5579-71b4-9e62-17834819b7ff
+**Status**: completed
+**Iteration**: 1
 
-**Resume command:**
-```text
-Continue ralph from Task 10 on .agents/plans/in-progress/PLAN-002b-notifications-shortcuts-integrations.md
-```
+### Changes
+
+- `MobCrew/MobCrew/Features/Roster/RosterView.swift` - Added shuffle button with `shuffle` SF Symbol next to "Active" header, disabled when < 2 mobsters
+
+### Commands Run
+
+- `./scripts/test.sh` ✓ (all tests pass)
+
+### Next
+
+- Task 11: Create ActiveMobstersFileService
 
 ---
 

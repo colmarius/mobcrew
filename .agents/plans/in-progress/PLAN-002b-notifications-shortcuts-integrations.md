@@ -100,7 +100,7 @@ Add system notifications, keyboard shortcuts (local and global), shuffle roster,
 
 ### Shuffle Roster
 
-- [ ] **Task 10: Add shuffle button to RosterView**
+- [x] **Task 10: Add shuffle button to RosterView**
   - Scope: `MobCrew/MobCrew/Features/Roster/RosterView.swift`
   - Depends on: none
   - Acceptance:

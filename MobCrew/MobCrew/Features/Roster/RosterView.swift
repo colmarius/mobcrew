@@ -59,9 +59,21 @@ struct RosterView: View {
     
     private var activeSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Active")
-                .font(.headline)
-                .foregroundStyle(.secondary)
+            HStack {
+                Text("Active")
+                    .font(.headline)
+                    .foregroundStyle(.secondary)
+                
+                Spacer()
+                
+                Button(action: { roster.shuffle() }) {
+                    Image(systemName: "shuffle")
+                        .font(.body)
+                }
+                .buttonStyle(.borderless)
+                .disabled(roster.activeMobsters.count < 2)
+                .help("Shuffle roster order")
+            }
             
             List {
                 ForEach(Array(roster.activeMobsters.enumerated()), id: \.element.id) { index, mobster in
