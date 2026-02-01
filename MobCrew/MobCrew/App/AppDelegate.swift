@@ -6,11 +6,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var hasShownAccessibilityAlert = false
     
     func applicationDidFinishLaunching(_ notification: Notification) {
-        if let appState = appState {
-            floatingTimerController = FloatingTimerController(appState: appState)
-            floatingTimerController?.show()
-        }
-        
         checkAccessibilityPermission()
         registerGlobalHotkey()
     }
