@@ -2,6 +2,8 @@
 
 A native macOS mob programming timer app, inspired by [mobster](https://github.com/dillonkearns/mobster).
 
+Built with [Amp](https://ampcode.com) — see the [development thread](https://ampcode.com/threads/T-019c1ba0-b486-75bc-887b-14ddd6684695) for the full build history.
+
 ## Features
 
 - **Timer** - Configurable turn duration with audio notifications
@@ -66,6 +68,48 @@ Prerequisites: `gh` CLI and Node.js (`brew install gh node && gh auth login`)
 ```
 
 See [docs/RELEASING.md](docs/RELEASING.md) for the full release process.
+
+## Project Evolution
+
+```mermaid
+flowchart TB
+    subgraph Phase1["Phase 1: Foundation & Research"]
+        A[Agent Setup] --> B[Research]
+        B --> C[PRDs & Planning]
+    end
+
+    subgraph Phase2["Phase 2: Project Scaffolding"]
+        D[Xcode Project] --> E[Folder Structure]
+        E --> F[Core Models]
+        F --> G[Initial Tests]
+    end
+
+    subgraph Phase3["Phase 3: Core Features"]
+        H[TimerEngine] --> I[FloatingTimer]
+        I --> J[MenuBar UI]
+        J --> K[Roster Management]
+        K --> L[Persistence]
+    end
+
+    subgraph Phase4["Phase 4: Polish & Distribution"]
+        M[Break System] --> N[Notifications]
+        N --> O[Global Hotkeys]
+        O --> P[Settings UI]
+        P --> Q[Release Automation]
+        Q --> R[Landing Page]
+    end
+
+    Phase1 --> Phase2
+    Phase2 --> Phase3
+    Phase3 --> Phase4
+```
+
+| Phase | Description |
+|-------|-------------|
+| **1. Foundation** | Agent setup, research (Ghostty patterns, Elm→Swift porting), PRD creation |
+| **2. Scaffolding** | Xcode project, folder structure, core models (Mobster/Roster/TimerState), tests |
+| **3. Core Features** | TimerEngine, FloatingTimer (NSPanel), MenuBar, RosterView, PersistenceService |
+| **4. Polish** | UI improvements, breaks, notifications, global hotkeys, settings, release automation |
 
 ## License
 
