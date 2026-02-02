@@ -2,7 +2,7 @@
 
 A native macOS mob programming timer app, inspired by [mobster](https://github.com/dillonkearns/mobster).
 
-Built with [Amp](https://ampcode.com) — see the [development thread](https://ampcode.com/threads/T-019c1ba0-b486-75bc-887b-14ddd6684695) for the full build history.
+Built with [Amp](https://ampcode.com) (~$60 in tokens) — see the [development thread](https://ampcode.com/threads/T-019c1ba0-b486-75bc-887b-14ddd6684695) for the full build history.
 
 ## Features
 
