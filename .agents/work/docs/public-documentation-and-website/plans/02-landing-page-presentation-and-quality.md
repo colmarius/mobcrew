@@ -32,7 +32,7 @@ an unnecessary frontend application stack.
 
 ## Tasks
 
-- [ ] **Task 2.1: Implement the approved information architecture and message hierarchy**
+- [x] **Task 2.1: Implement the approved information architecture and message hierarchy**
   - Scope: `docs/index.html`
   - Depends on: Phase 1 Tasks 1.1-1.4 (stable public message and install facts); incorporate Task
     1.7 evidence when it exists instead of blocking on macOS access
@@ -49,7 +49,7 @@ an unnecessary frontend application stack.
   - Notes: This is an information-architecture and copy implementation, not a speculative visual
     redesign or JavaScript application.
 
-- [ ] **Task 2.2: Replace the Tailwind browser runtime with static production CSS**
+- [x] **Task 2.2: Replace the Tailwind browser runtime with static production CSS**
   - Scope: `docs/index.html`, `docs/assets/` stylesheet as needed, Pages-serving scripts/config
   - Depends on: Task 2.1
   - Acceptance:
@@ -63,7 +63,7 @@ an unnecessary frontend application stack.
   - Notes: Preferred default for this one-page site is a small checked-in static stylesheet rather
     than introducing package management and a Tailwind build pipeline.
 
-- [ ] **Task 2.3: Fix keyboard, contrast, semantics, and touch ergonomics**
+- [x] **Task 2.3: Fix keyboard, contrast, semantics, and touch ergonomics**
   - Scope: `docs/index.html`, landing-page CSS
   - Depends on: Task 2.1, Task 2.2
   - Acceptance:
@@ -79,7 +79,7 @@ an unnecessary frontend application stack.
   - Notes: Preserve the already-correct landmark and heading hierarchy. Record contrast ratios rather
     than relying on visual judgment alone.
 
-- [ ] **Task 2.4: Make the existing gallery truthful, responsive, and inspectable**
+- [x] **Task 2.4: Make the existing gallery truthful, responsive, and inspectable**
   - Scope: `docs/assets/images/`, `docs/SCREENSHOTS.md`, `docs/index.html`
   - Depends on: Task 2.1
   - Acceptance:
@@ -109,8 +109,11 @@ an unnecessary frontend application stack.
       sizes before replacing existing assets.
   - Notes: Requires macOS. Keep this queued rather than substituting invented mockups or blocking the
     rest of Phase 2.
+  - Execution state (2026-08-08): **unverified** in the Linux orb. Existing captures were optimized
+    and visually reviewed, but no replacement was represented as a new real-app capture. The staged
+    recapture procedure remains in `docs/SCREENSHOTS.md`.
 
-- [ ] **Task 2.6: Optimize image loading and record performance change**
+- [x] **Task 2.6: Optimize image loading and record performance change**
   - Scope: `docs/assets/images/`, `docs/index.html`
   - Depends on: Task 2.4
   - Acceptance:
@@ -125,7 +128,7 @@ an unnecessary frontend application stack.
   - Notes: Keep capture source only if there is a real future editing need; do not ship unoptimized
     and optimized duplicates without purpose. This task does not depend on Task 2.5.
 
-- [ ] **Task 2.7: Add core search and social metadata**
+- [x] **Task 2.7: Add core search and social metadata**
   - Scope: `docs/index.html`, `docs/favicon.png`, `docs/assets/images/`, optional static metadata files
   - Depends on: Task 2.1, Task 2.4
   - Acceptance:
@@ -138,7 +141,7 @@ an unnecessary frontend application stack.
     appropriate asset/indexing decision makes them useful. Trust copy belongs to Task 2.1 page
     content, not metadata. External social-preview cache checks are post-deployment validation.
 
-- [ ] **Task 2.8: Add proportional deterministic Pages validation**
+- [x] **Task 2.8: Add proportional deterministic Pages validation**
   - Scope: `.github/workflows/pages.yml`, `docs/`, validation script/config only if justified
   - Depends on: Task 2.2, Task 2.3, Task 2.7
   - Acceptance:

@@ -95,6 +95,9 @@ Or open `MobCrew/MobCrew.xcodeproj` in Xcode and use ⌘B (build), ⌘R (run), �
 
 # Serve docs locally
 ./scripts/serve-docs.sh
+
+# Validate docs links, metadata, assets, and known stale claims
+python3 scripts/validate-docs.py
 ```
 
 ### Amp orbs

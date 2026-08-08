@@ -13,26 +13,27 @@ current release-trust limitations.
 
 ## Summary
 
-Phase 1's feasible documentation work is complete and Phase 2 is active after refinement against the
-corrected public facts. Released-artifact architecture, signatures, notarization, Gatekeeper
-behavior, clean-Mac qualification, and real-app screenshot recapture remain explicit unverified
-macOS gates and do not block the static site. Phase 3 continues to separate local release hardening
-from credential-dependent signing and separately authorized release operations. The scope excludes
+Phases 1 and 2 are complete for all Linux-feasible work. Public facts and install guidance are
+corrected; the static site is dependency-free, accessible, responsive, image-optimized, metadata-rich,
+and covered by deterministic Pages validation. Released-artifact architecture, signatures,
+notarization, Gatekeeper behavior, clean-Mac qualification, and real-app screenshot recapture remain
+explicit unverified macOS gates. Phase 3 is next and still separates local release hardening from
+credential-dependent signing and separately authorized release operations. The scope excludes
 unrelated app features and does not authorize publishing, deleting, merging, or deploying releases.
 
 ## Artifacts
 
 - Research: [Audit findings](research.md)
 - PRD: none
-- Plan: [Ordered plan index](plans/index.md) — Phase 2 is active
+- Plan: [Ordered plan index](plans/index.md) — Phase 3 refinement is next
 - Progress: [Execution evidence](progress.md)
 - Decisions: none
 - Handoffs: none
 
 ## Next Action
 
-- Implement [Phase 2, Task 2.1](plans/02-landing-page-presentation-and-quality.md#tasks): restructure
-  the landing page around the now-stable message and qualified install facts.
+- Refine [Phase 3](plans/03-release-and-distribution-hardening.md) against the implemented
+  documentation/trust state, then execute its feasible non-credential local hardening tasks.
 
 ## Open Questions
 

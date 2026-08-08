@@ -114,6 +114,9 @@ xcodebuild test -project MobCrew/MobCrew.xcodeproj -scheme MobCrew -destination 
 # Serve docs locally
 ./scripts/serve-docs.sh
 
+# Validate docs links, metadata, assets, and known stale claims
+python3 scripts/validate-docs.py
+
 # In an Amp orb: start/reconcile the supervised docs preview and portal
 amp orb services ensure
 ```

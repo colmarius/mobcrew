@@ -24,6 +24,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
+      - name: Validate static documentation
+        run: python3 scripts/validate-docs.py
+
       - name: Setup Pages
         uses: actions/configure-pages@v6
 
