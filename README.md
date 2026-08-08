@@ -68,7 +68,6 @@ in Applications. For help or bug reports, use [GitHub Issues](https://github.com
 Development requires a Mac with the full Xcode 26.6+ application and its Swift 6.3 compiler. Xcode
 is not required just to install or run a release.
 
-
 Built with [Amp](https://ampcode.com) (~$60 in tokens) — see the
 [development thread](https://ampcode.com/threads/T-019c1ba0-b486-75bc-887b-14ddd6684695)
 for the original build history.
@@ -171,12 +170,12 @@ flowchart TB
     Phase3 --> Phase4
 ```
 
-| Phase | Description |
-|-------|-------------|
-| **1. Foundation** | Agent setup, research (Ghostty patterns, Elm→Swift porting), PRD creation |
-| **2. Scaffolding** | Xcode project, folder structure, core models (Mobster/Roster/TimerState), tests |
-| **3. Core Features** | TimerEngine, FloatingTimer (NSPanel), MenuBar, RosterView, PersistenceService |
-| **4. Polish** | UI improvements, breaks, notifications, global hotkeys, settings, release automation |
+| Phase                | Description                                                                          |
+| -------------------- | ------------------------------------------------------------------------------------ |
+| **1. Foundation**    | Agent setup, research (Ghostty patterns, Elm→Swift porting), PRD creation            |
+| **2. Scaffolding**   | Xcode project, folder structure, core models (Mobster/Roster/TimerState), tests      |
+| **3. Core Features** | TimerEngine, FloatingTimer (NSPanel), MenuBar, RosterView, PersistenceService        |
+| **4. Polish**        | UI improvements, breaks, notifications, global hotkeys, settings, release automation |
 
 ## License
 

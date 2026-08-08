@@ -1,263 +1,585 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>MobCrew — macOS timer for pair and mob programming</title>
-    <meta name="description" content="Keep driver and navigator rotations visible and on time with MobCrew, a native macOS timer for pair, mob, and ensemble programming.">
-    <link rel="canonical" href="https://mobcrew.team/">
+    <meta
+      name="description"
+      content="Keep driver and navigator rotations visible and on time with MobCrew, a native macOS timer for pair, mob, and ensemble programming."
+    />
+    <link rel="canonical" href="https://mobcrew.team/" />
 
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="MobCrew">
-    <meta property="og:title" content="MobCrew — Keep every driver rotation on time">
-    <meta property="og:description" content="A native macOS timer for pair, mob, and ensemble programming. Track the roster, show the roles, and keep the countdown visible.">
-    <meta property="og:url" content="https://mobcrew.team/">
-    <meta property="og:image" content="https://mobcrew.team/assets/images/social-preview.jpg">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="MobCrew — role rotations that stay visible and on time">
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="MobCrew" />
+    <meta
+      property="og:title"
+      content="MobCrew — Keep every driver rotation on time"
+    />
+    <meta
+      property="og:description"
+      content="A native macOS timer for pair, mob, and ensemble programming. Track the roster, show the roles, and keep the countdown visible."
+    />
+    <meta property="og:url" content="https://mobcrew.team/" />
+    <meta
+      property="og:image"
+      content="https://mobcrew.team/assets/images/social-preview.jpg"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="MobCrew — role rotations that stay visible and on time"
+    />
 
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="MobCrew — Keep every driver rotation on time">
-    <meta name="twitter:description" content="A native macOS timer for pair, mob, and ensemble programming.">
-    <meta name="twitter:image" content="https://mobcrew.team/assets/images/social-preview.jpg">
-    <meta name="twitter:image:alt" content="MobCrew — role rotations that stay visible and on time">
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="MobCrew — Keep every driver rotation on time"
+    />
+    <meta
+      name="twitter:description"
+      content="A native macOS timer for pair, mob, and ensemble programming."
+    />
+    <meta
+      name="twitter:image"
+      content="https://mobcrew.team/assets/images/social-preview.jpg"
+    />
+    <meta
+      name="twitter:image:alt"
+      content="MobCrew — role rotations that stay visible and on time"
+    />
 
-    <meta name="theme-color" content="#080b12">
-    <link rel="icon" href="favicon.png" type="image/png" sizes="128x128">
-    <link rel="stylesheet" href="assets/styles.css">
-</head>
-<body>
+    <meta name="theme-color" content="#080b12" />
+    <link rel="icon" href="favicon.png" type="image/png" sizes="128x128" />
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
 
     <header class="site-header">
-        <nav class="site-nav shell" aria-label="Primary navigation">
-            <div class="nav-topline">
-                <a class="brand" href="/" aria-label="MobCrew home">
-                    <img src="assets/images/logo.png" alt="" width="128" height="128" decoding="async">
-                    <span>MobCrew</span>
-                </a>
-            </div>
-            <ul class="section-nav">
-                <li><a href="#how-it-works">How it works</a></li>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#install">Install &amp; trust</a></li>
-                <li><a href="#faq">FAQ</a></li>
-            </ul>
-            <div class="nav-actions">
-                <a class="nav-link" href="https://github.com/colmarius/mobcrew">GitHub</a>
-                <a class="button button-small" href="https://github.com/colmarius/mobcrew/releases/latest">Latest release</a>
-            </div>
-        </nav>
+      <nav class="site-nav shell" aria-label="Primary navigation">
+        <div class="nav-topline">
+          <a class="brand" href="/" aria-label="MobCrew home">
+            <img
+              src="assets/images/logo.png"
+              alt=""
+              width="128"
+              height="128"
+              decoding="async"
+            />
+            <span>MobCrew</span>
+          </a>
+        </div>
+        <ul class="section-nav">
+          <li><a href="#how-it-works">How it works</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#install">Install &amp; trust</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+        <div class="nav-actions">
+          <a class="nav-link" href="https://github.com/colmarius/mobcrew"
+            >GitHub</a
+          >
+          <a
+            class="button button-small"
+            href="https://github.com/colmarius/mobcrew/releases/latest"
+            >Latest release</a
+          >
+        </div>
+      </nav>
     </header>
 
     <main id="main-content">
-        <section class="hero shell" aria-labelledby="hero-title">
-            <div class="hero-copy">
-                <p class="eyebrow">Native macOS app for pair, mob, and ensemble programming</p>
-                <h1 id="hero-title">Keep every driver rotation on time.</h1>
-                <p class="hero-lede">Track the roster, show the current driver and navigator, rotate roles automatically, and keep the countdown visible without interrupting the session.</p>
-                <div class="hero-actions">
-                    <a class="button" href="https://github.com/colmarius/mobcrew/releases/latest">
-                        View latest release
-                        <svg aria-hidden="true" focusable="false" viewBox="0 0 20 20"><path d="M7.5 4.5 13 10l-5.5 5.5 1.4 1.4 6.9-6.9-6.9-6.9-1.4 1.4Z"/></svg>
-                    </a>
-                    <a class="button button-secondary" href="#how-it-works">See how it works</a>
-                </div>
-                <ul class="trust-list">
-                    <li>macOS 14+</li>
-                    <li>Apple silicon</li>
-                    <li>MIT licensed</li>
-                    <li>No account</li>
-                    <li>Data stays local</li>
-                </ul>
-                <p class="release-caveat"><strong>Release trust note:</strong> the current v0.2.0 artifact is arm64-only, its app is ad-hoc signed rather than Developer ID signed, and its outer DMG is unsigned. Exact notarization and clean-Mac Gatekeeper behavior remain unverified.</p>
-            </div>
+      <section class="hero shell" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">
+            Native macOS app for pair, mob, and ensemble programming
+          </p>
+          <h1 id="hero-title">Keep every driver rotation on time.</h1>
+          <p class="hero-lede">
+            Track the roster, show the current driver and navigator, rotate
+            roles automatically, and keep the countdown visible without
+            interrupting the session.
+          </p>
+          <div class="hero-actions">
+            <a
+              class="button"
+              href="https://github.com/colmarius/mobcrew/releases/latest"
+            >
+              View latest release
+              <svg aria-hidden="true" focusable="false" viewBox="0 0 20 20">
+                <path
+                  d="M7.5 4.5 13 10l-5.5 5.5 1.4 1.4 6.9-6.9-6.9-6.9-1.4 1.4Z"
+                />
+              </svg>
+            </a>
+            <a class="button button-secondary" href="#how-it-works"
+              >See how it works</a
+            >
+          </div>
+          <ul class="trust-list">
+            <li>macOS 14+</li>
+            <li>Apple silicon</li>
+            <li>MIT licensed</li>
+            <li>No account</li>
+            <li>Data stays local</li>
+          </ul>
+          <p class="release-caveat">
+            <strong>Release trust note:</strong> the current v0.2.0 artifact is
+            arm64-only, its app is ad-hoc signed rather than Developer ID
+            signed, and its outer DMG is unsigned. Exact notarization and
+            clean-Mac Gatekeeper behavior remain unverified.
+          </p>
+        </div>
 
-            <figure class="hero-proof">
-                <a class="image-link" href="assets/images/hero-screenshot.webp" aria-label="Open the full-resolution MobCrew main-window screenshot">
-                    <img src="assets/images/hero-screenshot.webp" alt="MobCrew main window showing a 4 minute 43 second timer, Driver Alice, Navigator Bob, and a four-person roster" width="1800" height="1204" decoding="async" fetchpriority="high">
-                </a>
-                <figcaption>Main-window timer, current roles, and active roster.</figcaption>
-            </figure>
-        </section>
+        <figure class="hero-proof">
+          <a
+            class="image-link"
+            href="assets/images/hero-screenshot.webp"
+            aria-label="Open the full-resolution MobCrew main-window screenshot"
+          >
+            <img
+              src="assets/images/hero-screenshot.webp"
+              alt="MobCrew main window showing a 4 minute 43 second timer, Driver Alice, Navigator Bob, and a four-person roster"
+              width="1800"
+              height="1204"
+              decoding="async"
+              fetchpriority="high"
+            />
+          </a>
+          <figcaption>
+            Main-window timer, current roles, and active roster.
+          </figcaption>
+        </figure>
+      </section>
 
-        <section id="how-it-works" class="section shell" aria-labelledby="how-heading">
-            <div class="section-heading">
-                <p class="eyebrow">A shared rhythm without meeting overhead</p>
-                <h2 id="how-heading">Set the roster. Start the timer. Rotate together.</h2>
-                <p>Mob programming puts the whole team on one problem. MobCrew handles the visible rotation so the team can stay focused on the work.</p>
-            </div>
-            <ol class="steps">
-                <li>
-                    <span class="step-number" aria-hidden="true">01</span>
-                    <h3>Build the crew</h3>
-                    <p>Add, bench, reorder, or shuffle participants. MobCrew assigns the current Driver and Navigator from the active roster.</p>
-                </li>
-                <li>
-                    <span class="step-number" aria-hidden="true">02</span>
-                    <h3>Keep time visible</h3>
-                    <p>Run a configurable turn timer in the main window or the always-on-top floating panel while everyone works.</p>
-                </li>
-                <li>
-                    <span class="step-number" aria-hidden="true">03</span>
-                    <h3>Rotate and recover</h3>
-                    <p>Advance roles automatically or skip on demand, with a configurable in-window break countdown after a chosen number of turns.</p>
-                </li>
+      <section
+        id="how-it-works"
+        class="section shell"
+        aria-labelledby="how-heading"
+      >
+        <div class="section-heading">
+          <p class="eyebrow">A shared rhythm without meeting overhead</p>
+          <h2 id="how-heading">
+            Set the roster. Start the timer. Rotate together.
+          </h2>
+          <p>
+            Mob programming puts the whole team on one problem. MobCrew handles
+            the visible rotation so the team can stay focused on the work.
+          </p>
+        </div>
+        <ol class="steps">
+          <li>
+            <span class="step-number" aria-hidden="true">01</span>
+            <h3>Build the crew</h3>
+            <p>
+              Add, bench, reorder, or shuffle participants. MobCrew assigns the
+              current Driver and Navigator from the active roster.
+            </p>
+          </li>
+          <li>
+            <span class="step-number" aria-hidden="true">02</span>
+            <h3>Keep time visible</h3>
+            <p>
+              Run a configurable turn timer in the main window or the
+              always-on-top floating panel while everyone works.
+            </p>
+          </li>
+          <li>
+            <span class="step-number" aria-hidden="true">03</span>
+            <h3>Rotate and recover</h3>
+            <p>
+              Advance roles automatically or skip on demand, with a configurable
+              in-window break countdown after a chosen number of turns.
+            </p>
+          </li>
+        </ol>
+      </section>
+
+      <section
+        id="features"
+        class="section section-tinted"
+        aria-labelledby="features-heading"
+      >
+        <div class="shell">
+          <div class="section-heading">
+            <p class="eyebrow">Built for the flow of a real session</p>
+            <h2 id="features-heading">
+              The rotation stays visible everywhere it matters.
+            </h2>
+          </div>
+          <div class="feature-grid">
+            <article class="feature-card">
+              <svg
+                class="feature-icon"
+                aria-hidden="true"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm1 5v4.59l3.2 3.2-1.41 1.41L11 12.41V7Z"
+                />
+              </svg>
+              <h3>Configurable turn timer</h3>
+              <p>
+                Choose the duration, pause or reset as needed, and optionally
+                receive a notification when the turn completes.
+              </p>
+            </article>
+            <article class="feature-card">
+              <svg
+                class="feature-icon"
+                aria-hidden="true"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3ZM8 11c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3Zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5C15 14.17 10.33 13 8 13Zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5Z"
+                />
+              </svg>
+              <h3>Roster and bench</h3>
+              <p>
+                Keep active and benched participants together, with
+                drag-and-drop ordering and clear Driver/Navigator roles.
+              </p>
+            </article>
+            <article class="feature-card">
+              <svg
+                class="feature-icon"
+                aria-hidden="true"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="m17.66 7.93-1.41 1.41A6 6 0 0 0 6.34 12H3l4 4 4-4H8.35a4 4 0 0 1 6.48-1.52l1.42-1.42a5.96 5.96 0 0 0-8.59-1.13ZM17 8l-4 4h2.65a4 4 0 0 1-6.48 1.52l-1.42 1.42a6 6 0 0 0 9.91-2.94H21Z"
+                />
+              </svg>
+              <h3>Automatic role rotation</h3>
+              <p>
+                Advance the roster when time expires or skip manually, keeping
+                the next Driver and Navigator predictable.
+              </p>
+            </article>
+            <article class="feature-card">
+              <svg
+                class="feature-icon"
+                aria-hidden="true"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path d="M3 4h18v13H3Zm2 2v9h14V6Zm4 13h6v2H9Z" />
+              </svg>
+              <h3>Floating timer</h3>
+              <p>
+                A compact always-on-top panel carries the countdown and roles
+                into the editor, terminal, or shared screen.
+              </p>
+            </article>
+            <article class="feature-card">
+              <svg
+                class="feature-icon"
+                aria-hidden="true"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M18 8h1a3 3 0 0 1 0 6h-1v1a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7h15Zm0 2v2h1a1 1 0 0 0 0-2ZM5 9v6a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2V9Z"
+                />
+              </svg>
+              <h3>Break cadence</h3>
+              <p>
+                After a configurable number of turns, the main window switches
+                to a visible break screen and countdown.
+              </p>
+            </article>
+            <article class="feature-card">
+              <svg
+                class="feature-icon"
+                aria-hidden="true"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M3 5h18v14H3Zm2 2v10h14V7Zm1 1h2v2H6Zm3 0h2v2H9Zm3 0h2v2h-2Zm3 0h2v2h-2ZM6 11h2v2H6Zm3 0h2v2H9Zm3 0h5v2h-5ZM7 14h10v2H7Z"
+                />
+              </svg>
+              <h3>Fixed shortcuts and menu bar</h3>
+              <p>
+                Use menu-bar controls or press <kbd>⌘⇧L</kbd> to toggle the
+                floating timer after granting optional Accessibility access.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section shell" aria-labelledby="gallery-heading">
+        <div class="section-heading">
+          <p class="eyebrow">Current real-app captures</p>
+          <h2 id="gallery-heading">
+            See the timer, break state, and settings.
+          </h2>
+          <p>
+            Select any screenshot to open its full-resolution file. These
+            captures show only the visible state described below.
+          </p>
+        </div>
+        <div class="gallery">
+          <figure class="gallery-card">
+            <a
+              class="image-link"
+              href="assets/images/floating-timer.webp"
+              aria-label="Open the full-resolution floating-timer screenshot"
+            >
+              <img
+                src="assets/images/floating-timer.webp"
+                alt="Compact MobCrew floating panel showing 4 minutes 34 seconds, Driver Alice, and Navigator Bob"
+                width="360"
+                height="320"
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
+            <figcaption>
+              <h3>Floating panel</h3>
+              <p>
+                The compact roles and countdown panel by itself. This capture
+                does not demonstrate its position over another app.
+              </p>
+            </figcaption>
+          </figure>
+          <figure class="gallery-card">
+            <a
+              class="image-link"
+              href="assets/images/break-overlay.webp"
+              aria-label="Open the full-resolution in-window break screenshot"
+            >
+              <img
+                src="assets/images/break-overlay.webp"
+                alt="MobCrew main window displaying an in-window Break Time screen with 2 minutes 35 seconds remaining"
+                width="1800"
+                height="1204"
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
+            <figcaption>
+              <h3>In-window break</h3>
+              <p>
+                The break countdown replaces the main window content; the
+                visible title bar confirms it is not a full-screen overlay.
+              </p>
+            </figcaption>
+          </figure>
+          <figure class="gallery-card">
+            <a
+              class="image-link"
+              href="assets/images/settings.webp"
+              aria-label="Open the full-resolution General settings screenshot"
+            >
+              <img
+                src="assets/images/settings.webp"
+                alt="MobCrew General settings showing Launch at Login, Turn duration, Notifications, and Show Tips controls"
+                width="900"
+                height="816"
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
+            <figcaption>
+              <h3>General settings</h3>
+              <p>
+                Launch at login, turn duration, notifications, and optional
+                programming tips. Shortcuts are listed separately and are fixed.
+              </p>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section
+        id="install"
+        class="section section-tinted"
+        aria-labelledby="install-heading"
+      >
+        <div class="shell install-layout">
+          <div>
+            <p class="eyebrow">Install and first run</p>
+            <h2 id="install-heading">From release page to running timer.</h2>
+            <ol class="install-steps">
+              <li>
+                <span>1</span>
+                <p>
+                  Download the DMG from the
+                  <a
+                    class="text-link"
+                    href="https://github.com/colmarius/mobcrew/releases/latest"
+                    >latest GitHub release</a
+                  >.
+                </p>
+              </li>
+              <li>
+                <span>2</span>
+                <p>
+                  Open it, copy MobCrew to Applications, eject the DMG, then
+                  open MobCrew from Applications.
+                </p>
+              </li>
+              <li>
+                <span>3</span>
+                <p>
+                  If macOS blocks this known download because it cannot verify
+                  the developer, review the message in
+                  <strong>System Settings → Privacy &amp; Security</strong> and
+                  choose <strong>Open Anyway</strong> only for the release you
+                  intended to download.
+                </p>
+              </li>
             </ol>
-        </section>
+            <p class="detail-link">
+              <a
+                class="text-link"
+                href="https://github.com/colmarius/mobcrew#install-and-first-run"
+                >Read the detailed installation and permission guidance</a
+              >
+            </p>
+          </div>
+          <aside class="trust-card" aria-labelledby="trust-heading">
+            <p class="card-label">Current distribution state</p>
+            <h3 id="trust-heading">
+              Transparent while release qualification catches up.
+            </h3>
+            <p>
+              Direct inspection found that v0.2.0 contains an arm64 executable,
+              a structurally valid ad-hoc app signature with no Developer ID
+              identity or hardened runtime, an unsigned outer DMG, and no
+              stapled tickets.
+            </p>
+            <p>
+              Exact notarization and Gatekeeper first-launch behavior on a clean
+              Mac remain unverified. That uncertainty is why MobCrew links to
+              the release page instead of promising a frictionless direct
+              download. Do not disable Gatekeeper or strip quarantine
+              attributes.
+            </p>
+            <dl class="trust-facts">
+              <div>
+                <dt>App requirement</dt>
+                <dd>macOS 14+</dd>
+              </div>
+              <div>
+                <dt>Release architecture</dt>
+                <dd>Apple silicon (arm64)</dd>
+              </div>
+              <div>
+                <dt>Updates</dt>
+                <dd>Manual download</dd>
+              </div>
+              <div>
+                <dt>License</dt>
+                <dd>MIT</dd>
+              </div>
+            </dl>
+          </aside>
+        </div>
+      </section>
 
-        <section id="features" class="section section-tinted" aria-labelledby="features-heading">
-            <div class="shell">
-                <div class="section-heading">
-                    <p class="eyebrow">Built for the flow of a real session</p>
-                    <h2 id="features-heading">The rotation stays visible everywhere it matters.</h2>
-                </div>
-                <div class="feature-grid">
-                    <article class="feature-card">
-                        <svg class="feature-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm1 5v4.59l3.2 3.2-1.41 1.41L11 12.41V7Z"/></svg>
-                        <h3>Configurable turn timer</h3>
-                        <p>Choose the duration, pause or reset as needed, and optionally receive a notification when the turn completes.</p>
-                    </article>
-                    <article class="feature-card">
-                        <svg class="feature-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3ZM8 11c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3Zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5C15 14.17 10.33 13 8 13Zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5Z"/></svg>
-                        <h3>Roster and bench</h3>
-                        <p>Keep active and benched participants together, with drag-and-drop ordering and clear Driver/Navigator roles.</p>
-                    </article>
-                    <article class="feature-card">
-                        <svg class="feature-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="m17.66 7.93-1.41 1.41A6 6 0 0 0 6.34 12H3l4 4 4-4H8.35a4 4 0 0 1 6.48-1.52l1.42-1.42a5.96 5.96 0 0 0-8.59-1.13ZM17 8l-4 4h2.65a4 4 0 0 1-6.48 1.52l-1.42 1.42a6 6 0 0 0 9.91-2.94H21Z"/></svg>
-                        <h3>Automatic role rotation</h3>
-                        <p>Advance the roster when time expires or skip manually, keeping the next Driver and Navigator predictable.</p>
-                    </article>
-                    <article class="feature-card">
-                        <svg class="feature-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M3 4h18v13H3Zm2 2v9h14V6Zm4 13h6v2H9Z"/></svg>
-                        <h3>Floating timer</h3>
-                        <p>A compact always-on-top panel carries the countdown and roles into the editor, terminal, or shared screen.</p>
-                    </article>
-                    <article class="feature-card">
-                        <svg class="feature-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M18 8h1a3 3 0 0 1 0 6h-1v1a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7h15Zm0 2v2h1a1 1 0 0 0 0-2ZM5 9v6a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2V9Z"/></svg>
-                        <h3>Break cadence</h3>
-                        <p>After a configurable number of turns, the main window switches to a visible break screen and countdown.</p>
-                    </article>
-                    <article class="feature-card">
-                        <svg class="feature-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M3 5h18v14H3Zm2 2v10h14V7Zm1 1h2v2H6Zm3 0h2v2H9Zm3 0h2v2h-2Zm3 0h2v2h-2ZM6 11h2v2H6Zm3 0h2v2H9Zm3 0h5v2h-5ZM7 14h10v2H7Z"/></svg>
-                        <h3>Fixed shortcuts and menu bar</h3>
-                        <p>Use menu-bar controls or press <kbd>⌘⇧L</kbd> to toggle the floating timer after granting optional Accessibility access.</p>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <section class="section shell" aria-labelledby="gallery-heading">
-            <div class="section-heading">
-                <p class="eyebrow">Current real-app captures</p>
-                <h2 id="gallery-heading">See the timer, break state, and settings.</h2>
-                <p>Select any screenshot to open its full-resolution file. These captures show only the visible state described below.</p>
-            </div>
-            <div class="gallery">
-                <figure class="gallery-card">
-                    <a class="image-link" href="assets/images/floating-timer.webp" aria-label="Open the full-resolution floating-timer screenshot">
-                        <img src="assets/images/floating-timer.webp" alt="Compact MobCrew floating panel showing 4 minutes 34 seconds, Driver Alice, and Navigator Bob" width="360" height="320" loading="lazy" decoding="async">
-                    </a>
-                    <figcaption>
-                        <h3>Floating panel</h3>
-                        <p>The compact roles and countdown panel by itself. This capture does not demonstrate its position over another app.</p>
-                    </figcaption>
-                </figure>
-                <figure class="gallery-card">
-                    <a class="image-link" href="assets/images/break-overlay.webp" aria-label="Open the full-resolution in-window break screenshot">
-                        <img src="assets/images/break-overlay.webp" alt="MobCrew main window displaying an in-window Break Time screen with 2 minutes 35 seconds remaining" width="1800" height="1204" loading="lazy" decoding="async">
-                    </a>
-                    <figcaption>
-                        <h3>In-window break</h3>
-                        <p>The break countdown replaces the main window content; the visible title bar confirms it is not a full-screen overlay.</p>
-                    </figcaption>
-                </figure>
-                <figure class="gallery-card">
-                    <a class="image-link" href="assets/images/settings.webp" aria-label="Open the full-resolution General settings screenshot">
-                        <img src="assets/images/settings.webp" alt="MobCrew General settings showing Launch at Login, Turn duration, Notifications, and Show Tips controls" width="900" height="816" loading="lazy" decoding="async">
-                    </a>
-                    <figcaption>
-                        <h3>General settings</h3>
-                        <p>Launch at login, turn duration, notifications, and optional programming tips. Shortcuts are listed separately and are fixed.</p>
-                    </figcaption>
-                </figure>
-            </div>
-        </section>
-
-        <section id="install" class="section section-tinted" aria-labelledby="install-heading">
-            <div class="shell install-layout">
-                <div>
-                    <p class="eyebrow">Install and first run</p>
-                    <h2 id="install-heading">From release page to running timer.</h2>
-                    <ol class="install-steps">
-                        <li><span>1</span><p>Download the DMG from the <a class="text-link" href="https://github.com/colmarius/mobcrew/releases/latest">latest GitHub release</a>.</p></li>
-                        <li><span>2</span><p>Open it, copy MobCrew to Applications, eject the DMG, then open MobCrew from Applications.</p></li>
-                        <li><span>3</span><p>If macOS blocks this known download because it cannot verify the developer, review the message in <strong>System Settings → Privacy &amp; Security</strong> and choose <strong>Open Anyway</strong> only for the release you intended to download.</p></li>
-                    </ol>
-                    <p class="detail-link"><a class="text-link" href="https://github.com/colmarius/mobcrew#install-and-first-run">Read the detailed installation and permission guidance</a></p>
-                </div>
-                <aside class="trust-card" aria-labelledby="trust-heading">
-                    <p class="card-label">Current distribution state</p>
-                    <h3 id="trust-heading">Transparent while release qualification catches up.</h3>
-                    <p>Direct inspection found that v0.2.0 contains an arm64 executable, a structurally valid ad-hoc app signature with no Developer ID identity or hardened runtime, an unsigned outer DMG, and no stapled tickets.</p>
-                    <p>Exact notarization and Gatekeeper first-launch behavior on a clean Mac remain unverified. That uncertainty is why MobCrew links to the release page instead of promising a frictionless direct download. Do not disable Gatekeeper or strip quarantine attributes.</p>
-                    <dl class="trust-facts">
-                        <div><dt>App requirement</dt><dd>macOS 14+</dd></div>
-                        <div><dt>Release architecture</dt><dd>Apple silicon (arm64)</dd></div>
-                        <div><dt>Updates</dt><dd>Manual download</dd></div>
-                        <div><dt>License</dt><dd>MIT</dd></div>
-                    </dl>
-                </aside>
-            </div>
-        </section>
-
-        <section id="faq" class="section shell faq" aria-labelledby="faq-heading">
-            <div class="section-heading">
-                <p class="eyebrow">Permissions, privacy, and support</p>
-                <h2 id="faq-heading">Know what MobCrew asks for—and what it does not.</h2>
-            </div>
-            <div class="faq-list">
-                <details>
-                    <summary>Why does MobCrew ask for Accessibility access?</summary>
-                    <p>Only so the fixed global shortcut <kbd>⌘⇧L</kbd> can toggle the floating timer from another app. Choosing Not Now does not block the timer, roster, menu-bar controls, or the panel's own controls. Grant it later in System Settings → Privacy &amp; Security → Accessibility.</p>
-                </details>
-                <details>
-                    <summary>Are notifications required?</summary>
-                    <p>No. MobCrew asks when you first start the timer and uses permission only for optional turn and break alerts. The timer continues if access is denied, and alerts can be disabled in General settings.</p>
-                </details>
-                <details>
-                    <summary>Where does the data go?</summary>
-                    <p>The current app code has no account, telemetry, or network service. Roster and settings data stay in local macOS user defaults, and active names are also written to MobCrew's local Application Support folder.</p>
-                </details>
-                <details>
-                    <summary>How do updates and support work?</summary>
-                    <p>MobCrew has no in-app updater. Replace the copy in Applications with a newer <a class="text-link" href="https://github.com/colmarius/mobcrew/releases/latest">release</a>. For help or bug reports, use <a class="text-link" href="https://github.com/colmarius/mobcrew/issues">GitHub Issues</a>.</p>
-                </details>
-                <details>
-                    <summary>Do I need Xcode or a specific Mac architecture?</summary>
-                    <p>Xcode is only for development; installing a release requires macOS 14 or later. CI tests an Apple-silicon build, but the architectures in the current public release remain unverified, so this page does not claim broader artifact support.</p>
-                </details>
-            </div>
-        </section>
+      <section id="faq" class="section shell faq" aria-labelledby="faq-heading">
+        <div class="section-heading">
+          <p class="eyebrow">Permissions, privacy, and support</p>
+          <h2 id="faq-heading">
+            Know what MobCrew asks for—and what it does not.
+          </h2>
+        </div>
+        <div class="faq-list">
+          <details>
+            <summary>Why does MobCrew ask for Accessibility access?</summary>
+            <p>
+              Only so the fixed global shortcut <kbd>⌘⇧L</kbd> can toggle the
+              floating timer from another app. Choosing Not Now does not block
+              the timer, roster, menu-bar controls, or the panel's own controls.
+              Grant it later in System Settings → Privacy &amp; Security →
+              Accessibility.
+            </p>
+          </details>
+          <details>
+            <summary>Are notifications required?</summary>
+            <p>
+              No. MobCrew asks when you first start the timer and uses
+              permission only for optional turn and break alerts. The timer
+              continues if access is denied, and alerts can be disabled in
+              General settings.
+            </p>
+          </details>
+          <details>
+            <summary>Where does the data go?</summary>
+            <p>
+              The current app code has no account, telemetry, or network
+              service. Roster and settings data stay in local macOS user
+              defaults, and active names are also written to MobCrew's local
+              Application Support folder.
+            </p>
+          </details>
+          <details>
+            <summary>How do updates and support work?</summary>
+            <p>
+              MobCrew has no in-app updater. Replace the copy in Applications
+              with a newer
+              <a
+                class="text-link"
+                href="https://github.com/colmarius/mobcrew/releases/latest"
+                >release</a
+              >. For help or bug reports, use
+              <a
+                class="text-link"
+                href="https://github.com/colmarius/mobcrew/issues"
+                >GitHub Issues</a
+              >.
+            </p>
+          </details>
+          <details>
+            <summary>Do I need Xcode or a specific Mac architecture?</summary>
+            <p>
+              Xcode is only for development; installing a release requires macOS
+              14 or later. CI tests an Apple-silicon build, but the
+              architectures in the current public release remain unverified, so
+              this page does not claim broader artifact support.
+            </p>
+          </details>
+        </div>
+      </section>
     </main>
 
     <footer class="site-footer">
-        <div class="shell footer-layout">
-            <div>
-                <a class="brand footer-brand" href="/" aria-label="MobCrew home">
-                    <img src="assets/images/logo.png" alt="" width="128" height="128" loading="lazy" decoding="async">
-                    <span>MobCrew</span>
-                </a>
-                <p>A native SwiftUI timer for pair, mob, and ensemble programming.</p>
-            </div>
-            <div class="footer-links">
-                <a href="https://github.com/colmarius/mobcrew">Source on GitHub</a>
-                <a href="https://github.com/colmarius/mobcrew/issues">Support</a>
-                <a href="https://github.com/colmarius/mobcrew/blob/main/LICENSE">MIT License</a>
-            </div>
-            <p class="attribution">Inspired by <a href="https://github.com/dillonkearns/mobster">Mobster</a> by Dillon Kearns.</p>
+      <div class="shell footer-layout">
+        <div>
+          <a class="brand footer-brand" href="/" aria-label="MobCrew home">
+            <img
+              src="assets/images/logo.png"
+              alt=""
+              width="128"
+              height="128"
+              loading="lazy"
+              decoding="async"
+            />
+            <span>MobCrew</span>
+          </a>
+          <p>A native SwiftUI timer for pair, mob, and ensemble programming.</p>
         </div>
+        <div class="footer-links">
+          <a href="https://github.com/colmarius/mobcrew">Source on GitHub</a>
+          <a href="https://github.com/colmarius/mobcrew/issues">Support</a>
+          <a href="https://github.com/colmarius/mobcrew/blob/main/LICENSE"
+            >MIT License</a
+          >
+        </div>
+        <p class="attribution">
+          Inspired by
+          <a href="https://github.com/dillonkearns/mobster">Mobster</a> by
+          Dillon Kearns.
+        </p>
+      </div>
     </footer>
-</body>
+  </body>
 </html>

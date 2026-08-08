@@ -58,6 +58,11 @@ separate release-operation authority, or an owner decision and credentials.
   separately authorized `publish` operations. Strict never-sourced schemas bind the canonical repo,
   full target SHA, artifact/version/build/architectures, local evidence, numeric release/asset IDs,
   remote bytes, and manual qualification hashes.
+- Independent Ultra review found a blocker in the initial implementation: GitHub's release-by-tag
+  endpoint returns 404 for drafts, so it could not safely discover and resume an existing draft.
+  The corrected implementation lists all release pages, selects drafts by exact tag, rejects
+  duplicates, creates missing metadata with a REST `POST` and exact `target_commitish`, captures the
+  numeric release ID, and revalidates that identity before upload.
 - The draft state machine resumes an exact partial draft, leaves a matching asset untouched, and
   aborts on conflicting metadata/state/assets without delete, overwrite, clobber, or retag recovery.
   Publication confirms first, then freshly verifies the numeric draft and downloaded asset, checks
@@ -66,11 +71,14 @@ separate release-operation authority, or an owner decision and credentials.
   Applications symlink, architecture, app structural signature, Developer ID/hardened-runtime,
   app/DMG stapled-ticket, spctl, outer-DMG signature, raw-log, and strict evidence checks. These are
   implemented checks, not observed macOS results.
-- `./scripts/test-release-hardening.sh` passes in the Linux orb using a temporary repository and
-  stateful mocked `gh`. It covers strict SemVer, dirty/wrong branch/upstream/origin, shallow and
-  behind/diverged history, local/API tag conflicts, tool/auth/repo/permission failures, draft create
-  and partial resume, matching/conflicting assets, downloaded-byte evidence, schema mutation, a
-  post-confirmation tag race, and numeric-ID-only publication. The mock never contacts GitHub.
+- `./scripts/test-release-hardening.sh` passes in the Linux orb and, after the draft-discovery
+  correction, on macOS/BSD tools using a temporary repository and stateful mocked `gh`. It covers
+  strict SemVer, dirty/wrong branch/upstream/origin, shallow and behind/diverged history, local/API
+  tag conflicts, tool/auth/repo/permission failures, paginated draft discovery, release-by-tag 404
+  behavior for drafts, duplicate rejection, create/retry/partial-resume paths, matching/conflicting
+  assets, downloaded-byte evidence, schema mutation, a post-confirmation tag race, and numeric-ID-only
+  publication. The mock also requires the exact paginated selector and full typed REST-create payload,
+  including `target_commitish` and `.id` extraction. It never contacts GitHub.
 - `bash -n scripts/*.sh`, `python3 scripts/validate-docs.py`, HTML validation, both workflow Prettier
   checks, and `git diff --check` pass. Linux `npm ci` stops with the expected `EBADPLATFORM` because
   locked `appdmg` is macOS-only; pinned macOS CI installed the same lockfile successfully with its
@@ -104,9 +112,9 @@ separate release-operation authority, or an owner decision and credentials.
   or preferences were changed. A clean-account first launch was not safe on this user's existing
   account, so Tasks 1.7/3.4 remain unchecked.
 - Supplemental local checks passed with Xcode 26.2 on this host: all 100 app tests used isolated
-  DerivedData, and the offline mocked release-hardening state-machine suite passed under macOS/BSD
-  tools. This is additional compatibility evidence, not a replacement for the pinned Xcode 26.6 /
-  Swift 6.3 CI result.
+  DerivedData. After integrating the corrected draft-discovery implementation, the expanded offline
+  release-hardening state-machine suite also passed under macOS/BSD tools. This is additional
+  compatibility evidence, not a replacement for the pinned Xcode 26.6 / Swift 6.3 CI result.
 
 ## Unverified manual gates
 

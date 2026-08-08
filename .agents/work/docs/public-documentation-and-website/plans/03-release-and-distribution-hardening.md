@@ -6,10 +6,10 @@ conditional extension after an owner decision and approved credential model.
 
 ## Phase-boundary refinement (2026-08-08)
 
-- Phase 1's released-artifact signatures, architectures, notarization/stapling, Gatekeeper/TCC, and
-  clean-Mac behavior remain **unverified**. Local tooling will record a newly built artifact's facts,
-  but this phase will not infer the `v0.2.0` state, enforce an architecture set, or strengthen public
-  claims without a real quarantined macOS qualification run.
+- Read-only inspection now establishes `v0.2.0` signatures, architecture, stapling probes, and a
+  browser-applied quarantine attribute. It did not launch the app and does not establish exact
+  notarization, Gatekeeper/TCC, or clean-account behavior. Local tooling records each newly built
+  artifact independently and does not infer future release state or enforce an architecture set.
 - Use explicit `check`, `prepare`, `create-draft`, `status`, `verify-draft`, and `publish` operations.
   Draft metadata creation and asset upload form a resumable state machine: matching partial state is
   resumed without clobbering, while conflicting state aborts without delete/retag recovery.
@@ -49,9 +49,9 @@ conditional extension after an owner decision and approved credential model.
     - Version input is validated and normalized consistently with tag/asset naming.
     - Release refuses a dirty worktree, unexpected branch/upstream state, or an existing release/tag
       without a clear non-destructive recovery path.
-    - The verified full commit SHA is bound to release/tag creation using `gh release create --target`
-      or an exact pre-created remote tag verified with `--verify-tag`; printing the SHA alone is not
-      sufficient.
+    - Draft metadata is created with a REST `POST` whose `target_commitish` is the verified full
+      commit SHA; the response's numeric release ID is captured and revalidated. Printing the SHA
+      alone or relying on a tag-name lookup is not sufficient.
     - Required Xcode, Swift, `gh`, Node, repository permissions, and complete git history/build-number
       assumptions are checked before a long build.
     - Tests complete successfully before remote release state is created.
@@ -96,7 +96,11 @@ conditional extension after an owner decision and approved credential model.
       asset set/identity/size/digest, and remote-tag absence immediately before changing state, then
       verifies the resulting tag target without automatic rollback.
   - Notes: Implement and test operation boundaries without creating a real draft. Prefer publishing
-    the tested draft over rebuilding a supposedly identical artifact.
+    the tested draft over rebuilding a supposedly identical artifact. Independent Ultra review found
+    that release-by-tag lookup returns 404 for drafts; the correction discovers drafts through the
+    paginated releases API, rejects duplicate matching drafts, creates through REST with exact
+    `target_commitish`, and retains the numeric release ID. The corrected offline suite passes on
+    macOS/BSD tools, including duplicate and retry regressions.
 
 - [ ] (manual-verify) **Task 3.4: Harden and document the default non-Developer-ID path**
   - Scope: release scripts/checks, `docs/RELEASING.md`, `TESTING.md`, public trust/install wording

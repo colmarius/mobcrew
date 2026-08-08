@@ -117,19 +117,19 @@ Relevant implementation locations include:
 
 ## Prioritized findings
 
-| Priority | Finding | User impact | Confidence |
-| --- | --- | --- | --- |
-| P0 | Distribution trust, Gatekeeper expectations, and first-launch path are undisclosed | Very high | High |
-| P0 | Published global shortcut and behavior are wrong | Very high | High |
-| P0 | Hero does not explain audience, outcome, or release trust | High | High |
-| P1 | Full-screen break, tip jar, and hotkey-customization claims are wrong | High | High |
-| P1 | Draft-release documentation cannot be followed as written | High | High |
-| P1 | Manual testing is stale and omits high-risk user journeys | High | High |
-| P1 | Keyboard focus and normal-text contrast are insufficient | High | High |
-| P2 | Gallery images do not prove their captions and are weak on mobile | Medium | High |
-| P2 | Runtime Tailwind CDN and eager oversized imagery are avoidable | Medium | High |
-| P2 | Social/search metadata and privacy/trust signals are minimal | Medium | High |
-| P2 | Repeated product facts across documents invite maintenance drift | Medium | High |
+| Priority | Finding                                                                            | User impact | Confidence |
+| -------- | ---------------------------------------------------------------------------------- | ----------- | ---------- |
+| P0       | Distribution trust, Gatekeeper expectations, and first-launch path are undisclosed | Very high   | High       |
+| P0       | Published global shortcut and behavior are wrong                                   | Very high   | High       |
+| P0       | Hero does not explain audience, outcome, or release trust                          | High        | High       |
+| P1       | Full-screen break, tip jar, and hotkey-customization claims are wrong              | High        | High       |
+| P1       | Draft-release documentation cannot be followed as written                          | High        | High       |
+| P1       | Manual testing is stale and omits high-risk user journeys                          | High        | High       |
+| P1       | Keyboard focus and normal-text contrast are insufficient                           | High        | High       |
+| P2       | Gallery images do not prove their captions and are weak on mobile                  | Medium      | High       |
+| P2       | Runtime Tailwind CDN and eager oversized imagery are avoidable                     | Medium      | High       |
+| P2       | Social/search metadata and privacy/trust signals are minimal                       | Medium      | High       |
+| P2       | Repeated product facts across documents invite maintenance drift                   | Medium      | High       |
 
 ## Documentation findings
 
@@ -150,18 +150,21 @@ is an end-user prerequisite. It is a development-only prerequisite.
 
 ### Release guide
 
-`docs/RELEASING.md` says to create and test a draft, then rerun `release.sh` with the same version to
-create the release. A draft created by `gh release create --draft` does not create the git tag, and
-the rerun rebuilds a new artifact before calling `gh release create` again — so the documented step
-publishes a rebuilt, untested artifact (or fails against existing release/tag state) and never
-publishes the draft that was actually tested. The correct next step is to publish the tested draft.
-The recovery guidance deletes both release and tag without distinguishing a draft (which has no tag
-yet) from a previously published release.
+At audit time, `docs/RELEASING.md` said to create and test a draft, then rerun `release.sh` with the
+same version to create the release. The old `gh release create --draft` path did not create the git
+tag, and the rerun rebuilt before calling `gh release create` again — so that historical workflow
+could publish rebuilt, untested bytes (or fail against existing state) instead of publishing the
+tested draft. The implemented replacement publishes the tested draft: creation uses a REST `POST`
+with exact `target_commitish`, captures the numeric release ID, and discovers existing drafts through
+paginated release listing because release-by-tag returns 404 for drafts. It never uses destructive
+delete/retag recovery.
 
-The release script does not enforce a clean tree, expected branch/upstream, semantic version, tests,
-or target commit before it creates remote state. DMG validation verifies container integrity but does
-not mount and inspect the app or assess Gatekeeper. The `xcode-select --install` troubleshooting step
-installs Command Line Tools, not the full Xcode version required by the project.
+At audit time, the release script did not enforce a clean tree, expected branch/upstream, semantic
+version, tests, or target commit before creating remote state. DMG validation checked container
+integrity without mounting and inspecting the app or assessing Gatekeeper. The hardened replacement
+now enforces and records those local facts; quarantined launch remains a manual gate. The historical
+`xcode-select --install` troubleshooting step installed Command Line Tools, not the full Xcode
+version required by the project.
 
 ### Contributor/testing quality
 
