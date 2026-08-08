@@ -48,7 +48,7 @@ project/
     │   │   ├── MenuBar/         # Menu bar extra UI
     │   │   ├── Roster/          # Mobster list management
     │   │   ├── Settings/        # Preferences window
-    │   │   └── Tips/            # Tip jar / support
+    │   │   └── Tips/            # Optional programming tips
     │   ├── Helpers/
     │   │   └── Extensions/      # Swift extensions
     │   ├── Resources/           # Assets, strings

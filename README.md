@@ -1,8 +1,12 @@
 # MobCrew
 
-A native macOS mob programming timer app, inspired by [mobster](https://github.com/dillonkearns/mobster).
+A native macOS timer for pair, mob, and ensemble programming. MobCrew keeps the roster, current
+driver and navigator, and rotation countdown visible so the team can rotate on time without
+interrupting the session.
 
-Built with [Amp](https://ampcode.com) (~$60 in tokens) — see the [development thread](https://ampcode.com/threads/T-019c1ba0-b486-75bc-887b-14ddd6684695) for the full build history.
+[Website](https://mobcrew.team/) ·
+[View the latest release](https://github.com/colmarius/mobcrew/releases/latest) ·
+[Report an issue](https://github.com/colmarius/mobcrew/issues)
 
 ## Features
 
@@ -10,26 +14,64 @@ Built with [Amp](https://ampcode.com) (~$60 in tokens) — see the [development 
 - **Roster management** - Driver/navigator rotation with drag-and-drop reordering
 - **Bench** - Temporarily bench inactive mobsters
 - **Floating timer** - Always-on-top window showing countdown
-- **Break timer** - Full-screen break overlay with countdown
-- **Global hotkey** - ⌘⇧M to rotate/start timer from anywhere (requires accessibility permission)
+- **Break timer** - In-window break screen with countdown
+- **Global hotkey** - ⌘⇧L toggles the floating timer from anywhere (requires Accessibility
+  permission)
 - **Menu bar** - Quick access from the menu bar
 - **Auto-rotation** - Automatic driver/navigator swap when timer ends
-- **Tips** - Support development via tip jar
-
-## Known Limitations
-
-- **Accessibility permissions reset on rebuild**: The app is currently ad-hoc signed, so macOS treats each build as a new app. You'll need to re-grant accessibility permission after rebuilding. See [code-signing-setup plan](.agents/plans/todo/code-signing-setup.md) for the fix.
-
-## Download
-
-Get the latest release from [GitHub Releases](https://github.com/colmarius/mobcrew/releases).
+- **Programming tips** - Optional mob-programming quotations while the timer runs
 
 ## Requirements
 
-- macOS 14.0+
-- Xcode 26.6+ (for development with the Swift 6.3 compiler)
+- macOS 14.0 or later
+
+The architectures in the current public release have not yet been independently inspected. The
+repository's macOS CI currently tests an Apple-silicon (`arm64`) build, but that does not establish
+the architecture of an older downloaded release.
+
+## Install and first run
+
+1. Open the [latest release](https://github.com/colmarius/mobcrew/releases/latest) and download its
+   `MobCrew-<version>.dmg` asset.
+2. Open the DMG and copy **MobCrew** to **Applications**, then eject the DMG.
+3. Open MobCrew from Applications.
+4. If macOS blocks this known download because it cannot verify the developer, open **System
+   Settings → Privacy & Security**, review the blocked-app message, and choose **Open Anyway** only
+   if the app is the MobCrew release you intended to download.
+
+The current public release has not yet been independently qualified for Developer ID signing,
+notarization, or exact Gatekeeper behavior on a clean Mac. The first-launch message and whether the
+extra Privacy & Security step appears can therefore vary. Do not disable Gatekeeper or remove
+quarantine attributes to install the app.
+
+### Optional permissions
+
+- **Accessibility:** used only so the fixed global shortcut **⌘⇧L** can toggle the floating timer.
+  Choosing **Not Now** does not prevent the timer, roster, menu-bar controls, or floating-window
+  controls from working. You can grant access later in **System Settings → Privacy & Security →
+  Accessibility**.
+- **Notifications:** requested when the timer is first started and used for optional turn and break
+  alerts. The timer continues to work if notifications are denied, and alerts can also be disabled
+  in MobCrew's General settings.
+
+### Privacy, updates, and support
+
+The current app code uses no account, telemetry, or network service. Roster and settings data are
+stored locally in macOS user defaults, and the active roster is also written to MobCrew's local
+Application Support folder.
+
+MobCrew does not currently update itself. To update, download a newer release and replace the copy
+in Applications. For help or bug reports, use [GitHub Issues](https://github.com/colmarius/mobcrew/issues).
 
 ## Development
+
+Development requires a Mac with the full Xcode 26.6+ application and its Swift 6.3 compiler. Xcode
+is not required just to install or run a release.
+
+
+Built with [Amp](https://ampcode.com) (~$60 in tokens) — see the
+[development thread](https://ampcode.com/threads/T-019c1ba0-b486-75bc-887b-14ddd6684695)
+for the original build history.
 
 ```bash
 # Build
@@ -80,10 +122,12 @@ release scripts accept compatible Node.js 24+ installations rather than rejectin
 DMGs use the repository-pinned `create-dmg` 8.1.0 release.
 
 ```bash
-./scripts/release.sh <version>
+./scripts/release.sh <version> --draft
 ```
 
-See [docs/RELEASING.md](docs/RELEASING.md) for the full release process.
+The script changes GitHub release state. Follow [docs/RELEASING.md](docs/RELEASING.md) to qualify the
+exact draft artifact and publish that same tested draft; do not rerun the script without `--draft`
+to publish a rebuilt artifact.
 
 ## Project Evolution
 
@@ -129,4 +173,4 @@ flowchart TB
 
 ## License
 
-MIT
+[MIT](LICENSE). Inspired by [Mobster](https://github.com/dillonkearns/mobster).

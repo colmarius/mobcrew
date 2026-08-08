@@ -4,6 +4,25 @@ Restructure the landing page around the approved product message and install pat
 accessibility, screenshot evidence, performance, metadata, and deploy-time confidence without adding
 an unnecessary frontend application stack.
 
+## Phase-boundary refinement (2026-08-08)
+
+- Phase 1 established `⌘⇧L`, an in-window break screen, optional programming tips, the 7-minute
+  default, contextual timer ranges, macOS 14+, local data/no account/no telemetry, and manual updates
+  as the public facts this phase must preserve.
+- The released artifact's architectures, app/DMG signatures, Developer ID identity, notarization,
+  Gatekeeper behavior, and clean-Mac path remain **unverified** because execution is in a Linux orb.
+  The hero and install/FAQ must retain qualified trust wording and must not claim Apple-silicon
+  release support.
+- The README now owns detailed installation, permission, privacy, update, and support guidance under
+  `#install-and-first-run`; this page should present a concise complete path and link there for more
+  detail rather than repeat long troubleshooting copy.
+- Existing screenshots remain the only real-app evidence. Task 2.5 stays an unchecked macOS manual
+  gate; Tasks 2.4 and 2.6 may truthfully frame and optimize those existing files without recapture.
+- A checked-in stylesheet and a small dependency-free validator are proportionate. No framework,
+  runtime CSS compiler, package manager, or frontend build system is justified for this one page.
+- Branch authority explicitly permits the Pages workflow validation change in Task 2.8, but not a
+  merge or deployment.
+
 ## Goals
 
 - Make audience, problem, outcome, and next action immediately understandable.

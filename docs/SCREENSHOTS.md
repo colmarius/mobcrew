@@ -47,7 +47,7 @@ screencapture -o -w docs/assets/images/floating-timer.png
 
 ### 3. break-overlay.png (optional)
 
-Full-screen break timer overlay.
+The break screen inside the main MobCrew window.
 
 **Setup:**
 
@@ -57,8 +57,8 @@ Full-screen break timer overlay.
 **Capture:**
 
 ```bash
-screencapture docs/assets/images/break-overlay.png
-# Full screen capture
+screencapture -o -w docs/assets/images/break-overlay.png
+# Click the main MobCrew window
 ```
 
 ---
@@ -88,7 +88,7 @@ The settings/preferences window.
 **Setup:**
 
 1. Open Settings (⌘,)
-2. Show timer and hotkey preferences
+2. Show the General tab with timer, notifications, and programming-tip settings
 
 **Capture:**
 

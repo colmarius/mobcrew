@@ -39,8 +39,8 @@
                 <span class="text-xl font-bold">MobCrew</span>
             </div>
             <div class="flex items-center gap-6">
-                <a href="https://github.com/colmarius/mobcrew" class="text-gray-400 hover:text-white transition-colors">GitHub</a>
-                <a href="https://github.com/colmarius/mobcrew/releases" class="bg-mob-blue hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-colors">Download</a>
+                <a href="https://github.com/colmarius/mobcrew" class="hidden sm:inline text-gray-400 hover:text-white transition-colors">GitHub</a>
+                <a href="https://github.com/colmarius/mobcrew/releases/latest" class="bg-mob-blue hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-colors">Latest release</a>
             </div>
         </nav>
     </header>
@@ -49,14 +49,14 @@
     <main>
         <section class="container mx-auto px-6 py-16 md:py-24 text-center">
             <h1 class="text-4xl md:text-6xl font-bold mb-6">Your Mob Programming Companion</h1>
-            <p class="text-xl md:text-2xl text-gray-400 mb-8 max-w-2xl mx-auto">Keep your mob in sync with a native macOS timer. Built for Apple Silicon.</p>
+            <p class="text-xl md:text-2xl text-gray-400 mb-8 max-w-2xl mx-auto">Keep driver and navigator rotations visible and on time with a native timer for pair, mob, and ensemble programming.</p>
 
             <div class="flex flex-col items-center gap-4 mb-12">
-                <a href="https://github.com/colmarius/mobcrew/releases" class="bg-mob-blue hover:bg-blue-600 text-white px-8 py-4 rounded-xl text-lg font-medium transition-colors inline-flex items-center gap-2">
+                <a href="https://github.com/colmarius/mobcrew/releases/latest" class="bg-mob-blue hover:bg-blue-600 text-white px-8 py-4 rounded-xl text-lg font-medium transition-colors inline-flex items-center gap-2">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
-                    Download for Mac
+                    View latest release
                 </a>
-                <span class="text-sm text-gray-500">macOS 14.0+ required</span>
+                <span class="text-sm text-gray-500">macOS 14.0+ · Release signing, notarization, and Gatekeeper behavior not yet independently verified</span>
             </div>
 
             <!-- Hero Screenshot -->
@@ -104,14 +104,14 @@
                 <div class="bg-mob-darker rounded-2xl p-6 border border-gray-800 hover:border-mob-blue transition-colors">
                     <div class="text-3xl mb-3">☕</div>
                     <h3 class="text-lg font-bold mb-2">Break Timer</h3>
-                    <p class="text-gray-400 text-sm">Full-screen break overlay ensures the team actually takes a break.</p>
+                    <p class="text-gray-400 text-sm">An in-window break screen gives the team a visible countdown between turns.</p>
                 </div>
 
                 <!-- Global Hotkey Card -->
                 <div class="bg-mob-darker rounded-2xl p-6 border border-gray-800 hover:border-mob-blue transition-colors">
                     <div class="text-3xl mb-3">⌨️</div>
                     <h3 class="text-lg font-bold mb-2">Global Hotkey</h3>
-                    <p class="text-gray-400 text-sm">Press <kbd class="bg-gray-700 px-1.5 py-0.5 rounded text-xs">⌘⇧M</kbd> to rotate from anywhere.</p>
+                    <p class="text-gray-400 text-sm">Press <kbd class="bg-gray-700 px-1.5 py-0.5 rounded text-xs">⌘⇧L</kbd> to toggle the floating timer from anywhere.</p>
                 </div>
             </div>
         </section>
@@ -128,13 +128,27 @@
                 <div class="bg-mob-darker rounded-2xl p-4 border border-gray-800">
                     <img src="assets/images/break-overlay.png" alt="Break Timer" class="rounded-lg w-full" onerror="this.parentElement.querySelector('img').style.display='none'; this.parentElement.querySelector('.placeholder').style.display='flex';">
                     <div class="placeholder hidden bg-gray-800 rounded-lg h-48 flex items-center justify-center text-gray-500 text-sm">Screenshot coming soon</div>
-                    <p class="text-gray-400 text-sm mt-3 text-center">Full-screen break reminder</p>
+                    <p class="text-gray-400 text-sm mt-3 text-center">Break countdown in the main window</p>
                 </div>
                 <div class="bg-mob-darker rounded-2xl p-4 border border-gray-800">
                     <img src="assets/images/settings.png" alt="Settings" class="rounded-lg w-full" onerror="this.parentElement.querySelector('img').style.display='none'; this.parentElement.querySelector('.placeholder').style.display='flex';">
                     <div class="placeholder hidden bg-gray-800 rounded-lg h-48 flex items-center justify-center text-gray-500 text-sm">Screenshot coming soon</div>
-                    <p class="text-gray-400 text-sm mt-3 text-center">Customize timer and hotkeys</p>
+                    <p class="text-gray-400 text-sm mt-3 text-center">Timer and notification settings</p>
                 </div>
+            </div>
+        </section>
+
+        <!-- Install Section -->
+        <section id="install" class="container mx-auto px-6 py-16">
+            <div class="max-w-3xl mx-auto bg-mob-darker rounded-2xl p-6 md:p-8 border border-gray-800">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6">Install and first run</h2>
+                <ol class="text-gray-400 space-y-3 list-decimal pl-5">
+                    <li>Download the DMG from the <a href="https://github.com/colmarius/mobcrew/releases/latest" class="text-mob-blue hover:underline">latest release</a>.</li>
+                    <li>Open it, copy MobCrew to Applications, eject the DMG, then open MobCrew from Applications.</li>
+                    <li>If macOS blocks this known download because it cannot verify the developer, review it in System Settings → Privacy &amp; Security and choose Open Anyway only for the release you intended to download.</li>
+                </ol>
+                <p class="text-gray-400 mt-5">Accessibility is optional and used only by ⌘⇧L to toggle the floating timer. Notifications are optional turn and break alerts. The timer and roster still work when either permission is denied.</p>
+                <p class="text-gray-400 mt-4">MobCrew has no in-app updater, account, telemetry, or network service in the current code. Data stays on this Mac. Install updates manually from GitHub Releases, and use <a href="https://github.com/colmarius/mobcrew/issues" class="text-mob-blue hover:underline">GitHub Issues</a> for support.</p>
             </div>
         </section>
 
@@ -144,7 +158,7 @@
                 <h2 class="text-3xl md:text-4xl font-bold mb-6">Inspired by Mobster</h2>
                 <p class="text-xl text-gray-400 mb-8">
                     MobCrew brings mob programming tools to modern macOS with a native SwiftUI experience.
-                    Built for Apple Silicon, designed to feel right at home on your Mac.
+                    Designed to feel at home on macOS 14 and later.
                 </p>
                 <a href="https://github.com/dillonkearns/mobster" class="text-mob-blue hover:underline">Check out the original Mobster →</a>
             </div>

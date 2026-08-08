@@ -14,7 +14,7 @@ downloaded artifact is inspected on macOS.
 
 ## Tasks
 
-- [ ] **Task 1.1: Revalidate the audited implementation facts**
+- [x] **Task 1.1: Revalidate the audited implementation facts**
   - Scope: `README.md`, `TESTING.md`, `docs/index.html`, `docs/SCREENSHOTS.md`,
     `docs/RELEASING.md`, `AGENTS.md`, and the implementation files cited by `research.md`
   - Depends on: none
@@ -29,7 +29,7 @@ downloaded artifact is inspected on macOS.
   - Notes: Product facts belong in their owning user/contributor documents during the following
     tasks; the work item is evidence, not a shadow canonical product-data source.
 
-- [ ] **Task 1.2: Correct contradictory claims everywhere in scope**
+- [x] **Task 1.2: Correct contradictory claims everywhere in scope**
   - Scope: `README.md`, `docs/index.html`, `docs/SCREENSHOTS.md`, `TESTING.md`, `AGENTS.md`
   - Depends on: Task 1.1
   - Acceptance:
@@ -43,7 +43,7 @@ downloaded artifact is inspected on macOS.
   - Notes: Existing GitHub release notes are historical public state and must not be edited or
     republished without separate approval; ensure the next release notes use corrected wording.
 
-- [ ] **Task 1.3: Rework the README's user journey**
+- [x] **Task 1.3: Rework the README's user journey**
   - Scope: `README.md`
   - Depends on: Task 1.1, Task 1.2
   - Acceptance:
@@ -64,7 +64,7 @@ downloaded artifact is inspected on macOS.
     "ad-hoc signed" note is a signature-type claim: keep rebuild/permission guidance
     contributor-facing and keep released-artifact signature wording qualified until Task 1.7.
 
-- [ ] **Task 1.4: Add an in-page install and trust path without redesigning the site**
+- [x] **Task 1.4: Add an in-page install and trust path without redesigning the site**
   - Scope: `docs/index.html`
   - Depends on: Task 1.1, Task 1.2
   - Acceptance:
@@ -80,7 +80,7 @@ downloaded artifact is inspected on macOS.
   - Notes: Keep this a thin content slice. Phase 2 owns structural redesign, styling, metadata, and
     performance work.
 
-- [ ] **Task 1.5: Correct and broaden app-level manual regression journeys**
+- [x] **Task 1.5: Correct and broaden app-level manual regression journeys**
   - Scope: `TESTING.md`
   - Depends on: Task 1.1, Task 1.2
   - Acceptance:
@@ -95,7 +95,7 @@ downloaded artifact is inspected on macOS.
   - Notes: Mark checks that require a compatible macOS runner or interactive Mac; do not imply that
     unavailable OS/hardware combinations are unsupported.
 
-- [ ] **Task 1.6: Correct release documentation for today's repository-defined workflow**
+- [x] **Task 1.6: Correct release documentation for today's repository-defined workflow**
   - Scope: `docs/RELEASING.md`
   - Depends on: Task 1.1, Task 1.2
   - Acceptance:
@@ -126,6 +126,10 @@ downloaded artifact is inspected on macOS.
     - Public wording is made exact when evidence exists; if macOS access remains unavailable, docs
       retain qualified language and `research.md` explicitly records what remains unverified.
   - Notes: Lack of access is not evidence of unsupported hardware or OS behavior.
+  - Execution state (2026-08-08): **unverified** in the Linux orb. No macOS screenshot
+    recapture, signature/identity assessment, architecture inspection, quarantined first launch, or
+    clean-Mac qualification was performed. Qualified public wording remains in place and this manual
+    gate does not block unrelated static-site or local release-hardening work.
 
 ## Implementation Notes
 
