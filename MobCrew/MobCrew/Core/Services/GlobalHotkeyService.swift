@@ -2,6 +2,7 @@ import Foundation
 import Carbon
 import AppKit
 import Combine
+@preconcurrency import ApplicationServices
 
 @MainActor
 final class GlobalHotkeyService: ObservableObject {
@@ -60,7 +61,7 @@ final class GlobalHotkeyService: ObservableObject {
         }
         
         // Cmd+Shift+L: modifiers = cmdKey + shiftKey, keyCode = 37 (L)
-        var hotkeyID = EventHotKeyID(
+        let hotkeyID = EventHotKeyID(
             signature: OSType(0x4D4F4243),  // "MOBC" for MobCrew
             id: 1
         )
