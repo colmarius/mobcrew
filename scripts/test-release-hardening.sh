@@ -428,7 +428,7 @@ publish_with_tty() {
 
 # A canonical tag appearing after confirmation blocks PATCH. A matching state publishes by numeric ID only.
 touch "$STATE/tag_conflict"; clear_log
-if publish_with_tty >/dev/null 2>&1; then
+if (trap - ERR; publish_with_tty) >/dev/null 2>&1; then
   echo 'published despite final tag conflict' >&2
   exit 1
 fi
