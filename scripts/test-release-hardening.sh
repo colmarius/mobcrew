@@ -1,6 +1,7 @@
 #!/bin/bash
-set -euo pipefail
+set -eEuo pipefail
 export LC_ALL=C LANG=C
+trap 'RC=$?; printf "release hardening test failed at line %s: %s\n" "$LINENO" "$BASH_COMMAND" >&2; exit "$RC"' ERR
 
 SOURCE=$(cd "$(dirname "$0")/.." && pwd)
 T=$(mktemp -d "${TMPDIR:-/tmp}/mobcrew-release-tests.XXXXXX")

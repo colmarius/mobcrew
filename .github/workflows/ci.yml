@@ -22,21 +22,13 @@ jobs:
           fetch-depth: 0
 
       - name: Select pinned Node packaging toolchain
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: npm
 
       - name: Install locked packaging tooling
         run: npm ci --ignore-scripts --no-audit --no-fund
-
-      - name: Test release hardening (offline mocks)
-        run: /bin/bash ./scripts/test-release-hardening.sh
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version-file: .nvmrc
 
       - name: Verify and record runner toolchain
         run: |
@@ -64,6 +56,9 @@ jobs:
             xcodebuild -showsdks
             xcrun --find xcresulttool
           } 2>&1 | tee "$ARTIFACTS/toolchain.txt"
+
+      - name: Test release hardening (offline mocks)
+        run: /bin/bash ./scripts/test-release-hardening.sh
 
       - name: Build and package release configuration
         run: |
