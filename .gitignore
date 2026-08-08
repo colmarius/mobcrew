@@ -7,6 +7,7 @@ DerivedData/
 build/
 .build/
 .swiftpm/
+node_modules/
 *.xcodeproj/project.xcworkspace/xcuserdata/
 *.xcodeproj/xcuserdata/
 *.xcworkspace/xcuserdata/

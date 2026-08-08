@@ -119,18 +119,22 @@ See [TESTING.md](TESTING.md) for the full checklist.
 
 ## Releasing
 
-Prerequisites: `gh` CLI and Node.js 24+ (`brew install gh node && gh auth login`). The reproducible
-development and CI runtime is exactly 24.19.0, selected by [`.nvmrc`](.nvmrc); local
-release scripts accept compatible Node.js 24+ installations rather than rejecting newer versions.
-DMGs use the repository-pinned `create-dmg` 8.1.0 release.
+Prerequisites: `gh`, exact Xcode 26.6 / Swift 6.3, and Node 24.19.0 from `.nvmrc`. Run `npm ci` from
+the repository root; this installs only locked release packaging tooling (`create-dmg` 8.1.0), not a
+frontend stack.
 
 ```bash
-./scripts/release.sh <version> --draft
+./scripts/release.sh check 1.2.3
+./scripts/release.sh prepare 1.2.3
+# Separately authorized gates:
+./scripts/release.sh create-draft 1.2.3
+./scripts/release.sh verify-draft 1.2.3
+./scripts/release.sh publish 1.2.3 qualification.txt
 ```
 
-The script changes GitHub release state. Follow [docs/RELEASING.md](docs/RELEASING.md) to qualify the
-exact draft artifact and publish that same tested draft; do not rerun the script without `--draft`
-to publish a rebuilt artifact.
+Only `create-draft` and `publish` change GitHub release state, and each requires explicit authority.
+Follow [docs/RELEASING.md](docs/RELEASING.md) to qualify the exact quarantined draft download. Script
+interlocks do not prove owner authority or Developer ID/notarization status.
 
 ## Project Evolution
 

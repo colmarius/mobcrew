@@ -94,3 +94,11 @@ Downloaded-DMG integrity, bundle version, signatures, notarization, Gatekeeper, 
 architectures, clean-Mac launch, and upgrade behavior are release-artifact checks. Follow the
 [release checklist](docs/RELEASING.md) against the exact draft artifact; do not infer those results
 from a local debug build.
+
+Download qualification DMGs in a browser so macOS applies quarantine, then record
+`xattr -l MobCrew-<version>.dmg` before opening it. A CLI download is not assumed to preserve this
+property. Record every matrix item as exactly **tested**, **unverified**, or
+**unsupported-by-explicit-decision**. In particular, unavailable hardware/OS coverage is unverified,
+and Developer ID signing/notarization plus quarantined clean-Mac behavior remain unverified until
+observed. The release-critical integrity, Gatekeeper first launch, core regression, permissions,
+upgrade, release notes, and publication approval rows must be tested before publication.

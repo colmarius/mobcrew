@@ -1,0 +1,8 @@
+{
+  "name": "mobcrew-release-tooling",
+  "private": true,
+  "description": "Pinned packaging tooling only; MobCrew has no frontend build stack.",
+  "dependencies": {
+    "create-dmg": "8.1.0"
+  }
+}

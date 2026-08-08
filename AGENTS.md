@@ -17,7 +17,6 @@
 project/
 ├── AGENTS.md                    # This file - project instructions
 ├── README.md                    # Project overview
-├── .nvmrc                       # Exact Node.js version used by development tooling and CI
 ├── docs/                        # GitHub Pages landing page + RELEASING.md
 ├── scripts/                     # Build and release scripts
 ├── .github/workflows/           # Xcode CI + GitHub Pages deployment
@@ -107,9 +106,18 @@ xcodebuild test -project MobCrew/MobCrew.xcodeproj -scheme MobCrew -destination 
 # Create DMG package (outputs to build/MobCrew-<version>.dmg)
 ./scripts/create-dmg.sh <version>
 
-# Full release: build + DMG + GitHub release + upload
-# Prerequisites: Node.js 24+ and brew install gh && gh auth login
-./scripts/release.sh <version> [--draft]
+# Release tooling install (packaging only)
+npm ci
+
+# Non-mutating preflight and local preparation
+./scripts/release.sh check <version>
+./scripts/release.sh prepare <version>
+
+# Separately authorized remote gates (see docs/RELEASING.md)
+./scripts/release.sh create-draft <version>
+./scripts/release.sh status <version>
+./scripts/release.sh verify-draft <version>
+./scripts/release.sh publish <version> <qualification-file>
 
 # Serve docs locally
 ./scripts/serve-docs.sh
