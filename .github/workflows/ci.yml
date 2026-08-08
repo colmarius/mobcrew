@@ -28,7 +28,7 @@ jobs:
           cache: npm
 
       - name: Install locked packaging tooling
-        run: npm ci --ignore-scripts --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
 
       - name: Verify and record runner toolchain
         run: |

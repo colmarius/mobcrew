@@ -9,7 +9,8 @@ retags, or rolls back a release.
 
 Use a Mac with exactly Xcode 26.6 / Swift 6.3, `gh`, and Node 24.19.0 (pinned in `.nvmrc`). From the
 repository root run `npm ci`; `create-dmg` 8.1.0 is locked in `package-lock.json` and invoked locally,
-not through `npx`. The canonical checkout must have stored origin
+not through `npx`. Its locked macOS-native helper is built during installation, so do not suppress
+dependency install scripts. The canonical checkout must have stored origin
 `https://github.com/colmarius/mobcrew.git`, clean `main` tracking `origin/main`, complete history, and
 freshly fetched HEAD equal to both `origin/main` and the canonical GitHub API's `main` SHA. The
 operator needs authenticated canonical-repository push permission even though `check` itself is
