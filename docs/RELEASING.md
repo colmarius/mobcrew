@@ -5,7 +5,8 @@ Guide for creating MobCrew releases.
 ## Prerequisites
 
 1. **GitHub CLI**: `brew install gh && gh auth login`
-2. **Node.js**: `brew install node`
+2. **Node.js 20+**: `brew install node`
+3. **Xcode 26.6+** with the Swift 6.3 compiler
 
 ## Quick Release
 
@@ -84,7 +85,7 @@ xcode-select --install
 
 ### DMG Creation Fails
 
-The `create-dmg` tool is downloaded via npx on first run. Ensure you have internet access.
+The pinned `create-dmg` 8.1.0 tool is downloaded via npx on first run. Ensure you have internet access.
 
 ### Release Already Exists
 

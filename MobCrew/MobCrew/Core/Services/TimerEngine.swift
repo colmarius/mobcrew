@@ -1,11 +1,12 @@
 import Foundation
 import Combine
 
+@MainActor
 @Observable
 final class TimerEngine {
     private(set) var state: TimerState
     private var timerCancellable: AnyCancellable?
-    private var onComplete: (() -> Void)?
+    private var onComplete: (@MainActor () -> Void)?
 
     var isRunning: Bool {
         state.isRunning
@@ -19,7 +20,7 @@ final class TimerEngine {
         self.state = state
     }
 
-    func configure(onComplete: @escaping () -> Void) {
+    func configure(onComplete: @escaping @MainActor () -> Void) {
         self.onComplete = onComplete
     }
 

@@ -1,6 +1,7 @@
 import Foundation
 import ServiceManagement
 
+@MainActor
 final class LaunchAtLoginService {
     static let shared = LaunchAtLoginService()
     

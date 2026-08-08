@@ -2,12 +2,13 @@ import Foundation
 import UserNotifications
 
 protocol NotificationCenterProtocol {
-    func requestAuthorization(options: UNAuthorizationOptions, completionHandler: @escaping (Bool, Error?) -> Void)
-    func add(_ request: UNNotificationRequest, withCompletionHandler completionHandler: ((Error?) -> Void)?)
+    func requestAuthorization(options: UNAuthorizationOptions, completionHandler: @escaping @Sendable (Bool, Error?) -> Void)
+    func add(_ request: UNNotificationRequest, withCompletionHandler completionHandler: (@Sendable (Error?) -> Void)?)
 }
 
 extension UNUserNotificationCenter: NotificationCenterProtocol {}
 
+@MainActor
 final class NotificationService {
     static let shared = NotificationService()
     
@@ -18,18 +19,14 @@ final class NotificationService {
         self.notificationCenter = notificationCenter
     }
     
-    func requestPermission(completion: ((Bool) -> Void)? = nil) {
-        guard !permissionRequested else {
-            completion?(true)
-            return
-        }
+    func requestPermission() {
+        guard !permissionRequested else { return }
         
         permissionRequested = true
-        notificationCenter.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+        notificationCenter.requestAuthorization(options: [.alert, .sound, .badge]) { _, error in
             if let error = error {
                 print("Notification permission error: \(error)")
             }
-            completion?(granted)
         }
     }
     

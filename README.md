@@ -27,7 +27,7 @@ Get the latest release from [GitHub Releases](https://github.com/colmarius/mobcr
 ## Requirements
 
 - macOS 14.0+
-- Xcode 15+ (for development)
+- Xcode 26.6+ (for development with the Swift 6.3 compiler)
 
 ## Development
 
@@ -64,7 +64,7 @@ checks the service again whenever an orb wakes.
 
 MobCrew itself is a macOS-only Xcode target and uses AppKit, Carbon, and ServiceManagement. Linux
 orbs cannot install Xcode, launch the app, or run Apple simulators. Build, test, and interact with
-the app on a macOS Amp runner (or a local Mac) with Xcode 15+. The current project has no iOS target,
+the app on a macOS Amp runner (or a local Mac) with Xcode 26.6+. The current project has no iOS target,
 so running it in an iOS simulator would first require a separate iOS target and platform-specific
 alternatives for the macOS APIs; the simulator would still need to run on macOS.
 
@@ -74,7 +74,8 @@ See [TESTING.md](TESTING.md) for the full checklist.
 
 ## Releasing
 
-Prerequisites: `gh` CLI and Node.js (`brew install gh node && gh auth login`)
+Prerequisites: `gh` CLI and Node.js 20+ (`brew install gh node && gh auth login`). DMGs use the
+repository-pinned `create-dmg` 8.1.0 release.
 
 ```bash
 ./scripts/release.sh <version>

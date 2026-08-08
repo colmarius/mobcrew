@@ -1,6 +1,7 @@
 import AppKit
 import SwiftUI
 
+@MainActor
 final class FloatingTimerController {
     private var window: FloatingTimerWindow?
     private var hostingView: NSHostingView<FloatingTimerView>?

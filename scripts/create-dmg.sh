@@ -9,7 +9,7 @@
 #   --no-code-sign Skip code signing (default for now)
 #
 # Prerequisites:
-#   - Node.js (for npx create-dmg)
+#   - Node.js 20+ (for npx create-dmg)
 #   - Built app at build/Release/MobCrew.app
 #
 # Output:
@@ -45,7 +45,14 @@ while [[ $# -gt 0 ]]; do
 done
 
 if ! command -v node &> /dev/null; then
-    echo "✗ Node.js is required. Install with: brew install node"
+    echo "✗ Node.js 20+ is required. Install with: brew install node"
+    exit 1
+fi
+
+NODE_MAJOR=$(node -p 'process.versions.node.split(".")[0]' 2>/dev/null || echo "")
+if [[ ! "$NODE_MAJOR" =~ ^[0-9]+$ ]] || [ "$NODE_MAJOR" -lt 20 ]; then
+    echo "✗ Node.js 20+ is required (found: $(node --version 2>/dev/null || echo "unknown"))."
+    echo "  Upgrade with: brew upgrade node"
     exit 1
 fi
 
@@ -57,25 +64,30 @@ fi
 
 DMG_NAME="MobCrew-${VERSION}.dmg"
 OUTPUT_PATH="$BUILD_DIR/$DMG_NAME"
+TEMP_DIR=$(mktemp -d "$BUILD_DIR/.create-dmg.XXXXXX")
+trap 'rm -rf "$TEMP_DIR"' EXIT
 
-rm -f "$BUILD_DIR"/MobCrew-*.dmg 2>/dev/null || true
+rm -f "$OUTPUT_PATH"
 
 echo "Creating DMG..."
 echo "  App: $APP_PATH"
 echo "  Output: $OUTPUT_PATH"
 
-CREATE_DMG_ARGS=("--overwrite" "$APP_PATH" "$BUILD_DIR")
+CREATE_DMG_ARGS=("--overwrite" "$APP_PATH" "$TEMP_DIR")
 if [ "$NO_CODE_SIGN" = true ]; then
-    CREATE_DMG_ARGS=("--overwrite" "--no-code-sign" "$APP_PATH" "$BUILD_DIR")
+    CREATE_DMG_ARGS=("--overwrite" "--no-code-sign" "$APP_PATH" "$TEMP_DIR")
 fi
 
-npx create-dmg "${CREATE_DMG_ARGS[@]}" 2>&1 || true
+npx --yes create-dmg@8.1.0 "${CREATE_DMG_ARGS[@]}" 2>&1
 
-CREATED_DMG=$(find "$BUILD_DIR" -maxdepth 1 -name "MobCrew*.dmg" -type f | head -1)
-if [ -n "$CREATED_DMG" ] && [ -f "$CREATED_DMG" ]; then
-    mv "$CREATED_DMG" "$OUTPUT_PATH"
-    echo "✓ Created: $OUTPUT_PATH"
-else
-    echo "✗ DMG creation failed"
+shopt -s nullglob
+CREATED_DMGS=("$TEMP_DIR"/*.dmg)
+shopt -u nullglob
+if [ "${#CREATED_DMGS[@]}" -ne 1 ]; then
+    echo "✗ Expected exactly one DMG, found ${#CREATED_DMGS[@]}"
     exit 1
 fi
+
+hdiutil verify "${CREATED_DMGS[0]}"
+mv "${CREATED_DMGS[0]}" "$OUTPUT_PATH"
+echo "✓ Created and verified: $OUTPUT_PATH"

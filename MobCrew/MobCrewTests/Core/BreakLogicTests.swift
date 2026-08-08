@@ -2,6 +2,7 @@ import Testing
 import Foundation
 @testable import MobCrew
 
+@MainActor
 @Suite("Break Logic Tests")
 struct BreakLogicTests {
 

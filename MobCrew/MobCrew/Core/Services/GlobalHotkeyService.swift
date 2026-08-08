@@ -2,23 +2,25 @@ import Foundation
 import Carbon
 import AppKit
 import Combine
+@preconcurrency import ApplicationServices
 
+@MainActor
 final class GlobalHotkeyService: ObservableObject {
     static let shared = GlobalHotkeyService()
     
     private var hotkeyRef: EventHotKeyRef?
     private var eventHandler: EventHandlerRef?
-    private var callback: (() -> Void)?
+    private var callback: (@MainActor () -> Void)?
     
     @Published private(set) var isAccessibilityGranted: Bool = false
     private var permissionPollingTimer: DispatchSourceTimer?
-    private var onPermissionGranted: (() -> Void)?
+    private var onPermissionGranted: (@MainActor () -> Void)?
     
     private init() {
         isAccessibilityGranted = AXIsProcessTrusted()
     }
     
-    deinit {
+    isolated deinit {
         unregister()
         stopPolling()
     }
@@ -27,7 +29,7 @@ final class GlobalHotkeyService: ObservableObject {
     /// - Parameter callback: Called when the hotkey is pressed
     /// - Returns: true if registration succeeded
     @discardableResult
-    func register(callback: @escaping () -> Void) -> Bool {
+    func register(callback: @escaping @MainActor () -> Void) -> Bool {
         guard hotkeyRef == nil else { return true }
         
         self.callback = callback
@@ -42,7 +44,9 @@ final class GlobalHotkeyService: ObservableObject {
             { (_, event, userData) -> OSStatus in
                 guard let userData = userData else { return noErr }
                 let service = Unmanaged<GlobalHotkeyService>.fromOpaque(userData).takeUnretainedValue()
-                service.callback?()
+                MainActor.assumeIsolated {
+                    service.callback?()
+                }
                 return noErr
             },
             1,
@@ -57,7 +61,7 @@ final class GlobalHotkeyService: ObservableObject {
         }
         
         // Cmd+Shift+L: modifiers = cmdKey + shiftKey, keyCode = 37 (L)
-        var hotkeyID = EventHotKeyID(
+        let hotkeyID = EventHotKeyID(
             signature: OSType(0x4D4F4243),  // "MOBC" for MobCrew
             id: 1
         )
@@ -118,7 +122,7 @@ final class GlobalHotkeyService: ObservableObject {
     
     /// Starts polling for accessibility permission changes
     /// - Parameter onGranted: Called once when permission is granted
-    func startPollingForPermission(onGranted: @escaping () -> Void) {
+    func startPollingForPermission(onGranted: @escaping @MainActor () -> Void) {
         guard !isAccessibilityGranted else {
             onGranted()
             return
@@ -129,7 +133,9 @@ final class GlobalHotkeyService: ObservableObject {
         permissionPollingTimer = DispatchSource.makeTimerSource(queue: .main)
         permissionPollingTimer?.schedule(deadline: .now() + 0.5, repeating: 0.5)
         permissionPollingTimer?.setEventHandler { [weak self] in
-            self?.checkPermissionStatus()
+            MainActor.assumeIsolated {
+                self?.checkPermissionStatus()
+            }
         }
         permissionPollingTimer?.resume()
     }
@@ -146,8 +152,9 @@ final class GlobalHotkeyService: ObservableObject {
         isAccessibilityGranted = AXIsProcessTrusted()
         
         if isAccessibilityGranted && !wasGranted {
+            let onGranted = onPermissionGranted
             stopPolling()
-            onPermissionGranted?()
+            onGranted?()
         }
     }
 }
