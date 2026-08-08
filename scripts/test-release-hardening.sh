@@ -102,6 +102,21 @@ case "$1" in
       ENDPOINT=$3
       shift 3
       test "$ENDPOINT" = "repos/colmarius/mobcrew/releases"
+      test "$1" = -f && test "$2" = "tag_name=v1.2.3"
+      shift 2
+      test "$1" = -f && test "$2" = "target_commitish=$(read_state target)"
+      shift 2
+      test "$1" = -f && test "$2" = "name=MobCrew 1.2.3"
+      shift 2
+      test "$1" = -f && test "$2" = "body=Release v1.2.3"
+      shift 2
+      test "$1" = -F && test "$2" = "draft=true"
+      shift 2
+      test "$1" = -F && test "$2" = "prerelease=false"
+      shift 2
+      test "$1" = --jq && test "$2" = .id
+      shift 2
+      test "$#" = 0
       test "$(read_state release_present)" = false
       printf 'true\n' >"$STATE/release_present"
       printf 'true\n' >"$STATE/draft"
@@ -123,7 +138,12 @@ case "$1" in
 
     if test "$1" = --paginate; then
       ENDPOINT=$2
+      shift 2
       test "$ENDPOINT" = "repos/colmarius/mobcrew/releases?per_page=100"
+      test "$1" = --jq
+      test "$2" = '.[] | select(.draft == true and .tag_name == "v1.2.3") | .id'
+      shift 2
+      test "$#" = 0
       if test "$(read_state release_present)" = true && test "$(read_state draft)" = true; then
         read_state release_id
         test ! -f "$STATE/duplicate_draft" || echo 88
