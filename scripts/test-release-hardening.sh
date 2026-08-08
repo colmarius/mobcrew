@@ -419,11 +419,23 @@ run_fail unapproved-qualification "$WORK/scripts/release.sh" publish 1.2.3 "$QUA
 write_qualification "$QUAL"
 
 publish_with_tty() {
+  TRANSCRIPT="$T/publish.typescript"
+  rm -f "$TRANSCRIPT"
   if test "$(uname -s)" = Darwin; then
-    printf 'v1.2.3\n' | script -q /dev/null "$WORK/scripts/release.sh" publish 1.2.3 "$QUAL"
+    if printf 'v1.2.3\n' | script -q "$TRANSCRIPT" "$WORK/scripts/release.sh" publish 1.2.3 "$QUAL"; then
+      return 0
+    else
+      RC=$?
+    fi
   else
-    printf 'v1.2.3\n' | script -qefc "'$WORK/scripts/release.sh' publish 1.2.3 '$QUAL'" /dev/null
+    if printf 'v1.2.3\n' | script -qefc "'$WORK/scripts/release.sh' publish 1.2.3 '$QUAL'" "$TRANSCRIPT"; then
+      return 0
+    else
+      RC=$?
+    fi
   fi
+  test ! -f "$TRANSCRIPT" || cat "$TRANSCRIPT" >&2
+  return "$RC"
 }
 
 # A canonical tag appearing after confirmation blocks PATCH. A matching state publishes by numeric ID only.
