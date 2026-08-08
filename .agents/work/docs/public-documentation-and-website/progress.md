@@ -2,9 +2,9 @@
 
 ## Current slice
 
-All Linux-feasible implementation across Phases 1-3 is complete. Remaining work requires a pinned
-macOS/Xcode environment, an interactive quarantined qualification Mac, or an owner decision and
-credentials.
+All feasible local/static implementation across Phases 1-3 is complete. Remaining work requires an
+interactive quarantined qualification Mac, separate release-operation authority, or an owner
+decision and credentials.
 
 ## Observed evidence
 
@@ -73,8 +73,17 @@ credentials.
   post-confirmation tag race, and numeric-ID-only publication. The mock never contacts GitHub.
 - `bash -n scripts/*.sh`, `python3 scripts/validate-docs.py`, HTML validation, both workflow Prettier
   checks, and `git diff --check` pass. Linux `npm ci` stops with the expected `EBADPLATFORM` because
-  locked `appdmg` is macOS-only; dependency installation and packaging therefore remain macOS/CI
-  evidence rather than a claimed orb pass.
+  locked `appdmg` is macOS-only; pinned macOS CI installed the same lockfile successfully with its
+  required native install script.
+- [Pinned macOS CI run 31276077780](https://github.com/colmarius/mobcrew/actions/runs/31276077780)
+  passed Node 24.19.0 installation, the full offline release-hardening test under macOS/BSD tools,
+  Xcode 26.6 / Swift 6.3 release build, DMG creation/mount/verification, 100 app tests, and evidence
+  retention. The synthetic `0.0.0` artifact was 2,997,188 bytes with SHA-256
+  `4d3f933e7ffac0e7df32045a9d05796019bbf1d1ead65c2abdd4fd488d17966a`.
+- That CI artifact recorded build 167, `arm64`, an ad-hoc app signature, no Developer ID identity,
+  no hardened runtime, an unsigned outer DMG, and non-accepted stapled-ticket/spctl probes. The two
+  independent verifier runs produced identical strict evidence hashes. These are actual facts about
+  the synthetic CI artifact only, not `v0.2.0`, a future release, or quarantined Gatekeeper behavior.
 
 ## Unverified manual gates
 
@@ -86,8 +95,5 @@ credentials.
   new evidence.
 - Developer ID signing/notarization remains conditional on an explicit owner decision and credentials;
   it is not authorized by this execution.
-- The pinned macOS CI build/package/verifier path has not yet run for these changes. Linux cannot
-  substantiate Xcode build output, DMG mounting/detachment, actual bundle/DMG signature states, or
-  the generated architecture list.
 - No real draft, upload, qualification run, tag, or publication was created. Those remain separately
   authorized operations; the mocked state-machine result is not remote-release evidence.

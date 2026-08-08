@@ -59,7 +59,7 @@ conditional extension after an owner decision and approved credential model.
   - Notes: Do not add bypass flags for invariants that should always hold. A script can harden only
     the documented path; it cannot prevent maintainers from using GitHub directly.
 
-- [ ] (macos-verify) **Task 3.2: Build and verify the local release artifact before upload**
+- [x] **Task 3.2: Build and verify the local release artifact before upload**
   - Scope: `scripts/build-release.sh`, `scripts/create-dmg.sh`, `.github/workflows/ci.yml`,
     `docs/RELEASING.md`
   - Depends on: Task 3.1
@@ -75,9 +75,9 @@ conditional extension after an owner decision and approved credential model.
     - Local SHA-256 is generated and recorded for later comparison with the uploaded draft asset.
     - CI and release scripts use the same material artifact checks where practical.
   - Notes: This task is entirely local/non-publishing. Structural `codesign --verify` is not evidence
-    of Developer ID trust or notarization. The scripts and CI integration are implemented; keep this
-    unchecked until the pinned macOS runner actually builds, mounts, inspects, and records an
-    artifact with them.
+    of Developer ID trust or notarization. Pinned macOS CI run `31276077780` built, mounted,
+    inspected, and retained the synthetic `0.0.0` artifact and evidence; those results do not qualify
+    the public release or quarantined first launch.
 
 - [x] **Task 3.3: Implement resumable, separately authorized release operations**
   - Scope: `scripts/release.sh`, `docs/RELEASING.md`

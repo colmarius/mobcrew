@@ -13,14 +13,14 @@ current release-trust limitations.
 
 ## Summary
 
-All Linux-feasible work across Phases 1-3 is complete. Public facts and install guidance are
+All feasible local/static work across Phases 1-3 is complete. Public facts and install guidance are
 corrected; the static site is dependency-free, accessible, responsive, image-optimized,
 metadata-rich, and covered by deterministic Pages validation. Release tooling now has strict
 target/artifact/remote/qualification evidence, non-destructive resumable draft operations, a final
-live publication gate, locked packaging dependencies, and offline state-machine tests. Pinned macOS
-artifact execution, quarantined trust qualification, real-app screenshot recapture, and the
-conditional Developer ID owner decision remain blocked gates. The scope excludes unrelated app
-features and does not authorize publishing, deleting, merging, or deploying releases.
+live publication gate, locked packaging dependencies, Linux/macOS state-machine tests, and a passing
+pinned macOS build/package/verification run. Quarantined trust qualification, real-app screenshot
+recapture, and the conditional Developer ID owner decision remain blocked gates. The scope excludes
+unrelated app features and does not authorize publishing, deleting, merging, or deploying releases.
 
 ## Artifacts
 
@@ -33,9 +33,10 @@ features and does not authorize publishing, deleting, merging, or deploying rele
 
 ## Next Action
 
-- Run the updated Xcode CI job on its pinned macOS runner and record whether Phase 3 Task 3.2's real
-  build, DMG mount, signature-state inspection, and evidence generation pass. Do not infer Task 3.4's
-  quarantined Gatekeeper result from CI.
+- After this branch is reviewed and landed, obtain separate owner authorization before creating a
+  draft. Then prepare the exact release from clean canonical `main`, verify the uploaded bytes, and
+  run Tasks 1.7/3.4 on a clean Mac using the browser-downloaded quarantined DMG. Do not infer public
+  release or first-launch results from the synthetic CI artifact.
 
 ## Open Questions
 
