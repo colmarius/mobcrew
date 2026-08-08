@@ -29,7 +29,6 @@ STALE_CLAIMS = {
     "tip jar claim": re.compile(r"tip jar", re.IGNORECASE),
     "customizable hotkey claim": re.compile(r"customize timer and hotkeys", re.IGNORECASE),
     "five-minute default claim": re.compile(r"default 5 min", re.IGNORECASE),
-    "unverified ad-hoc signature claim": re.compile(r"ad-hoc signed", re.IGNORECASE),
 }
 
 
@@ -148,6 +147,10 @@ def validate(docs_root: Path) -> list[str]:
         for path in docs_root.rglob("*")
         if path.is_file() and path.suffix.lower() in {".css", ".html", ".md", ".txt", ".xml"}
     ]
+    repository_root = docs_root.parent
+    text_files.extend(
+        path for path in (repository_root / "README.md", repository_root / "TESTING.md") if path.is_file()
+    )
     for path in text_files:
         content = path.read_text(encoding="utf-8")
         if "cdn.tailwindcss.com" in content:

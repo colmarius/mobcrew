@@ -87,7 +87,7 @@ case "$1" in
           fi
           ;;
         repos/colmarius/mobcrew/releases/tags/v1.2.3)
-          if test "$(read_state release_present)" = true; then
+          if test "$(read_state release_present)" = true && test "$(read_state draft)" = false; then
             echo 'HTTP/2 200'
             exit 0
           fi
@@ -96,6 +96,18 @@ case "$1" in
       esac
       echo 'gh: Not Found (HTTP 404)' >&2
       exit 1
+    fi
+
+    if test "$1" = --method && test "$2" = POST; then
+      ENDPOINT=$3
+      shift 3
+      test "$ENDPOINT" = "repos/colmarius/mobcrew/releases"
+      test "$(read_state release_present)" = false
+      printf 'true\n' >"$STATE/release_present"
+      printf 'true\n' >"$STATE/draft"
+      printf '0\n' >"$STATE/asset_count"
+      read_state release_id
+      exit 0
     fi
 
     if test "$1" = --method; then
@@ -109,6 +121,16 @@ case "$1" in
       exit 0
     fi
 
+    if test "$1" = --paginate; then
+      ENDPOINT=$2
+      test "$ENDPOINT" = "repos/colmarius/mobcrew/releases?per_page=100"
+      if test "$(read_state release_present)" = true && test "$(read_state draft)" = true; then
+        read_state release_id
+        test ! -f "$STATE/duplicate_draft" || echo 88
+      fi
+      exit 0
+    fi
+
     ENDPOINT=$1
     case "$ENDPOINT" in
       repos/colmarius/mobcrew)
@@ -117,7 +139,12 @@ case "$1" in
       repos/colmarius/mobcrew/commits/main)
         read_state target
         ;;
-      repos/colmarius/mobcrew/releases/tags/v1.2.3|repos/colmarius/mobcrew/releases/77)
+      repos/colmarius/mobcrew/releases/tags/v1.2.3)
+        test "$(read_state release_present)" = true
+        test "$(read_state draft)" = false
+        write_live
+        ;;
+      repos/colmarius/mobcrew/releases/77)
         test "$(read_state release_present)" = true
         write_live
         ;;
@@ -126,12 +153,6 @@ case "$1" in
     ;;
   release)
     case "$2" in
-      create)
-        test "$(read_state release_present)" = false
-        printf 'true\n' >"$STATE/release_present"
-        printf 'true\n' >"$STATE/draft"
-        printf '0\n' >"$STATE/asset_count"
-        ;;
       upload)
         test "$(read_state release_present)" = true
         cp "$4" "$STATE/server-asset"
@@ -166,7 +187,7 @@ export PATH="$MOCK:$PATH" GH_LOG STATE TEST_REMOTE="$REMOTE"
 read_state() { cat "$STATE/$1"; }
 
 reset_state() {
-  rm -f "$STATE/tag_query_error" "$STATE/tag_conflict" "$STATE/server-asset"
+  rm -f "$STATE/tag_query_error" "$STATE/tag_conflict" "$STATE/duplicate_draft" "$STATE/server-asset"
   printf 'false\n' >"$STATE/release_present"
   printf 'false\n' >"$STATE/tag_present"
   printf '77\n' >"$STATE/release_id"
@@ -194,7 +215,7 @@ set_matching_asset() {
 }
 
 clear_log() { : >"$GH_LOG"; }
-assert_no_mutation() { ! grep -Eq '^release (create|upload)|^api --method PATCH' "$GH_LOG"; }
+assert_no_mutation() { ! grep -Eq '^release upload|^api --method (POST|PATCH)' "$GH_LOG"; }
 run_check_ok() {
   reset_state; clear_log
   (cd "$T" && "$WORK/scripts/release.sh" check 1.2.3) >/dev/null
@@ -235,7 +256,8 @@ run_check_fail wrong-swift MOCK_SWIFT=6.2
 run_check_fail auth MOCK_AUTH=bad
 run_check_fail repo MOCK_REPO=bad
 run_check_fail push MOCK_PUSH=false
-printf 'true\n' >"$STATE/release_present"; run_check_fail existing-release; reset_state
+printf 'true\n' >"$STATE/release_present"; run_check_fail existing-draft; reset_state
+printf 'true\n' >"$STATE/release_present"; printf 'false\n' >"$STATE/draft"; run_check_fail published-release; reset_state
 printf 'true\n' >"$STATE/tag_present"; run_check_fail remote-tag-api; reset_state
 touch "$STATE/tag_query_error"; run_check_fail tag-query-error; reset_state
 test "$(shasum -a 256 "$WORK/build/known-good.dmg" | awk '{print $1}')" = "$KNOWN"
@@ -342,12 +364,14 @@ EOF
 # Absent -> create metadata -> upload -> read back. Re-running never clobbers.
 clear_log
 (cd "$T" && "$WORK/scripts/release.sh" create-draft 1.2.3) >/dev/null
-grep -Fq "release create v1.2.3 --repo colmarius/mobcrew --draft --target $TARGET" "$GH_LOG"
+grep -Fq "api --method POST repos/colmarius/mobcrew/releases -f tag_name=v1.2.3 -f target_commitish=$TARGET" "$GH_LOG"
 grep -q '^release upload v1.2.3 .* --repo colmarius/mobcrew$' "$GH_LOG"
 test "$(read_state asset_count)" = 1
 clear_log
 (cd "$T" && "$WORK/scripts/release.sh" create-draft 1.2.3) >/dev/null
 assert_no_mutation
+grep -q '^api -i repos/colmarius/mobcrew/releases/tags/v1.2.3$' "$GH_LOG"
+grep -q '^api --paginate repos/colmarius/mobcrew/releases?per_page=100 ' "$GH_LOG"
 
 # A matching partial draft resumes upload; conflicting remote state never mutates.
 printf '0\n' >"$STATE/asset_count"; printf '\n' >"$STATE/asset_id"; printf '\n' >"$STATE/asset_name"; printf '\n' >"$STATE/asset_size"; printf '\n' >"$STATE/asset_digest"
@@ -370,6 +394,9 @@ run_fail wrong-asset "$WORK/scripts/release.sh" create-draft 1.2.3; assert_no_mu
 set_matching_asset "$DMG"; printf 'sha256:%064d\n' 0 >"$STATE/asset_digest"
 run_fail wrong-api-digest "$WORK/scripts/release.sh" create-draft 1.2.3; assert_no_mutation
 set_matching_asset "$DMG"
+touch "$STATE/duplicate_draft"
+run_fail duplicate-drafts "$WORK/scripts/release.sh" create-draft 1.2.3; assert_no_mutation
+rm "$STATE/duplicate_draft"
 
 clear_log
 (cd "$T" && "$WORK/scripts/release.sh" status 1.2.3) >/dev/null

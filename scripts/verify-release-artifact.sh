@@ -23,7 +23,7 @@ SIG=$(codesign -dv --verbose=4 "$APP" 2>&1 || true); printf '%s\n' "$SIG" >>"$LO
 case "$SIG" in *'Authority=Developer ID Application:'*) KIND=developer-id;; *'Signature=adhoc'*) KIND=adhoc;; *'Authority='*) KIND=other;; *) KIND=unclassified;; esac
 test "$KIND" != unclassified || { echo "unable to classify app signature" >&2; exit 1; }
 TEAM=$(printf '%s\n' "$SIG" | sed -n 's/^TeamIdentifier=//p' | head -1); test -n "$TEAM" || TEAM=none
-case "$SIG" in *'flags=0x10000(runtime)'*) HARDENED=true;; *) HARDENED=false;; esac
+if printf '%s\n' "$SIG" | grep -Eq 'flags=0x[0-9a-fA-F]+[[:space:]]*\([^)]*runtime[^)]*\)'; then HARDENED=true; else HARDENED=false; fi
 probe() { NAME=$1; shift; if "$@" >>"$LOG" 2>&1; then RESULT=accepted; RC=0; else RC=$?; RESULT=not-accepted; fi; printf '%s exit=%s\n' "$NAME" "$RC" >>"$LOG"; eval "$NAME=$RESULT"; eval "${NAME}_EXIT=$RC"; }
 probe APP_STAPLER xcrun stapler validate "$APP"; probe APP_SPCTL spctl --assess --type execute --verbose=4 "$APP"
 DS=$(codesign --verify --verbose=4 "$DMG" 2>&1) && DRC=0 || DRC=$?; printf '%s\n' "$DS" >>"$LOG"

@@ -39,7 +39,7 @@ project/
     │   ├── App/                 # MobCrewApp.swift, AppDelegate.swift
     │   ├── Core/
     │   │   ├── Models/          # Mobster, Roster, TimerState
-    │   │   ├── Services/        # HotkeyService, SoundService, etc.
+    │   │   ├── Services/        # GlobalHotkeyService, persistence, etc.
     │   │   └── AppState.swift   # Global app state
     │   ├── Features/            # Feature-based UI modules
     │   │   ├── Break/           # Break timer overlay
