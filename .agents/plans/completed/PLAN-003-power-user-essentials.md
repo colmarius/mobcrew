@@ -47,7 +47,7 @@ Features explicitly excluded (too complex for value):
     - Tips displayed in main window (not floating timer)
     - At least 10 tips included (source from mobster repo)
     - Tip changes on each timer start
-  - Notes: Check `.agents/reference/mobster/` for original tips
+  - Notes: Check `.agents/references/mobster/` for original tips
 
 - [x] **Task 3: Dark Mode Verification**
   - Scope: All UI views

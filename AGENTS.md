@@ -24,16 +24,15 @@ project/
 ├── .agents/
 │   ├── setup                    # Fresh-orb prerequisite checks
 │   ├── resume                   # Fast service repair after orb wake
-│   ├── reference/               # External repos (gitignored)
+│   ├── work/                    # Durable work items when continuity has value
+│   ├── references/              # External repos (gitignored)
 │   │   ├── mobster/             # Original dillonkearns/mobster clone
 │   │   └── ghostty/             # Ghostty terminal app (Swift/SwiftUI patterns)
-│   ├── research/                # Research and reference material
-│   ├── prds/                    # Product requirements documents
-│   ├── plans/                   # Implementation plans
-│   │   ├── todo/                # Planned but not started
-│   │   ├── in-progress/         # Currently being worked on
-│   │   └── completed/           # Finished and verified
-│   └── skills/                  # Agent skills
+│   ├── research/                # Reusable cross-work findings
+│   ├── plans/                   # Legacy implementation-plan archive
+│   ├── prds/                    # Legacy product-requirements archive
+│   ├── scripts/                 # dot-agents sync helpers
+│   └── skills/                  # Repeatable agent workflows
 └── MobCrew/                     # Xcode project
     ├── MobCrew/
     │   ├── App/                 # MobCrewApp.swift, AppDelegate.swift
@@ -57,48 +56,21 @@ project/
     └── MobCrewTests/            # Unit tests (mirrors main structure)
 ```
 
-## PRD → Plan → Execute Workflow
+## Agent Work
 
-```text
-Research → PRD → Plan → Ralph executes
-```
-
-1. **Create PRD**: `Create a PRD for [feature] based on .agents/research/[doc].md`
-2. **Generate Plan**: PRD acceptance criteria → Ralph task format
-3. **Execute**: `Run ralph on .agents/plans/in-progress/[plan].md`
-
-PRD template and rules in `.agents/prds/AGENTS.md`.
-
-## Plan Management
-
-Plans in `.agents/plans/` follow this workflow:
-
-| Status | Location |
-|--------|----------|
-| **TODO** | `plans/todo/` |
-| **IN-PROGRESS** | `plans/in-progress/` |
-| **COMPLETED** | `plans/completed/` |
-
-### Writing Ralph-Ready Plans
-
-```markdown
-- [ ] **Task N: Short descriptive title**
-  - Scope: `path/to/affected/files` or module name
-  - Depends on: Task M (or "none")
-  - Acceptance:
-    - Specific, verifiable criterion 1
-    - Specific, verifiable criterion 2
-  - Notes: Optional implementation hints
-```
-
-**Task markers:**
-
-| Marker | Meaning |
-|--------|---------|
-| `- [ ]` | Not started |
-| `- [x]` | Completed |
-| `- [ ] (blocked)` | Blocked, needs intervention |
-| `- [ ] (manual-verify)` | Requires manual verification |
+- Keep small, self-contained planning and implementation in the current conversation.
+- Create a durable work item under `.agents/work/<category>/<slug>/` when resumption,
+  coordination, handoff, auditability, durable decisions, or an explicit request makes repository
+  context useful.
+- Use the `agent-work` skill for durable requirements, planning, refinement, execution, and optional
+  handoffs. Follow `.agents/work/AGENTS.md` for status, artifact, evidence, and closeout rules.
+- Keep task-specific research in its work item. Use `.agents/research/` only for reusable findings.
+- Implement in the current thread by default. Handoffs are optional and should be persisted only when
+  reuse or durable transition context justifies them.
+- On completion, promote reusable outcomes, commit the final completed work-item snapshot, then use
+  `close-work.sh` to stage its removal. Git history is the archive.
+- Existing `.agents/plans/` and `.agents/prds/` files are legacy project records; do not use their old
+  lifecycle for new work.
 
 ## Commands
 
@@ -156,7 +128,7 @@ git push
 ### Commit Guidelines
 
 - Write clear, descriptive commit messages
-- Reference plan numbers in commits (e.g., "Plan 001: Initial setup")
+- Reference the durable work-item slug when one exists
 - Commit after each logical step
 
 ## Maintenance
@@ -165,4 +137,5 @@ After making changes:
 
 1. **Update AGENTS.md** - Keep project structure and commands current
 2. **Update README.md** - Reflect user-facing changes
-3. **Update plan status** - Move completed plans to `completed/`
+3. **Update durable context when used** - Keep the work-item index, plan, and evidence aligned with
+   `.agents/work/AGENTS.md`
