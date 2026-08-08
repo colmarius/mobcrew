@@ -9,7 +9,7 @@
 #   --no-code-sign Skip code signing (default for now)
 #
 # Prerequisites:
-#   - Node.js 24+ (24.19.0 is pinned in .node-version)
+#   - Node.js 24+ (24.19.0 is pinned in .nvmrc)
 #   - Built app at build/Release/MobCrew.app
 #
 # Output:

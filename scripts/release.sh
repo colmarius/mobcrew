@@ -10,7 +10,7 @@
 #
 # Prerequisites:
 #   - gh CLI installed and authenticated (brew install gh && gh auth login)
-#   - Node.js 24+ for DMG creation (24.19.0 is pinned in .node-version)
+#   - Node.js 24+ for DMG creation (24.19.0 is pinned in .nvmrc)
 #
 # This script:
 #   1. Builds the app in Release configuration

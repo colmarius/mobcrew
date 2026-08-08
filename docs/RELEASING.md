@@ -5,8 +5,8 @@ Guide for creating MobCrew releases.
 ## Prerequisites
 
 1. **GitHub CLI**: `brew install gh && gh auth login`
-2. **Node.js 24+**: use the exact 24.19.0 version in [`.node-version`](../.node-version) when your
-   version manager supports it, or `brew install node`
+2. **Node.js 24+**: run `nvm install && nvm use` to select the exact 24.19.0 version in
+   [`.nvmrc`](../.nvmrc), or `brew install node`
 3. **Xcode 26.6+** with the Swift 6.3 compiler
 
 CI uses the exact Node.js 24.19.0 pin for reproducibility. The local release scripts require Node.js

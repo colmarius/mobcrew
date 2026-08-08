@@ -17,7 +17,7 @@
 project/
 ├── AGENTS.md                    # This file - project instructions
 ├── README.md                    # Project overview
-├── .node-version                # Exact Node.js version used by development tooling and CI
+├── .nvmrc                       # Exact Node.js version used by development tooling and CI
 ├── docs/                        # GitHub Pages landing page + RELEASING.md
 ├── scripts/                     # Build and release scripts
 ├── .github/workflows/           # Xcode CI + GitHub Pages deployment

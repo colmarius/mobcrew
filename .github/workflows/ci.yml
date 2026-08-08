@@ -22,7 +22,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v7
         with:
-          node-version-file: .node-version
+          node-version-file: .nvmrc
 
       - name: Verify and record runner toolchain
         run: |
@@ -37,7 +37,7 @@ jobs:
             uname -m
             echo "ImageOS=${ImageOS:-unset}"
             echo "ImageVersion=${ImageVersion:-unset}"
-            EXPECTED_NODE_VERSION="v$(< .node-version)"
+            EXPECTED_NODE_VERSION="v$(< .nvmrc)"
             ACTUAL_NODE_VERSION="$(node --version)"
             echo "Node expected=$EXPECTED_NODE_VERSION"
             echo "Node actual=$ACTUAL_NODE_VERSION"
