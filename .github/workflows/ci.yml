@@ -50,6 +50,15 @@ jobs:
           ditto -c -k --keepParent build/Release/MobCrew.app \
             "$ARTIFACTS/MobCrew.app.zip"
 
+      - name: Create and verify DMG
+        run: |
+          set -euo pipefail
+          ./scripts/create-dmg.sh ci \
+            2>&1 | tee "$ARTIFACTS/create-dmg.log"
+          hdiutil verify build/MobCrew-ci.dmg \
+            2>&1 | tee "$ARTIFACTS/hdiutil-verify.log"
+          mv build/MobCrew-ci.dmg "$ARTIFACTS/MobCrew-ci.dmg"
+
       - name: Run complete test suite
         run: |
           set -euo pipefail
