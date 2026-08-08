@@ -19,6 +19,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+
       - name: Verify and record runner toolchain
         run: |
           set -euo pipefail
@@ -27,15 +32,24 @@ jobs:
             exit 1
           }
           mkdir -p "$ARTIFACTS"
-          sw_vers
-          uname -m
-          echo "ImageOS=${ImageOS:-unset}"
-          echo "ImageVersion=${ImageVersion:-unset}"
-          xcode-select -p
-          xcodebuild -version
-          xcrun swift --version
-          xcodebuild -showsdks
-          xcrun --find xcresulttool
+          {
+            sw_vers
+            uname -m
+            echo "ImageOS=${ImageOS:-unset}"
+            echo "ImageVersion=${ImageVersion:-unset}"
+            EXPECTED_NODE_VERSION="v$(< .node-version)"
+            ACTUAL_NODE_VERSION="$(node --version)"
+            echo "Node expected=$EXPECTED_NODE_VERSION"
+            echo "Node actual=$ACTUAL_NODE_VERSION"
+            test "$ACTUAL_NODE_VERSION" = "$EXPECTED_NODE_VERSION"
+            echo "npm=$(npm --version)"
+            echo "npx=$(npx --version)"
+            xcode-select -p
+            xcodebuild -version
+            xcrun swift --version
+            xcodebuild -showsdks
+            xcrun --find xcresulttool
+          } 2>&1 | tee "$ARTIFACTS/toolchain.txt"
 
       - name: Build and package release configuration
         run: |

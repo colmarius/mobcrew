@@ -9,7 +9,7 @@
 #   --no-code-sign Skip code signing (default for now)
 #
 # Prerequisites:
-#   - Node.js 20+ (for npx create-dmg)
+#   - Node.js 24+ (24.19.0 is pinned in .node-version)
 #   - Built app at build/Release/MobCrew.app
 #
 # Output:
@@ -45,14 +45,19 @@ while [[ $# -gt 0 ]]; do
 done
 
 if ! command -v node &> /dev/null; then
-    echo "✗ Node.js 20+ is required. Install with: brew install node"
+    echo "✗ Node.js 24+ is required. Install with: brew install node"
     exit 1
 fi
 
 NODE_MAJOR=$(node -p 'process.versions.node.split(".")[0]' 2>/dev/null || echo "")
-if [[ ! "$NODE_MAJOR" =~ ^[0-9]+$ ]] || [ "$NODE_MAJOR" -lt 20 ]; then
-    echo "✗ Node.js 20+ is required (found: $(node --version 2>/dev/null || echo "unknown"))."
+if [[ ! "$NODE_MAJOR" =~ ^[0-9]+$ ]] || [ "$NODE_MAJOR" -lt 24 ]; then
+    echo "✗ Node.js 24+ is required (found: $(node --version 2>/dev/null || echo "unknown"))."
     echo "  Upgrade with: brew upgrade node"
+    exit 1
+fi
+
+if ! command -v npx &> /dev/null; then
+    echo "✗ npx is required. Install the complete Node.js distribution."
     exit 1
 fi
 

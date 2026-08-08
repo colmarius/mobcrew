@@ -5,8 +5,12 @@ Guide for creating MobCrew releases.
 ## Prerequisites
 
 1. **GitHub CLI**: `brew install gh && gh auth login`
-2. **Node.js 20+**: `brew install node`
+2. **Node.js 24+**: use the exact 24.19.0 version in [`.node-version`](../.node-version) when your
+   version manager supports it, or `brew install node`
 3. **Xcode 26.6+** with the Swift 6.3 compiler
+
+CI uses the exact Node.js 24.19.0 pin for reproducibility. The local release scripts require Node.js
+24 or newer so a compatible local installation is not rejected solely for using a newer version.
 
 ## Quick Release
 
@@ -69,7 +73,7 @@ This builds the app, creates a DMG, and publishes to GitHub Releases.
 gh auth login
 ```
 
-### "Node.js is required"
+### "Node.js 24+ is required"
 
 ```bash
 brew install node
@@ -85,7 +89,8 @@ xcode-select --install
 
 ### DMG Creation Fails
 
-The pinned `create-dmg` 8.1.0 tool is downloaded via npx on first run. Ensure you have internet access.
+The pinned `create-dmg` 8.1.0 tool is downloaded via npx on first run. Ensure the complete Node.js
+distribution and internet access are available.
 
 ### Release Already Exists
 

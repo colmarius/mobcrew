@@ -74,8 +74,10 @@ See [TESTING.md](TESTING.md) for the full checklist.
 
 ## Releasing
 
-Prerequisites: `gh` CLI and Node.js 20+ (`brew install gh node && gh auth login`). DMGs use the
-repository-pinned `create-dmg` 8.1.0 release.
+Prerequisites: `gh` CLI and Node.js 24+ (`brew install gh node && gh auth login`). The reproducible
+development and CI runtime is exactly 24.19.0, selected by [`.node-version`](.node-version); local
+release scripts accept compatible Node.js 24+ installations rather than rejecting newer versions.
+DMGs use the repository-pinned `create-dmg` 8.1.0 release.
 
 ```bash
 ./scripts/release.sh <version>

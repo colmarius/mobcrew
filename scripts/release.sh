@@ -10,7 +10,7 @@
 #
 # Prerequisites:
 #   - gh CLI installed and authenticated (brew install gh && gh auth login)
-#   - Node.js 20+ for DMG creation (brew install node)
+#   - Node.js 24+ for DMG creation (24.19.0 is pinned in .node-version)
 #
 # This script:
 #   1. Builds the app in Release configuration
@@ -64,15 +64,20 @@ if ! gh auth status &> /dev/null; then
 fi
 
 if ! command -v node &> /dev/null; then
-    echo "✗ Node.js 20+ is required for DMG creation."
+    echo "✗ Node.js 24+ is required for DMG creation."
     echo "  Install: brew install node"
     exit 1
 fi
 
 NODE_MAJOR=$(node -p 'process.versions.node.split(".")[0]' 2>/dev/null || echo "")
-if [[ ! "$NODE_MAJOR" =~ ^[0-9]+$ ]] || [ "$NODE_MAJOR" -lt 20 ]; then
-    echo "✗ Node.js 20+ is required (found: $(node --version 2>/dev/null || echo "unknown"))."
+if [[ ! "$NODE_MAJOR" =~ ^[0-9]+$ ]] || [ "$NODE_MAJOR" -lt 24 ]; then
+    echo "✗ Node.js 24+ is required (found: $(node --version 2>/dev/null || echo "unknown"))."
     echo "  Upgrade with: brew upgrade node"
+    exit 1
+fi
+
+if ! command -v npx &> /dev/null; then
+    echo "✗ npx is required. Install the complete Node.js distribution."
     exit 1
 fi
 
