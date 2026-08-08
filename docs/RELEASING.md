@@ -52,10 +52,11 @@ After authority to change GitHub state is explicit:
 Draft creation first revalidates main, local evidence, artifact contents, and remote tag absence. It
 discovers an existing draft by exact tag across the paginated releases API. When absent, it creates
 metadata with a REST `POST` whose `target_commitish` is the full target SHA, captures the numeric
-release ID, and reads that exact release back before uploading. A matching asset is untouched;
-duplicate drafts, conflicting metadata, wrong state, wrong asset, extra assets, and generic network
-failures stop. `verify-draft` binds the numeric release/asset IDs, title/body, target, API digest when
-supplied, and a freshly downloaded size/SHA in `build/MobCrew-1.2.3.remote-evidence`.
+release ID, reads that exact release back, and uploads through that release ID's asset endpoint. A
+matching asset is untouched; duplicate drafts, conflicting metadata, wrong state, wrong asset, extra
+assets, and generic network failures stop. `verify-draft` binds the numeric release/asset IDs,
+title/body, target, API digest when supplied, and a freshly downloaded size/SHA in
+`build/MobCrew-1.2.3.remote-evidence`.
 
 ## Qualification contract
 

@@ -101,27 +101,50 @@ case "$1" in
     if test "$1" = --method && test "$2" = POST; then
       ENDPOINT=$3
       shift 3
-      test "$ENDPOINT" = "repos/colmarius/mobcrew/releases"
-      test "$1" = -f && test "$2" = "tag_name=v1.2.3"
-      shift 2
-      test "$1" = -f && test "$2" = "target_commitish=$(read_state target)"
-      shift 2
-      test "$1" = -f && test "$2" = "name=MobCrew 1.2.3"
-      shift 2
-      test "$1" = -f && test "$2" = "body=Release v1.2.3"
-      shift 2
-      test "$1" = -F && test "$2" = "draft=true"
-      shift 2
-      test "$1" = -F && test "$2" = "prerelease=false"
-      shift 2
-      test "$1" = --jq && test "$2" = .id
-      shift 2
-      test "$#" = 0
-      test "$(read_state release_present)" = false
-      printf 'true\n' >"$STATE/release_present"
-      printf 'true\n' >"$STATE/draft"
-      printf '0\n' >"$STATE/asset_count"
-      read_state release_id
+      case "$ENDPOINT" in
+        repos/colmarius/mobcrew/releases)
+          test "$1" = -f && test "$2" = "tag_name=v1.2.3"
+          shift 2
+          test "$1" = -f && test "$2" = "target_commitish=$(read_state target)"
+          shift 2
+          test "$1" = -f && test "$2" = "name=MobCrew 1.2.3"
+          shift 2
+          test "$1" = -f && test "$2" = "body=Release v1.2.3"
+          shift 2
+          test "$1" = -F && test "$2" = "draft=true"
+          shift 2
+          test "$1" = -F && test "$2" = "prerelease=false"
+          shift 2
+          test "$1" = --jq && test "$2" = .id
+          shift 2
+          test "$#" = 0
+          test "$(read_state release_present)" = false
+          printf 'true\n' >"$STATE/release_present"
+          printf 'true\n' >"$STATE/draft"
+          printf '0\n' >"$STATE/asset_count"
+          read_state release_id
+          ;;
+        "https://uploads.github.com/repos/colmarius/mobcrew/releases/77/assets?name=MobCrew-1.2.3.dmg")
+          test "$1" = -H && test "$2" = "Content-Type: application/octet-stream"
+          shift 2
+          test "$1" = --input; UPLOAD=$2
+          shift 2
+          test "$1" = --jq && test "$2" = .id
+          shift 2
+          test "$#" = 0
+          test "$(read_state release_present)" = true
+          test "$(read_state draft)" = true
+          test "$(read_state asset_count)" = 0
+          cp "$UPLOAD" "$STATE/server-asset"
+          printf '1\n' >"$STATE/asset_count"
+          printf '501\n' >"$STATE/asset_id"
+          basename "$UPLOAD" >"$STATE/asset_name"
+          wc -c <"$UPLOAD" | tr -d ' ' >"$STATE/asset_size"
+          printf 'sha256:%s\n' "$(shasum -a 256 "$UPLOAD" | awk '{print $1}')" >"$STATE/asset_digest"
+          read_state asset_id
+          ;;
+        *) echo "unexpected POST endpoint: $ENDPOINT" >&2; exit 99;;
+      esac
       exit 0
     fi
 
@@ -173,15 +196,6 @@ case "$1" in
     ;;
   release)
     case "$2" in
-      upload)
-        test "$(read_state release_present)" = true
-        cp "$4" "$STATE/server-asset"
-        printf '1\n' >"$STATE/asset_count"
-        printf '501\n' >"$STATE/asset_id"
-        basename "$4" >"$STATE/asset_name"
-        wc -c <"$4" | tr -d ' ' >"$STATE/asset_size"
-        printf 'sha256:%s\n' "$(shasum -a 256 "$4" | awk '{print $1}')" >"$STATE/asset_digest"
-        ;;
       download)
         shift 2
         DEST=; PATTERN=
@@ -235,7 +249,7 @@ set_matching_asset() {
 }
 
 clear_log() { : >"$GH_LOG"; }
-assert_no_mutation() { ! grep -Eq '^release upload|^api --method (POST|PATCH)' "$GH_LOG"; }
+assert_no_mutation() { ! grep -Eq '^release (upload|delete)|^api --method (POST|PATCH|DELETE)|--clobber' "$GH_LOG"; }
 run_check_ok() {
   reset_state; clear_log
   (cd "$T" && "$WORK/scripts/release.sh" check 1.2.3) >/dev/null
@@ -385,7 +399,7 @@ EOF
 clear_log
 (cd "$T" && "$WORK/scripts/release.sh" create-draft 1.2.3) >/dev/null
 grep -Fq "api --method POST repos/colmarius/mobcrew/releases -f tag_name=v1.2.3 -f target_commitish=$TARGET" "$GH_LOG"
-grep -q '^release upload v1.2.3 .* --repo colmarius/mobcrew$' "$GH_LOG"
+grep -Fq 'api --method POST https://uploads.github.com/repos/colmarius/mobcrew/releases/77/assets?name=MobCrew-1.2.3.dmg -H Content-Type: application/octet-stream --input ' "$GH_LOG"
 test "$(read_state asset_count)" = 1
 clear_log
 (cd "$T" && "$WORK/scripts/release.sh" create-draft 1.2.3) >/dev/null
@@ -397,7 +411,7 @@ grep -q '^api --paginate repos/colmarius/mobcrew/releases?per_page=100 ' "$GH_LO
 printf '0\n' >"$STATE/asset_count"; printf '\n' >"$STATE/asset_id"; printf '\n' >"$STATE/asset_name"; printf '\n' >"$STATE/asset_size"; printf '\n' >"$STATE/asset_digest"
 clear_log
 (cd "$T" && "$WORK/scripts/release.sh" create-draft 1.2.3) >/dev/null
-grep -q '^release upload ' "$GH_LOG"
+grep -Fq 'api --method POST https://uploads.github.com/repos/colmarius/mobcrew/releases/77/assets?name=MobCrew-1.2.3.dmg ' "$GH_LOG"
 
 set_matching_asset "$DMG"; printf 'Wrong title\n' >"$STATE/title"
 run_fail conflicting-title "$WORK/scripts/release.sh" create-draft 1.2.3; assert_no_mutation

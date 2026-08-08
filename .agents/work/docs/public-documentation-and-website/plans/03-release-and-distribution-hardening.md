@@ -86,6 +86,7 @@ conditional extension after an owner decision and approved credential model.
     - Local preparation, draft metadata creation/asset upload, status inspection, uploaded-digest
       verification, and publication of the existing draft are distinct operations.
     - Draft creation accepts only the locally verified artifact and binds to the Task 3.1 target SHA.
+    - Asset upload targets the captured numeric release ID rather than resolving a mutable tag name.
     - After an authorized upload, the GitHub asset digest or a downloaded draft asset is compared
       with the recorded local SHA-256 before qualification.
     - Rerunning after a partial failure reports existing remote state and a safe next operation rather
@@ -99,8 +100,8 @@ conditional extension after an owner decision and approved credential model.
     the tested draft over rebuilding a supposedly identical artifact. Independent Ultra review found
     that release-by-tag lookup returns 404 for drafts; the correction discovers drafts through the
     paginated releases API, rejects duplicate matching drafts, creates through REST with exact
-    `target_commitish`, and retains the numeric release ID. The corrected offline suite passes on
-    macOS/BSD tools, including duplicate and retry regressions.
+    `target_commitish`, retains the numeric release ID, and binds asset upload to that ID. The
+    corrected offline suite passes on macOS/BSD tools, including duplicate and retry regressions.
 
 - [ ] (manual-verify) **Task 3.4: Harden and document the default non-Developer-ID path**
   - Scope: release scripts/checks, `docs/RELEASING.md`, `TESTING.md`, public trust/install wording
