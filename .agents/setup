@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+started_at=$SECONDS
+repo_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$repo_root"
+
+echo "[setup] Checking MobCrew's orb prerequisites..."
+command -v python3 >/dev/null || {
+  echo "[setup] python3 is required to serve the documentation preview." >&2
+  exit 1
+}
+test -f MobCrew/MobCrew.xcodeproj/project.pbxproj
+test -f docs/index.html
+
+if command -v xcodebuild >/dev/null; then
+  echo "[setup] Xcode detected; macOS builds and tests are available."
+else
+  echo "[setup] Xcode is unavailable in Linux orbs; use a macOS Amp runner for app builds and tests."
+fi
+
+if [[ "${AMP_ORB:-}" == "1" ]]; then
+  command -v amp >/dev/null || {
+    echo "[setup] amp is required to manage declared orb services." >&2
+    exit 1
+  }
+  echo "[setup] Starting the supervised documentation preview..."
+  amp orb services ensure
+fi
+
+echo "[setup] Complete in $((SECONDS - started_at))s."

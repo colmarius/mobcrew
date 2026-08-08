@@ -5,14 +5,16 @@ set -e
 
 PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 DOCS_DIR="$PROJECT_DIR/docs"
-PORT=8000
+PORT="${PORT:-8000}"
+HOST="${HOST:-127.0.0.1}"
 
-echo "Serving docs at http://localhost:$PORT"
+echo "Serving docs at http://$HOST:$PORT"
 echo "Press Ctrl+C to stop"
 
-# Open browser after a short delay
-(sleep 1 && open "http://localhost:$PORT") &
+# Open the preview on macOS. Orb services expose it through an authenticated portal.
+if [[ "${AMP_ORB:-}" != "1" ]] && command -v open >/dev/null; then
+  (sleep 1 && open "http://$HOST:$PORT") &
+fi
 
 # Start local server
-cd "$DOCS_DIR"
-python3 -m http.server $PORT
+python3 -m http.server "$PORT" --bind "$HOST" --directory "$DOCS_DIR"

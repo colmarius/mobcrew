@@ -19,7 +19,11 @@ project/
 ├── README.md                    # Project overview
 ├── docs/                        # GitHub Pages landing page + RELEASING.md
 ├── scripts/                     # Build and release scripts
+├── .amp/
+│   └── services.yaml            # Supervised docs preview + orb portal
 ├── .agents/
+│   ├── setup                    # Fresh-orb prerequisite checks
+│   ├── resume                   # Fast service repair after orb wake
 │   ├── reference/               # External repos (gitignored)
 │   │   ├── mobster/             # Original dillonkearns/mobster clone
 │   │   └── ghostty/             # Ghostty terminal app (Swift/SwiftUI patterns)
@@ -98,6 +102,10 @@ Plans in `.agents/plans/` follow this workflow:
 
 ## Commands
 
+MobCrew is a macOS-only Xcode target. Run app builds, tests, and UI checks on a macOS Amp runner
+or local Mac with Xcode 15+. Debian orbs cannot run Xcode or Apple simulators; the project does not
+currently define an iOS target.
+
 ```bash
 # Build
 xcodebuild -project MobCrew/MobCrew.xcodeproj -scheme MobCrew -destination 'platform=macOS' build
@@ -131,6 +139,9 @@ xcodebuild test -project MobCrew/MobCrew.xcodeproj -scheme MobCrew -destination 
 
 # Serve docs locally
 ./scripts/serve-docs.sh
+
+# In an Amp orb: start/reconcile the supervised docs preview and portal
+amp orb services ensure
 ```
 
 ## Git Workflow

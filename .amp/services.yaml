@@ -1,0 +1,6 @@
+services:
+  docs:
+    command: ./scripts/serve-docs.sh
+    portal:
+      title: MobCrew Docs
+      description: Preview the static landing page in this orb.

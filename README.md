@@ -55,6 +55,19 @@ Or open `MobCrew/MobCrew.xcodeproj` in Xcode and use ⌘B (build), ⌘R (run), �
 ./scripts/serve-docs.sh
 ```
 
+### Amp orbs
+
+Fresh Linux orbs run [`.agents/setup`](.agents/setup), which validates the repository and starts
+the landing page declared in [`.amp/services.yaml`](.amp/services.yaml). Run
+`amp orb services ensure` to recreate the authenticated docs portal; [`.agents/resume`](.agents/resume)
+checks the service again whenever an orb wakes.
+
+MobCrew itself is a macOS-only Xcode target and uses AppKit, Carbon, and ServiceManagement. Linux
+orbs cannot install Xcode, launch the app, or run Apple simulators. Build, test, and interact with
+the app on a macOS Amp runner (or a local Mac) with Xcode 15+. The current project has no iOS target,
+so running it in an iOS simulator would first require a separate iOS target and platform-specific
+alternatives for the macOS APIs; the simulator would still need to run on macOS.
+
 ## Manual Testing
 
 See [TESTING.md](TESTING.md) for the full checklist.
