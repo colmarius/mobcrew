@@ -102,14 +102,18 @@ but lower-priority floating-panel and richer roster-correction work remains non-
     - Break completion produces one fixed cue through the existing notification preference and one
       accessible in-app transition; it does not add a new sound-preference subsystem.
     - Skip Break resets cadence and returns to regular idle without advancing roles.
-    - Tests cover disabled breaks, due decisions, all break lifecycle transitions, and completion exactly once.
+    - Disabling breaks clears any pending break-due state, and turns completed while disabled do not
+      accumulate cadence, so re-enabling can never trigger an immediate surprise break prompt.
+    - Tests cover disabled breaks, due decisions, cadence while disabled and across re-enable, all
+      break lifecycle transitions, and completion exactly once.
   - Notes: Keep breaks enabled by default now that due status no longer forcibly takes over the session.
 
 ### Task 6: Persist and recover a versioned session snapshot
 
 - [ ] **Task 6: Persist and recover a versioned session snapshot**
   - Scope: `MobCrew/MobCrew/Core/Services/PersistenceService.swift`, `MobCrew/MobCrew/Core/AppState.swift`,
-    app lifecycle hooks, roster persistence integration, persistence/AppState tests
+    `MobCrew/MobCrew/App/MobCrewApp.swift` (scene `.onChange` persistence removal), app lifecycle
+    hooks, roster persistence integration, persistence/AppState tests
   - Depends on: Tasks 2, 4, 5
   - Acceptance:
     - A versioned snapshot stores authoritative session state, current-cycle total, remaining duration
@@ -125,6 +129,9 @@ but lower-priority floating-panel and richer roster-correction work remains non-
       including a simulated interruption between roster and snapshot writes.
     - A normalized snapshot is saved after every semantic transition; lifecycle hooks are backup
       flushes rather than the primary persistence path.
+    - Roster persistence is triggered by model mutation operations rather than SwiftUI scene
+      `.onChange` observation, so roster-then-snapshot write ordering is enforceable and roster
+      changes persist without an open main window.
     - Recovery and any resulting roster change are persisted before a restored publisher is armed,
       and completion handling is configured before a restored timer can fire.
     - Missing, corrupt, unknown-newer-version, impossible-state, missing-deadline, non-positive/excessive

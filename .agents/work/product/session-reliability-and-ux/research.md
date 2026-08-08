@@ -29,6 +29,7 @@ friction. Adding broad features before this stabilization would amplify existing
 | P1 | A blocking Accessibility alert appears at launch, “Not Now” is not remembered, and the public shortcut/action are wrong. | Confirmed flow and mismatch; permission need unverified | `MobCrew/MobCrew/App/AppDelegate.swift:16-18,36-96`; `README.md:14`; `docs/index.html:110-115` | Task 7 |
 | P1 | Automatic breaks cannot be disabled, start without a Take/Skip decision, and end without feedback. | Confirmed | `MobCrew/MobCrew/Core/AppState.swift:15-28,83-127`; `MobCrew/MobCrew/Features/Settings/SettingsView.swift:113-147` | Task 5 |
 | P1 | Notification and Launch at Login toggles can claim success while macOS denied or failed the operation. | Confirmed | `MobCrew/MobCrew/Core/Services/NotificationService.swift:22-30`; `MobCrew/MobCrew/Core/Services/LaunchAtLoginService.swift:10-24`; `MobCrew/MobCrew/Features/Settings/SettingsView.swift:27-38,54-57` | Task 8 |
+| P1 | Roster persistence is scene-observed, not model-owned: saves fire only from SwiftUI `.onChange` observers, and `skipTurn()`/timer completion never call `saveRoster()` directly. | Confirmed | `MobCrew/MobCrew/App/MobCrewApp.swift:19-27`; `MobCrew/MobCrew/Core/AppState.swift:83-97,129-136,157-163` | Tasks 2, 6 |
 | P1 | Roster correction and ordering are destructive or pointer-first: no rename, removal Undo, or Move Up/Down. | Confirmed absence; interaction quality needs Mac observation | `MobCrew/MobCrew/Features/Roster/RosterView.swift:45-58,78-117`; `MobCrew/MobCrew/Features/Roster/MobsterRow.swift:10-44` | Tasks 9, 12 |
 | P1 | Critical controls lack explicit contextual accessibility semantics and transition announcements. | Confirmed absence; exact VoiceOver output unobserved | `MobCrew/MobCrew/ContentView.swift:97-122`; `MobCrew/MobCrew/Features/Break/BreakProgressView.swift:7-15`; `MobCrew/MobCrew/Features/Roster/MobsterRow.swift:24-56` | Task 9 |
 | P2 | The floating timer is forced open, only hideable by hotkey, and repositioned on every show. | Confirmed | `MobCrew/MobCrew/App/MobCrewApp.swift:48-53`; `MobCrew/MobCrew/Features/FloatingTimer/FloatingTimerController.swift:19-25,54-66` | Task 11 |
@@ -41,7 +42,9 @@ friction. Adding broad features before this stabilization would amplify existing
 During a break, menu-bar Skip calls `skipTurn()`. That method advances the roster, resets the timer
 to the regular duration, and starts it without clearing break mode. The next completion is then
 misclassified as break completion. Route the action to `skipBreak()` in break mode and guard
-`skipTurn()` at the AppState boundary.
+`skipTurn()` at the AppState boundary. The same menu-bar Skip is also enabled with zero or one
+active participant while the main window disables it below two, so guards must live in shared
+AppState capabilities rather than per-surface `disabled` modifiers.
 
 ### Roster mutation invariants
 
@@ -54,7 +57,9 @@ participant.
 ### Duration and lifecycle ambiguity
 
 The main stepper resets whenever `isRunning` is false, including paused timers. Settings changes only
-the configured value, leaving an idle display stale. Introduce the smallest explicit lifecycle that
+the configured value, leaving an idle display stale. The two surfaces also disagree on range: the
+main stepper allows 1–30 minutes (`ContentView.swift:138`) while Settings allows 1–60
+(`SettingsView.swift:44`). Introduce the smallest explicit lifecycle that
 distinguishes idle, running, and paused, then route both steppers through one operation. Idle changes
 apply immediately; running and paused changes apply to the next turn unless the user explicitly
 resets.
@@ -68,10 +73,18 @@ relaunch. Persist a versioned snapshot separately from roster/settings so corrup
 cannot erase roster data. On recovery after an expired deadline, process at most one idempotent
 completion, stop for human handoff, and never simulate multiple missed rotations.
 
+Ordered roster-then-snapshot writes are unenforceable today because roster persistence is owned by
+SwiftUI scene `.onChange` observers rather than the model: `skipTurn()` and timer completion mutate
+the roster and update the active-mobsters file but rely on view-layer observation for the durable
+save. Recovery work must first move roster persistence into the model mutation path.
+
 ### First launch and system integrations
 
 Do not request powerful permission merely because the app launched. First determine on real Macs
-whether Carbon registration works without Accessibility permission. If permission is genuinely
+whether Carbon registration works without Accessibility permission. Prior platform evidence points
+to "not required": Accessibility (TCC) gates CGEventTap and NSEvent global monitors, while Carbon
+`RegisterEventHotKey` has historically worked without it; the Mac check confirms this on supported
+releases rather than exploring an open question. If permission is genuinely
 required, request it contextually, remember dismissal, bound polling, and show status in Settings.
 Notification and login-item settings must distinguish user preference from macOS authorization or
 registration state and offer recovery actions.
@@ -121,6 +134,8 @@ registration state and offer recovery actions.
 - Tests codify one-person Skip starting a timer and reorder resetting the driver to index zero; those
   expectations should change with the product contract.
 - AppState tests inject isolated UserDefaults but still default to the shared notification service.
+- No test proves a roster mutation reaches durable storage; production saving depends on SwiftUI
+  scene observation that unit tests cannot exercise.
 - No tests cover session restoration, corrupt snapshots, permission status, launch-item failure, or
   accessibility/UI behavior.
 - `TESTING.md` omits breaks, permission refusal, notifications, launch at login, sleep/wake, recovery,
