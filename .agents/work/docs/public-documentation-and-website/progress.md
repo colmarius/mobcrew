@@ -83,6 +83,12 @@ separate release-operation authority, or an owner decision and credentials.
   checks, and `git diff --check` pass. Linux `npm ci` stops with the expected `EBADPLATFORM` because
   locked `appdmg` is macOS-only; pinned macOS CI installed the same lockfile successfully with its
   required native install script.
+- [Corrected-implementation CI run 31280321451](https://github.com/colmarius/mobcrew/actions/runs/31280321451)
+  completed successfully at `56db1b0370dc9e77905aa1d5318487844eb97899`. Its new Static
+  documentation job passed `scripts/validate-docs.py`. Its pinned Xcode 26.6 / Swift 6.3 macOS job
+  passed the corrected offline release-hardening suite, locked-tooling installation, release
+  build/package and DMG verification, the full app test suite, and evidence retention. This is the
+  authoritative pinned-toolchain evidence for the corrected draft-discovery implementation.
 - [Pinned macOS CI run 31276077780](https://github.com/colmarius/mobcrew/actions/runs/31276077780)
   passed Node 24.19.0 installation, the full offline release-hardening test under macOS/BSD tools,
   Xcode 26.6 / Swift 6.3 release build, DMG creation/mount/verification, 100 app tests, and evidence
@@ -114,7 +120,8 @@ separate release-operation authority, or an owner decision and credentials.
 - Supplemental local checks passed with Xcode 26.2 on this host: all 100 app tests used isolated
   DerivedData. After integrating the corrected draft-discovery implementation, the expanded offline
   release-hardening state-machine suite also passed under macOS/BSD tools. This is additional
-  compatibility evidence, not a replacement for the pinned Xcode 26.6 / Swift 6.3 CI result.
+  compatibility evidence, not a replacement for corrected-implementation CI run 31280321451 under
+  pinned Xcode 26.6 / Swift 6.3.
 
 ## Unverified manual gates
 

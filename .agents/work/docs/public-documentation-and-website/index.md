@@ -20,12 +20,12 @@ target/artifact/remote/qualification evidence, non-destructive resumable draft o
 live publication gate, locked packaging dependencies, Linux/macOS state-machine tests, and a passing
 pinned macOS build/package/verification run. Independent review found and corrected a draft-discovery
 blocker: drafts are now found through the paginated releases API, while creation uses REST with the
-exact target SHA and captures the numeric release ID. The corrected offline suite passes on macOS.
-Read-only inspection has also established the public `v0.2.0` artifact's identity, architecture, and
-app/DMG trust states from a browser-quarantined download. Clean-account first launch, real-app
-screenshot recapture, and the conditional Developer ID owner decision remain blocked gates. The
-scope excludes unrelated app features and does not authorize publishing, deleting, merging, or
-deploying releases.
+exact target SHA and captures the numeric release ID. The corrected implementation passes the pinned
+Xcode 26.6 CI release-hardening, build/package/verification, and full-test path. Read-only inspection
+has also established the public `v0.2.0` artifact's identity, architecture, and app/DMG trust states
+from a browser-quarantined download. Clean-account first launch, real-app screenshot recapture, and
+the conditional Developer ID owner decision remain blocked gates. The scope excludes unrelated app
+features and does not authorize publishing, deleting, merging, or deploying releases.
 
 ## Artifacts
 
