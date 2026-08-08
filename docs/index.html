@@ -542,9 +542,10 @@
             <summary>Do I need Xcode or a specific Mac architecture?</summary>
             <p>
               Xcode is only for development; installing a release requires macOS
-              14 or later. CI tests an Apple-silicon build, but the
-              architectures in the current public release remain unverified, so
-              this page does not claim broader artifact support.
+              14 or later. The current v0.2.0 release contains an Apple-silicon
+              (<code>arm64</code>) executable only; it does not include an Intel
+              (<code>x86_64</code>) executable. Future artifacts are qualified
+              independently.
             </p>
           </details>
         </div>

@@ -65,12 +65,13 @@ separate release-operation authority, or an owner decision and credentials.
   numeric release ID, and revalidates that identity before upload.
 - The draft state machine resumes an exact partial draft, leaves a matching asset untouched, and
   aborts on conflicting metadata/state/assets without delete, overwrite, clobber, or retag recovery.
-  Publication confirms first, then freshly verifies the numeric draft and downloaded asset, checks
-  canonical tag absence as the final read, patches only `draft=false`, and verifies post-state/tag.
+  Creation and asset upload both bind to the captured numeric release ID. Publication confirms
+  first, then freshly verifies that numeric draft and downloaded asset, checks canonical tag absence
+  as the final read, patches only `draft=false`, and verifies post-state/tag.
 - `scripts/verify-release-artifact.sh` defines the shared read-only DMG mount, bundle/version/build,
   Applications symlink, architecture, app structural signature, Developer ID/hardened-runtime,
-  app/DMG stapled-ticket, spctl, outer-DMG signature, raw-log, and strict evidence checks. These are
-  implemented checks, not observed macOS results.
+  app/DMG stapled-ticket, spctl, outer-DMG signature, raw-log, and strict evidence checks. The CI and
+  public-artifact sections below distinguish their observed results from the checks' implementation.
 - `./scripts/test-release-hardening.sh` passes in the Linux orb and, after the draft-discovery
   correction, on macOS/BSD tools using a temporary repository and stateful mocked `gh`. It covers
   strict SemVer, dirty/wrong branch/upstream/origin, shallow and behind/diverged history, local/API
@@ -78,7 +79,8 @@ separate release-operation authority, or an owner decision and credentials.
   behavior for drafts, duplicate rejection, create/retry/partial-resume paths, matching/conflicting
   assets, downloaded-byte evidence, schema mutation, a post-confirmation tag race, and numeric-ID-only
   publication. The mock also requires the exact paginated selector and full typed REST-create payload,
-  including `target_commitish` and `.id` extraction. It never contacts GitHub.
+  including `target_commitish` and `.id` extraction, and rejects an upload unless it names the exact
+  release ID with no existing asset. It never contacts GitHub.
 - `bash -n scripts/*.sh`, `python3 scripts/validate-docs.py`, HTML validation, both workflow Prettier
   checks, and `git diff --check` pass. Linux `npm ci` stops with the expected `EBADPLATFORM` because
   locked `appdmg` is macOS-only; pinned macOS CI installed the same lockfile successfully with its

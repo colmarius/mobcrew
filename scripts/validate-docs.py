@@ -29,6 +29,9 @@ STALE_CLAIMS = {
     "tip jar claim": re.compile(r"tip jar", re.IGNORECASE),
     "customizable hotkey claim": re.compile(r"customize timer and hotkeys", re.IGNORECASE),
     "five-minute default claim": re.compile(r"default 5 min", re.IGNORECASE),
+    "unverified current-release architecture claim": re.compile(
+        r"architectures? in the current public release remain unverified", re.IGNORECASE
+    ),
 }
 
 

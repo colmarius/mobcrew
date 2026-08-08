@@ -9,10 +9,11 @@ an unnecessary frontend application stack.
 - Phase 1 established `⌘⇧L`, an in-window break screen, optional programming tips, the 7-minute
   default, contextual timer ranges, macOS 14+, local data/no account/no telemetry, and manual updates
   as the public facts this phase must preserve.
-- The released artifact's architectures, app/DMG signatures, Developer ID identity, notarization,
-  Gatekeeper behavior, and clean-Mac path remain **unverified** because execution is in a Linux orb.
-  The hero and install/FAQ must retain qualified trust wording and must not claim Apple-silicon
-  release support.
+- Subsequent read-only macOS inspection established the public `v0.2.0` artifact's `arm64`-only
+  executable, ad-hoc app signature, absent Developer ID identity/hardened runtime/stapled tickets,
+  and unsigned outer DMG. The hero and install/FAQ now use those exact historical facts while
+  keeping notarization and clean-Mac Gatekeeper behavior explicitly unverified; they do not infer
+  future artifact support.
 - The README now owns detailed installation, permission, privacy, update, and support guidance under
   `#install-and-first-run`; this page should present a concise complete path and link there for more
   detail rather than repeat long troubleshooting copy.
