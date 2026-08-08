@@ -15,7 +15,8 @@ an unnecessary frontend application stack.
 
 - [ ] **Task 2.1: Implement the approved information architecture and message hierarchy**
   - Scope: `docs/index.html`
-  - Depends on: Phase 1 complete
+  - Depends on: Phase 1 Tasks 1.1-1.4 (stable public message and install facts); incorporate Task
+    1.7 evidence when it exists instead of blocking on macOS access
   - Acceptance:
     - Header links to How it works, Features, Install/FAQ, GitHub, and the latest release without
       becoming crowded at 390px.
@@ -98,11 +99,10 @@ an unnecessary frontend application stack.
       initial page transfer; before/after encoded bytes are recorded.
     - Below-fold images use lazy loading; all images declare intrinsic dimensions and sensible
       decoding behavior.
-    - Hero before/after output is visually reviewed at rendered desktop/mobile and full-resolution
-      sizes, and intrinsic dimensions reserve its aspect ratio before load.
+    - Optimized assets, including the hero, are visually reviewed at rendered desktop/mobile and
+      full-resolution sizes, and intrinsic dimensions reserve the hero's aspect ratio before load.
     - Uncached transfer, LCP, and CLS are recorded under named browser/network conditions, with
       regressions investigated rather than compared to an arbitrary audit-wide budget.
-    - Optimized assets are visually reviewed at their rendered and full-resolution sizes.
   - Notes: Keep capture source only if there is a real future editing need; do not ship unoptimized
     and optimized duplicates without purpose. This task does not depend on Task 2.5.
 

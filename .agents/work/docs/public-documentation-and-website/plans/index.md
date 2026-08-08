@@ -5,6 +5,11 @@ distribution changes. Treat the numbering as priority order. After Phase 1 stabi
 Phase 2's static-site work and Phase 3's non-credential release hardening can proceed independently;
 conditional/manual slices remain explicit gates.
 
+Phase 1 is implementation-ready now. Phases 2 and 3 require a refinement pass at their phase
+boundary before execution: reconcile their tasks with the facts Phase 1 actually recorded —
+especially Task 1.7 artifact/Gatekeeper evidence or its explicitly qualified absence — and with any
+copy that changed during Phase 1.
+
 | Order | Plan | State | Dependencies |
 | --- | --- | --- | --- |
 | 1 | [Public truth and installation](01-public-truth-and-installation.md) | Active | None |

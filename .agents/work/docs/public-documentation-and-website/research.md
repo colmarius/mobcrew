@@ -102,6 +102,10 @@ Relevant implementation locations include:
   is not signed by that tool; this does not establish the app bundle's signature type.
 - Xcode uses automatic signing and CI verifies the built app's signature structure. The downloaded
   `v0.2.0` app's actual identity/signature type was not inspected in the Linux audit environment.
+- `README.md:21` publicly states the app is "currently ad-hoc signed" to explain Accessibility
+  permission resets across rebuilds. That is plausible for local automatic-signing development
+  builds without a team, but it is a specific signature-type claim about the app, and the released
+  `v0.2.0` bundle was not inspected; Phase 1 must verify or qualify this claim rather than repeat it.
 - The repository defines no Developer ID, hardened-runtime, notarization, or stapling workflow.
 - The app is sandboxed. No app network-client APIs were found; roster/settings are stored with
   UserDefaults and an Application Support file.
@@ -145,9 +149,12 @@ is an end-user prerequisite. It is a development-only prerequisite.
 ### Release guide
 
 `docs/RELEASING.md` says to create and test a draft, then rerun `release.sh` with the same version to
-create the release. `gh release create` will collide with the existing draft/tag. The correct next
-step is to publish the tested draft. The recovery guidance deletes both release and tag without
-distinguishing a draft from a previously published release.
+create the release. A draft created by `gh release create --draft` does not create the git tag, and
+the rerun rebuilds a new artifact before calling `gh release create` again — so the documented step
+publishes a rebuilt, untested artifact (or fails against existing release/tag state) and never
+publishes the draft that was actually tested. The correct next step is to publish the tested draft.
+The recovery guidance deletes both release and tag without distinguishing a draft (which has no tag
+yet) from a previously published release.
 
 The release script does not enforce a clean tree, expected branch/upstream, semantic version, tests,
 or target commit before it creates remote state. DMG validation verifies container integrity but does

@@ -68,7 +68,7 @@ conditional extension after an owner decision and approved credential model.
 
 - [ ] **Task 3.4: Harden and document the default non-Developer-ID path**
   - Scope: release scripts/checks, `docs/RELEASING.md`, `TESTING.md`, public trust/install wording
-  - Depends on: Task 3.2, Phase 1 artifact findings
+  - Depends on: Task 3.2; Phase 1 Task 1.7 findings or its explicitly recorded unverified state
   - Acceptance:
     - Tooling records the actual app-bundle and outer-DMG signature states and explicitly reports
       absence/presence of Developer ID, notarization, and stapling.

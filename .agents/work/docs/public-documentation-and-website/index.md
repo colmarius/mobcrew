@@ -16,7 +16,9 @@ current release-trust limitations.
 Research is complete and the three ordered plans have been reviewed and refined. Phase 1 is
 implementation-ready; Phase 2 is queued behind stable public facts, and Phase 3 separates local
 release hardening from credential-dependent signing and separately authorized release operations.
-The scope excludes unrelated app features and does not authorize publishing or deleting releases.
+Phases 2 and 3 each require a refinement pass at their phase boundary against the facts Phase 1
+records. The scope excludes unrelated app features and does not authorize publishing or deleting
+releases.
 
 ## Artifacts
 

@@ -60,7 +60,9 @@ downloaded artifact is inspected on macOS.
     - Manual update and GitHub support paths are explicit.
     - Development, testing, releasing, history, and attribution remain discoverable without
       dominating the user path.
-  - Notes: Omit a beta/maturity label unless the owner explicitly assigns one.
+  - Notes: Omit a beta/maturity label unless the owner explicitly assigns one. The Known Limitations
+    "ad-hoc signed" note is a signature-type claim: keep rebuild/permission guidance
+    contributor-facing and keep released-artifact signature wording qualified until Task 1.7.
 
 - [ ] **Task 1.4: Add an in-page install and trust path without redesigning the site**
   - Scope: `docs/index.html`
@@ -153,8 +155,9 @@ downloaded artifact is inspected on macOS.
 
 ## Verification
 
-- Run a scoped `rg` check for `⌘⇧M`, `full-screen`, `tip jar`, `Customize timer and hotkeys`, and
-  `default 5 min`; investigate every remaining match.
+- Run a scoped case-insensitive `rg -i` check for `⌘⇧M`, `full-screen`, `tip jar`,
+  `customize timer and hotkeys`, `default 5 min`, and `ad-hoc`; investigate every remaining match
+  (existing copy includes capitalized variants such as `Full-screen`).
 - Check all relative Markdown links and all landing-page links/assets.
 - Serve the page locally and use `agent-browser` at 1440x900 and 390x844 to verify the CTA, install
   content, responsive layout, semantics, console, and link destinations.
