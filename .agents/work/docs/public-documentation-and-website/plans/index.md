@@ -5,15 +5,14 @@ distribution changes. Treat the numbering as priority order. After Phase 1 stabi
 Phase 2's static-site work and Phase 3's non-credential release hardening can proceed independently;
 conditional/manual slices remain explicit gates.
 
-Phases 1 and 2 are complete for all Linux-feasible work; their macOS-only Tasks 1.7 and 2.5 remain
-explicit unverified manual gates. Phase 3 is next and requires its phase-boundary refinement before
-local, non-credential execution.
+All Linux-feasible work across Phases 1-3 is complete. macOS-only Tasks 1.7 and 2.5, Phase 3 artifact
+execution and trust qualification, and the conditional Developer ID decision remain explicit gates.
 
 | Order | Plan | State | Dependencies |
 | --- | --- | --- | --- |
 | 1 | [Public truth and installation](01-public-truth-and-installation.md) | Feasible work complete; Task 1.7 unverified | None |
 | 2 | [Landing-page presentation and quality](02-landing-page-presentation-and-quality.md) | Feasible work complete; Task 2.5 unverified | Phase 1 message and install facts |
-| 3 | [Release and distribution hardening](03-release-and-distribution-hardening.md) | Next: refine before execution | Phase 1 release facts; Apple credentials only for the conditional signed extension |
+| 3 | [Release and distribution hardening](03-release-and-distribution-hardening.md) | Feasible implementation complete; macOS/manual gates remain | Phase 1 release facts; Apple credentials only for the conditional signed extension |
 
 ## Sequencing rationale
 

@@ -2,8 +2,9 @@
 
 ## Current slice
 
-Phases 1 and 2 are complete for all Linux-feasible work. Phase 3 requires its boundary refinement
-before local, non-credential release hardening begins.
+All Linux-feasible implementation across Phases 1-3 is complete. Remaining work requires a pinned
+macOS/Xcode environment, an interactive quarantined qualification Mac, or an owner decision and
+credentials.
 
 ## Observed evidence
 
@@ -49,6 +50,32 @@ before local, non-credential release hardening begins.
   workflow Prettier parsing, Markdown relative links, six external page destinations, and
   `git diff --check` also pass.
 
+### Phase 3 release-hardening evidence
+
+- Pinned Node 24.19.0 and the complete `create-dmg` 8.1.0 dependency graph. `create-dmg` remains
+  packaging-only tooling; the static site has no framework or build system.
+- Split release work into `check`, `prepare`, `create-draft`, read-only `status`, `verify-draft`, and
+  separately authorized `publish` operations. Strict never-sourced schemas bind the canonical repo,
+  full target SHA, artifact/version/build/architectures, local evidence, numeric release/asset IDs,
+  remote bytes, and manual qualification hashes.
+- The draft state machine resumes an exact partial draft, leaves a matching asset untouched, and
+  aborts on conflicting metadata/state/assets without delete, overwrite, clobber, or retag recovery.
+  Publication confirms first, then freshly verifies the numeric draft and downloaded asset, checks
+  canonical tag absence as the final read, patches only `draft=false`, and verifies post-state/tag.
+- `scripts/verify-release-artifact.sh` defines the shared read-only DMG mount, bundle/version/build,
+  Applications symlink, architecture, app structural signature, Developer ID/hardened-runtime,
+  app/DMG stapled-ticket, spctl, outer-DMG signature, raw-log, and strict evidence checks. These are
+  implemented checks, not observed macOS results.
+- `./scripts/test-release-hardening.sh` passes in the Linux orb using a temporary repository and
+  stateful mocked `gh`. It covers strict SemVer, dirty/wrong branch/upstream/origin, shallow and
+  behind/diverged history, local/API tag conflicts, tool/auth/repo/permission failures, draft create
+  and partial resume, matching/conflicting assets, downloaded-byte evidence, schema mutation, a
+  post-confirmation tag race, and numeric-ID-only publication. The mock never contacts GitHub.
+- `bash -n scripts/*.sh`, `python3 scripts/validate-docs.py`, HTML validation, both workflow Prettier
+  checks, and `git diff --check` pass. Linux `npm ci` stops with the expected `EBADPLATFORM` because
+  locked `appdmg` is macOS-only; dependency installation and packaging therefore remain macOS/CI
+  evidence rather than a claimed orb pass.
+
 ## Unverified manual gates
 
 - The `v0.2.0` app bundle and outer DMG signatures, Developer ID identity, notarization/stapling,
@@ -59,3 +86,8 @@ before local, non-credential release hardening begins.
   new evidence.
 - Developer ID signing/notarization remains conditional on an explicit owner decision and credentials;
   it is not authorized by this execution.
+- The pinned macOS CI build/package/verifier path has not yet run for these changes. Linux cannot
+  substantiate Xcode build output, DMG mounting/detachment, actual bundle/DMG signature states, or
+  the generated architecture list.
+- No real draft, upload, qualification run, tag, or publication was created. Those remain separately
+  authorized operations; the mocked state-machine result is not remote-release evidence.

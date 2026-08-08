@@ -4,6 +4,32 @@ Make MobCrew's documented/scripted release path reproducible, inspectable, targe
 resume. Harden the current non-Developer-ID path first; Developer ID signing/notarization is a
 conditional extension after an owner decision and approved credential model.
 
+## Phase-boundary refinement (2026-08-08)
+
+- Phase 1's released-artifact signatures, architectures, notarization/stapling, Gatekeeper/TCC, and
+  clean-Mac behavior remain **unverified**. Local tooling will record a newly built artifact's facts,
+  but this phase will not infer the `v0.2.0` state, enforce an architecture set, or strengthen public
+  claims without a real quarantined macOS qualification run.
+- Use explicit `check`, `prepare`, `create-draft`, `status`, `verify-draft`, and `publish` operations.
+  Draft metadata creation and asset upload form a resumable state machine: matching partial state is
+  resumed without clobbering, while conflicting state aborts without delete/retag recovery.
+- Strict local manifest, remote-evidence, and qualification schemas form a hash chain over the exact
+  target, artifact, verifier evidence, numeric GitHub release ID, asset, release notes, and manual
+  qualification. Files are parsed as data and never sourced or evaluated.
+- Publication must freshly re-download and hash the asset, recheck release ID/draft/tag/target/title/
+  notes/asset state and remote-tag absence, require an interactive exact-tag confirmation, patch the
+  recorded numeric release ID, and verify the resulting tag. A mismatch stops for manual recovery;
+  no automatic rollback is added.
+- Pin Node 24.19.0 and lock `create-dmg` 8.1.0's dependency graph with npm metadata. This is
+  reproducible release tooling, not a landing-page framework or frontend build system. The scripts
+  run packaging from a controlled repository directory and do not promise byte-identical DMGs across
+  macOS versions.
+- Production scripts remain compatible with macOS Bash 3.2 and BSD tools. Linux-safe tests use a
+  local temporary git remote plus mocked `gh`, Node, Xcode, and Swift boundaries; they must never
+  contact GitHub or mutate a real release.
+- Tasks 3.5 and 3.6 remain blocked on an explicit owner decision and credentials. Task 3.4 can gain
+  tooling/documentation but stays unchecked until real macOS trust/Gatekeeper evidence exists.
+
 ## Goals
 
 - Prevent releases from the wrong tree, branch, version, or untested artifact.
@@ -16,7 +42,7 @@ conditional extension after an owner decision and approved credential model.
 
 ## Tasks
 
-- [ ] **Task 3.1: Define and enforce safe release preflight invariants**
+- [x] **Task 3.1: Define and enforce safe release preflight invariants**
   - Scope: `scripts/release.sh`, `scripts/build-release.sh`, `docs/RELEASING.md`
   - Depends on: Phase 1 release facts complete
   - Acceptance:
@@ -33,13 +59,14 @@ conditional extension after an owner decision and approved credential model.
   - Notes: Do not add bypass flags for invariants that should always hold. A script can harden only
     the documented path; it cannot prevent maintainers from using GitHub directly.
 
-- [ ] **Task 3.2: Build and verify the local release artifact before upload**
+- [ ] (macos-verify) **Task 3.2: Build and verify the local release artifact before upload**
   - Scope: `scripts/build-release.sh`, `scripts/create-dmg.sh`, `.github/workflows/ci.yml`,
     `docs/RELEASING.md`
   - Depends on: Task 3.1
   - Acceptance:
     - Bundle marketing version/build number match the requested release and are recorded.
-    - `lipo -archs` output is recorded and checked against documented CPU support.
+    - `lipo -archs` output is recorded for the qualification matrix. No architecture set is enforced
+      until support is documented from artifact evidence and an explicit product decision.
     - DMG is mounted in a temporary location; app presence, bundle identity, executable, and
       Applications install affordance are checked before any upload.
     - App bundle and outer DMG signatures are inspected and reported separately; structural signing,
@@ -48,14 +75,16 @@ conditional extension after an owner decision and approved credential model.
     - Local SHA-256 is generated and recorded for later comparison with the uploaded draft asset.
     - CI and release scripts use the same material artifact checks where practical.
   - Notes: This task is entirely local/non-publishing. Structural `codesign --verify` is not evidence
-    of Developer ID trust or notarization.
+    of Developer ID trust or notarization. The scripts and CI integration are implemented; keep this
+    unchecked until the pinned macOS runner actually builds, mounts, inspects, and records an
+    artifact with them.
 
-- [ ] **Task 3.3: Implement resumable, separately authorized release operations**
+- [x] **Task 3.3: Implement resumable, separately authorized release operations**
   - Scope: `scripts/release.sh`, `docs/RELEASING.md`
   - Depends on: Task 3.1, Task 3.2
   - Acceptance:
-    - Draft creation/upload, status inspection, uploaded-digest verification, and publication of the
-      existing draft are distinct operations.
+    - Local preparation, draft metadata creation/asset upload, status inspection, uploaded-digest
+      verification, and publication of the existing draft are distinct operations.
     - Draft creation accepts only the locally verified artifact and binds to the Task 3.1 target SHA.
     - After an authorized upload, the GitHub asset digest or a downloaded draft asset is compared
       with the recorded local SHA-256 before qualification.
@@ -63,10 +92,13 @@ conditional extension after an owner decision and approved credential model.
       than deleting or duplicating tags/releases.
     - Publish/delete operations never run implicitly; each requires explicit invocation and user
       authority.
+    - Publication revalidates the live numeric release ID, draft/tag/target, title/body hash, exact
+      asset set/identity/size/digest, and remote-tag absence immediately before changing state, then
+      verifies the resulting tag target without automatic rollback.
   - Notes: Implement and test operation boundaries without creating a real draft. Prefer publishing
     the tested draft over rebuilding a supposedly identical artifact.
 
-- [ ] **Task 3.4: Harden and document the default non-Developer-ID path**
+- [ ] (manual-verify) **Task 3.4: Harden and document the default non-Developer-ID path**
   - Scope: release scripts/checks, `docs/RELEASING.md`, `TESTING.md`, public trust/install wording
   - Depends on: Task 3.2; Phase 1 Task 1.7 findings or its explicitly recorded unverified state
   - Acceptance:
@@ -77,7 +109,9 @@ conditional extension after an owner decision and approved credential model.
       and keeps unobserved behavior marked unverified.
     - This path requires no Apple signing credentials and remains usable if Developer ID work is not
       approved.
-  - Notes: This is the default plan path, not a degraded fallback.
+  - Notes: This is the default plan path, not a degraded fallback. The inspection tooling and
+    qualified documentation are implemented, but actual app/DMG states and quarantined Gatekeeper
+    behavior remain unverified in the Linux orb.
 
 - [ ] (blocked) **Task 3.5: Decide whether and where to pursue Developer ID distribution**
   - Scope: owner decision recorded in this work item or a durable decision file
@@ -106,7 +140,7 @@ conditional extension after an owner decision and approved credential model.
   - Notes: Local keychain and CI signing are different operating models; implement only the approved
     one.
 
-- [ ] **Task 3.7: Create the clean-Mac qualification and release-evidence contract**
+- [x] **Task 3.7: Create the clean-Mac qualification and release-evidence contract**
   - Scope: `TESTING.md`, `docs/RELEASING.md`, work-item evidence template only if repeated use
     justifies it
   - Depends on: Task 3.3, Task 3.4; Task 3.6 only when the signed extension is selected
