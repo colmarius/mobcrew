@@ -419,23 +419,62 @@ run_fail unapproved-qualification "$WORK/scripts/release.sh" publish 1.2.3 "$QUA
 write_qualification "$QUAL"
 
 publish_with_tty() {
-  TRANSCRIPT="$T/publish.typescript"
-  rm -f "$TRANSCRIPT"
-  if test "$(uname -s)" = Darwin; then
-    if printf 'v1.2.3\n' | script -q "$TRANSCRIPT" "$WORK/scripts/release.sh" publish 1.2.3 "$QUAL"; then
-      return 0
-    else
-      RC=$?
-    fi
-  else
-    if printf 'v1.2.3\n' | script -qefc "'$WORK/scripts/release.sh' publish 1.2.3 '$QUAL'" "$TRANSCRIPT"; then
-      return 0
-    else
-      RC=$?
-    fi
-  fi
-  test ! -f "$TRANSCRIPT" || cat "$TRANSCRIPT" >&2
-  return "$RC"
+  python3 - "$WORK/scripts/release.sh" "$QUAL" <<'PY'
+import errno
+import os
+import pty
+import select
+import signal
+import sys
+import time
+
+release_script, qualification = sys.argv[1:]
+pid, fd = pty.fork()
+if pid == 0:
+    os.execl(
+        release_script,
+        release_script,
+        "publish",
+        "1.2.3",
+        qualification,
+    )
+
+output = bytearray()
+confirmed = False
+status = None
+deadline = time.monotonic() + 20
+while time.monotonic() < deadline:
+    readable, _, _ = select.select([fd], [], [], 0.25)
+    if not readable:
+        done, status = os.waitpid(pid, os.WNOHANG)
+        if done:
+            break
+        status = None
+        continue
+    try:
+        chunk = os.read(fd, 4096)
+    except OSError as error:
+        if error.errno == errno.EIO:
+            break
+        raise
+    if not chunk:
+        break
+    output.extend(chunk)
+    if not confirmed and b"Type v1.2.3 to publish: " in output:
+        os.write(fd, b"v1.2.3\n")
+        confirmed = True
+else:
+    os.kill(pid, signal.SIGTERM)
+    os.waitpid(pid, 0)
+    sys.stderr.buffer.write(output)
+    raise SystemExit("timed out waiting for publish command")
+
+if status is None:
+    _, status = os.waitpid(pid, 0)
+exit_code = os.waitstatus_to_exitcode(status)
+(sys.stdout.buffer if exit_code == 0 else sys.stderr.buffer).write(output)
+raise SystemExit(exit_code)
+PY
 }
 
 # A canonical tag appearing after confirmation blocks PATCH. A matching state publishes by numeric ID only.
