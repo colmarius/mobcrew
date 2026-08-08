@@ -1,6 +1,3 @@
-# Reference repositories for agent access
-.agents/reference/
-
 # Generated Amp orb portal manifests
 .amp/portals/
 

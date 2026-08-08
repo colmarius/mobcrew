@@ -112,7 +112,7 @@ Ghostty's `QuickTerminal` is remarkably similar to what MobCrew needs for its fl
 
 #### 2.2.1 NSPanel Subclass
 
-From [QuickTerminalWindow.swift](file://.agents/reference/ghostty/macos/Sources/Features/QuickTerminal/QuickTerminalWindow.swift):
+From [QuickTerminalWindow.swift](file://.agents/references/ghostty/macos/Sources/Features/QuickTerminal/QuickTerminalWindow.swift):
 
 ```swift
 class QuickTerminalWindow: NSPanel {
@@ -152,7 +152,7 @@ class FloatingTimerWindow: NSPanel {
 
 #### 2.2.2 Controller-Owned Window Management
 
-From [QuickTerminalController.swift](file://.agents/reference/ghostty/macos/Sources/Features/QuickTerminal/QuickTerminalController.swift):
+From [QuickTerminalController.swift](file://.agents/references/ghostty/macos/Sources/Features/QuickTerminal/QuickTerminalController.swift):
 
 The controller owns:
 
@@ -204,7 +204,7 @@ class FloatingTimerController: NSWindowController {
 
 ### 2.3 Helpers Directory ✅
 
-Ghostty's [Helpers/](file://.agents/reference/ghostty/macos/Sources/Helpers) contains reusable utilities:
+Ghostty's [Helpers/](file://.agents/references/ghostty/macos/Sources/Helpers) contains reusable utilities:
 
 | File | Purpose | MobCrew Relevance |
 |------|---------|-------------------|
@@ -224,7 +224,7 @@ Ghostty's [Helpers/](file://.agents/reference/ghostty/macos/Sources/Helpers) con
 
 ### 2.4 AppDelegate Structure ✅ (Simplified)
 
-Ghostty's [AppDelegate.swift](file://.agents/reference/ghostty/macos/Sources/App/macOS/AppDelegate.swift) is complex (~1300 lines) due to:
+Ghostty's [AppDelegate.swift](file://.agents/references/ghostty/macos/Sources/App/macOS/AppDelegate.swift) is complex (~1300 lines) due to:
 
 - XIB-based menu management with many IBOutlets
 - Deep integration with libghostty
@@ -268,7 +268,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 ### 3.2 CGEvent Tap for Global Hotkeys ⚠️
 
-Ghostty's [GlobalEventTap.swift](file://.agents/reference/ghostty/macos/Sources/Features/Global%20Keybinds/GlobalEventTap.swift) uses low-level CGEvent interception.
+Ghostty's [GlobalEventTap.swift](file://.agents/references/ghostty/macos/Sources/Features/Global%20Keybinds/GlobalEventTap.swift) uses low-level CGEvent interception.
 
 **Pros**:
 
