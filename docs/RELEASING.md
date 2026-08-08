@@ -67,6 +67,14 @@ minimum/current macOS samples. Use only `tested`, `unverified`, or
 unsupported. Task 3.4 remains manually unverified until this real quarantined-Mac run; Developer ID
 signing/notarization remain blocked decisions.
 
+For historical comparison, read-only inspection of the public `v0.2.0` browser download on
+2026-08-08 recorded SHA-256 `1d7f8daff797dd20876b4a9ab011a98e20d23bf931e98118a131e7ba9c4b99d4`,
+3,593,226 bytes, bundle version/build `0.2.0`/`146`, and an `arm64` executable. The app signature was
+structurally valid and ad-hoc, with no Developer ID identity, team, or hardened runtime; the outer
+DMG was unsigned, and neither app nor DMG had a stapled ticket. Both `spctl` probes were not accepted.
+The DMG had `com.apple.quarantine` before mounting, but it was not launched; these negative probes do
+not establish notarization status or predict the exact Gatekeeper first-launch result.
+
 For each machine record target/version/digests, macOS/hardware, trust outputs, install and first
 launch/Gatekeeper, Accessibility and Notifications allow/deny/recovery, launch at login, timer,
 rotation, breaks, persistence, upgrade from the previous release, release notes/latest link, and

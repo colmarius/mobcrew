@@ -24,10 +24,9 @@ interrupting the session.
 ## Requirements
 
 - macOS 14.0 or later
+- Apple silicon: the current `v0.2.0` release contains an `arm64` executable only
 
-The architectures in the current public release have not yet been independently inspected. The
-repository's macOS CI currently tests an Apple-silicon (`arm64`) build, but that does not establish
-the architecture of an older downloaded release.
+The current release does not contain an Intel (`x86_64`) executable.
 
 ## Install and first run
 
@@ -39,10 +38,11 @@ the architecture of an older downloaded release.
    Settings → Privacy & Security**, review the blocked-app message, and choose **Open Anyway** only
    if the app is the MobCrew release you intended to download.
 
-The current public release has not yet been independently qualified for Developer ID signing,
-notarization, or exact Gatekeeper behavior on a clean Mac. The first-launch message and whether the
-extra Privacy & Security step appears can therefore vary. Do not disable Gatekeeper or remove
-quarantine attributes to install the app.
+Direct inspection of the browser-downloaded `v0.2.0` artifact found a structurally valid ad-hoc app
+signature, no Developer ID identity or hardened runtime, an unsigned outer DMG, and no stapled
+tickets. Exact notarization and Gatekeeper first-launch behavior on a clean Mac remain unverified;
+the first-launch message and whether the extra Privacy & Security step appears can therefore vary.
+Do not disable Gatekeeper or remove quarantine attributes to install the app.
 
 ### Optional permissions
 

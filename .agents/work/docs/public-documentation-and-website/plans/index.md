@@ -5,12 +5,13 @@ distribution changes. Treat the numbering as priority order. After Phase 1 stabi
 Phase 2's static-site work and Phase 3's non-credential release hardening can proceed independently;
 conditional/manual slices remain explicit gates.
 
-All feasible local/static work across Phases 1-3 is complete. macOS-only Tasks 1.7 and 2.5, Phase 3
-quarantined trust qualification, and the conditional Developer ID decision remain explicit gates.
+All feasible local/static work across Phases 1-3 is complete. Public `v0.2.0` artifact inspection is
+now recorded, while clean-account first launch in Task 1.7, screenshot recapture in Task 2.5, Phase
+3 quarantined trust qualification, and the conditional Developer ID decision remain explicit gates.
 
 | Order | Plan | State | Dependencies |
 | --- | --- | --- | --- |
-| 1 | [Public truth and installation](01-public-truth-and-installation.md) | Feasible work complete; Task 1.7 unverified | None |
+| 1 | [Public truth and installation](01-public-truth-and-installation.md) | Feasible work complete; Task 1.7 partially verified | None |
 | 2 | [Landing-page presentation and quality](02-landing-page-presentation-and-quality.md) | Feasible work complete; Task 2.5 unverified | Phase 1 message and install facts |
 | 3 | [Release and distribution hardening](03-release-and-distribution-hardening.md) | Local hardening complete; manual trust/owner gates remain | Phase 1 release facts; Apple credentials only for the conditional signed extension |
 

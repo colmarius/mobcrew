@@ -94,24 +94,26 @@ Relevant implementation locations include:
 ### Distribution state
 
 - Latest public release: `v0.2.0`, published 2026-02-01.
-- Release asset: `MobCrew-0.2.0.dmg`, 3,593,226 bytes, with six recorded downloads at audit time.
+- Release asset: `MobCrew-0.2.0.dmg`, 3,593,226 bytes, with seven recorded downloads when rechecked
+  on 2026-08-08.
 - Asset SHA-256: `1d7f8daff797dd20876b4a9ab011a98e20d23bf931e98118a131e7ba9c4b99d4`.
 - Current `main` is newer than the release tag; audited user-visible differences are primarily Swift
   6/runtime hardening rather than newly marketed features.
-- `scripts/create-dmg.sh` always supplies `--no-code-sign` to the DMG tool, which means the outer DMG
-  is not signed by that tool; this does not establish the app bundle's signature type.
-- Xcode uses automatic signing and CI verifies the built app's signature structure. The downloaded
-  `v0.2.0` app's actual identity/signature type was not inspected in the Linux audit environment.
-- `README.md:21` publicly states the app is "currently ad-hoc signed" to explain Accessibility
-  permission resets across rebuilds. That is plausible for local automatic-signing development
-  builds without a team, but it is a specific signature-type claim about the app, and the released
-  `v0.2.0` bundle was not inspected; Phase 1 must verify or qualify this claim rather than repeat it.
+- Browser download on macOS preserved `com.apple.quarantine` with agent `Google Chrome for Testing`
+  before the DMG was opened or mounted. The bytes matched GitHub's published size and digest.
+- Read-only `hdiutil verify` passed. The mounted bundle was `com.colmarius.MobCrew`, version/build
+  `0.2.0`/`146`, executable `MobCrew`, with a thin `arm64` Mach-O. The Applications symlink was
+  present, and the temporary read-only mount detached cleanly.
+- `codesign --verify --deep --strict` passed for the app. Detailed inspection classified it as
+  ad-hoc with no Developer ID authority, no team identifier, and no hardened-runtime flag. The outer
+  DMG was unsigned. Stapler found no ticket on either object; app and DMG `spctl` probes exited 3 and
+  were not accepted. Those negative probes are recorded facts, not proof of notarization status or
+  a prediction of quarantined first-launch behavior.
 - The repository defines no Developer ID, hardened-runtime, notarization, or stapling workflow.
 - The app is sandboxed. No app network-client APIs were found; roster/settings are stored with
   UserDefaults and an Application Support file.
-- The public Apple-silicon claim was not verified against the released Mach-O binary in the Linux
-  audit environment. CI explicitly tests `arch=arm64`, while release settings do not make the public
-  artifact architecture self-evident. A future release gate must record `lipo -archs` output.
+- The current `v0.2.0` release executable is verified as `arm64` only. Future release gates must
+  continue recording `lipo -archs`; this historical result does not constrain future artifacts.
 
 ## Prioritized findings
 

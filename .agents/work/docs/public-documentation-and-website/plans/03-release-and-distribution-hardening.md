@@ -110,8 +110,10 @@ conditional extension after an owner decision and approved credential model.
     - This path requires no Apple signing credentials and remains usable if Developer ID work is not
       approved.
   - Notes: This is the default plan path, not a degraded fallback. The inspection tooling and
-    qualified documentation are implemented, but actual app/DMG states and quarantined Gatekeeper
-    behavior remain unverified in the Linux orb.
+    qualified documentation are implemented. Read-only macOS inspection now records the actual
+    public `v0.2.0` app/DMG states and a browser-applied quarantine attribute, but quarantined
+    Gatekeeper first launch and clean-account behavior remain unverified, so this task stays
+    unchecked.
 
 - [ ] (blocked) **Task 3.5: Decide whether and where to pursue Developer ID distribution**
   - Scope: owner decision recorded in this work item or a durable decision file

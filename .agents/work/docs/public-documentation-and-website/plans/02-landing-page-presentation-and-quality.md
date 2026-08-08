@@ -109,9 +109,12 @@ an unnecessary frontend application stack.
       sizes before replacing existing assets.
   - Notes: Requires macOS. Keep this queued rather than substituting invented mockups or blocking the
     rest of Phase 2.
-  - Execution state (2026-08-08): **unverified** in the Linux orb. Existing captures were optimized
-    and visually reviewed, but no replacement was represented as a new real-app capture. The staged
-    recapture procedure remains in `docs/SCREENSHOTS.md`.
+  - Execution state (2026-08-08): **unverified**. Existing captures were optimized and visually
+    reviewed, but no replacement was represented as a new real-app capture. The available macOS
+    account is not disposable: launching the real bundle identity would consult or alter its TCC
+    state and the app uses standard user preferences/Application Support. No repository-supported
+    isolated app identity exists, so recapture was not attempted. The staged procedure remains in
+    `docs/SCREENSHOTS.md`.
 
 - [x] **Task 2.6: Optimize image loading and record performance change**
   - Scope: `docs/assets/images/`, `docs/index.html`

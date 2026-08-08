@@ -66,11 +66,12 @@
                 </div>
                 <ul class="trust-list">
                     <li>macOS 14+</li>
+                    <li>Apple silicon</li>
                     <li>MIT licensed</li>
                     <li>No account</li>
                     <li>Data stays local</li>
                 </ul>
-                <p class="release-caveat"><strong>Release trust note:</strong> the current public artifact's architecture, Developer ID signing, notarization, and exact Gatekeeper behavior have not yet been independently verified.</p>
+                <p class="release-caveat"><strong>Release trust note:</strong> the current v0.2.0 artifact is arm64-only, its app is ad-hoc signed rather than Developer ID signed, and its outer DMG is unsigned. Exact notarization and clean-Mac Gatekeeper behavior remain unverified.</p>
             </div>
 
             <figure class="hero-proof">
@@ -199,10 +200,11 @@
                 <aside class="trust-card" aria-labelledby="trust-heading">
                     <p class="card-label">Current distribution state</p>
                     <h3 id="trust-heading">Transparent while release qualification catches up.</h3>
-                    <p>The public artifact has not yet been independently inspected for executable architectures, app or DMG signature identity, Developer ID, notarization, or exact Gatekeeper behavior on a clean Mac.</p>
-                    <p>That uncertainty is why MobCrew links to the release page instead of promising a frictionless direct download. Do not disable Gatekeeper or strip quarantine attributes.</p>
+                    <p>Direct inspection found that v0.2.0 contains an arm64 executable, a structurally valid ad-hoc app signature with no Developer ID identity or hardened runtime, an unsigned outer DMG, and no stapled tickets.</p>
+                    <p>Exact notarization and Gatekeeper first-launch behavior on a clean Mac remain unverified. That uncertainty is why MobCrew links to the release page instead of promising a frictionless direct download. Do not disable Gatekeeper or strip quarantine attributes.</p>
                     <dl class="trust-facts">
                         <div><dt>App requirement</dt><dd>macOS 14+</dd></div>
+                        <div><dt>Release architecture</dt><dd>Apple silicon (arm64)</dd></div>
                         <div><dt>Updates</dt><dd>Manual download</dd></div>
                         <div><dt>License</dt><dd>MIT</dd></div>
                     </dl>

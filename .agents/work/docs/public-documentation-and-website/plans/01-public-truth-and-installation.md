@@ -126,10 +126,12 @@ downloaded artifact is inspected on macOS.
     - Public wording is made exact when evidence exists; if macOS access remains unavailable, docs
       retain qualified language and `research.md` explicitly records what remains unverified.
   - Notes: Lack of access is not evidence of unsupported hardware or OS behavior.
-  - Execution state (2026-08-08): **unverified** in the Linux orb. No macOS screenshot
-    recapture, signature/identity assessment, architecture inspection, quarantined first launch, or
-    clean-Mac qualification was performed. Qualified public wording remains in place and this manual
-    gate does not block unrelated static-site or local release-hardening work.
+  - Execution state (2026-08-08): **partially verified** on macOS. A real browser download retained
+    quarantine and read-only inspection established the exact digest/size, DMG integrity, bundle
+    identity/version/build/executable, `arm64` architecture, ad-hoc app signature, absent Developer
+    ID/team/hardened runtime, unsigned outer DMG, absent stapled tickets, and non-accepted `spctl`
+    probes. The app was not launched or installed. Exact Gatekeeper wording/recovery, TCC behavior,
+    and clean-Mac first launch remain unverified, so this task stays unchecked.
 
 ## Implementation Notes
 

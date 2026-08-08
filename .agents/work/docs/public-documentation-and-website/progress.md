@@ -2,9 +2,9 @@
 
 ## Current slice
 
-All feasible local/static implementation across Phases 1-3 is complete. Remaining work requires an
-interactive quarantined qualification Mac, separate release-operation authority, or an owner
-decision and credentials.
+All feasible local/static implementation and read-only public-artifact inspection across Phases 1-3
+is complete. Remaining work requires a disposable clean account/Mac for launch-sensitive evidence,
+separate release-operation authority, or an owner decision and credentials.
 
 ## Observed evidence
 
@@ -85,14 +85,36 @@ decision and credentials.
   independent verifier runs produced identical strict evidence hashes. These are actual facts about
   the synthetic CI artifact only, not `v0.2.0`, a future release, or quarantined Gatekeeper behavior.
 
+### Public v0.2.0 macOS artifact evidence
+
+- On macOS 26.5.2 (25F84), arm64, the `agent-browser` real-browser workflow downloaded GitHub asset
+  ID `349260554` from public release `v0.2.0`. Before opening or mounting, the 3,593,226-byte DMG had
+  SHA-256 `1d7f8daff797dd20876b4a9ab011a98e20d23bf931e98118a131e7ba9c4b99d4`, matching GitHub's
+  published digest, and `com.apple.quarantine=0081;6a77a2dc;Google Chrome for Testing;`.
+- `hdiutil verify` reported a valid image checksum. A temporary read-only mount contained
+  `MobCrew.app`, the `/Applications` symlink, bundle ID `com.colmarius.MobCrew`, version/build
+  `0.2.0`/`146`, executable `MobCrew`, and a thin `arm64` Mach-O. The mount detached cleanly; no
+  MobCrew volume remained, and the downloaded DMG retained quarantine.
+- `codesign --verify --deep --strict` passed for the app. Detailed inspection recorded an ad-hoc
+  signature, no Developer ID authority, `TeamIdentifier=not set`, and no hardened-runtime flag. The
+  outer DMG was unsigned. Stapler found no ticket on app or DMG (exit 65); app and DMG `spctl`
+  probes were not accepted (exit 3). These are exact artifact/probe facts, not proof of notarization
+  status or the exact Gatekeeper result on launch.
+- The app was not launched, copied to Applications, or installed. No TCC, login-item, MobCrew data,
+  or preferences were changed. A clean-account first launch was not safe on this user's existing
+  account, so Tasks 1.7/3.4 remain unchecked.
+- Supplemental local checks passed with Xcode 26.2 on this host: all 100 app tests used isolated
+  DerivedData, and the offline mocked release-hardening state-machine suite passed under macOS/BSD
+  tools. This is additional compatibility evidence, not a replacement for the pinned Xcode 26.6 /
+  Swift 6.3 CI result.
+
 ## Unverified manual gates
 
-- The `v0.2.0` app bundle and outer DMG signatures, Developer ID identity, notarization/stapling,
-  Gatekeeper assessment, and executable architectures require macOS inspection.
 - Quarantined first launch, exact Privacy & Security recovery wording, permission/TCC behavior,
   clean-Mac qualification, and upgrade behavior require a compatible interactive Mac.
-- Stronger real-app screenshot recapture requires macOS. Existing images have not been represented as
-  new evidence.
+- Stronger real-app screenshot recapture requires a disposable account or an isolated app identity.
+  The current app launches under the real bundle identity, consults TCC state, and uses standard
+  preferences/Application Support; existing images have not been represented as new evidence.
 - Developer ID signing/notarization remains conditional on an explicit owner decision and credentials;
   it is not authorized by this execution.
 - No real draft, upload, qualification run, tag, or publication was created. Those remain separately
