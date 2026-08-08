@@ -3,6 +3,7 @@ import Foundation
 import UserNotifications
 @testable import MobCrew
 
+@MainActor
 @Suite("NotificationService Tests")
 struct NotificationServiceTests {
 
@@ -63,12 +64,12 @@ final class MockNotificationCenter: NotificationCenterProtocol {
     var authorizationRequestCount = 0
     var authorizationGranted = true
     
-    func add(_ request: UNNotificationRequest, withCompletionHandler completionHandler: ((Error?) -> Void)?) {
+    func add(_ request: UNNotificationRequest, withCompletionHandler completionHandler: (@Sendable (Error?) -> Void)?) {
         addedRequests.append(request)
         completionHandler?(nil)
     }
     
-    func requestAuthorization(options: UNAuthorizationOptions, completionHandler: @escaping (Bool, Error?) -> Void) {
+    func requestAuthorization(options: UNAuthorizationOptions, completionHandler: @escaping @Sendable (Bool, Error?) -> Void) {
         authorizationRequestCount += 1
         completionHandler(authorizationGranted, nil)
     }

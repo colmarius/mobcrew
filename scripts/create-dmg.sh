@@ -69,7 +69,7 @@ if [ "$NO_CODE_SIGN" = true ]; then
     CREATE_DMG_ARGS=("--overwrite" "--no-code-sign" "$APP_PATH" "$BUILD_DIR")
 fi
 
-npx create-dmg "${CREATE_DMG_ARGS[@]}" 2>&1 || true
+npx --yes create-dmg@8.1.0 "${CREATE_DMG_ARGS[@]}" 2>&1 || true
 
 CREATED_DMG=$(find "$BUILD_DIR" -maxdepth 1 -name "MobCrew*.dmg" -type f | head -1)
 if [ -n "$CREATED_DMG" ] && [ -f "$CREATED_DMG" ]; then

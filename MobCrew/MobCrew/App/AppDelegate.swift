@@ -1,5 +1,6 @@
 import AppKit
 
+@MainActor
 class AppDelegate: NSObject, NSApplicationDelegate {
     var floatingTimerController: FloatingTimerController?
     var appState: AppState?
@@ -19,9 +20,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     private func registerGlobalHotkey() {
         GlobalHotkeyService.shared.register { [weak self] in
-            DispatchQueue.main.async {
-                self?.toggleFloatingTimer()
-            }
+            self?.toggleFloatingTimer()
         }
     }
 

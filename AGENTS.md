@@ -6,7 +6,7 @@
 
 ## Tech Stack
 
-- **Language**: Swift 5
+- **Language**: Swift 6 (Swift 6.3 compiler in Xcode 26.6)
 - **UI**: SwiftUI + AppKit (via `@NSApplicationDelegateAdaptor`)
 - **Target**: macOS 14.0+
 - **Architecture**: Feature-based folder structure
@@ -19,6 +19,7 @@ project/
 ├── README.md                    # Project overview
 ├── docs/                        # GitHub Pages landing page + RELEASING.md
 ├── scripts/                     # Build and release scripts
+├── .github/workflows/           # Xcode CI + GitHub Pages deployment
 ├── .amp/
 │   └── services.yaml            # Supervised docs preview + orb portal
 ├── .agents/
@@ -103,7 +104,7 @@ Plans in `.agents/plans/` follow this workflow:
 ## Commands
 
 MobCrew is a macOS-only Xcode target. Run app builds, tests, and UI checks on a macOS Amp runner
-or local Mac with Xcode 15+. Debian orbs cannot run Xcode or Apple simulators; the project does not
+or local Mac with Xcode 26.6+. Debian orbs cannot run Xcode or Apple simulators; the project does not
 currently define an iOS target.
 
 ```bash

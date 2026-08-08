@@ -1,5 +1,6 @@
 import Foundation
 
+@MainActor
 @Observable
 final class AppState {
     let roster: Roster
