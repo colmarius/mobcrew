@@ -215,7 +215,12 @@ removed and all Task 9 verification threads archived.
 - Do not reject duplicate participant names; real teams may contain them.
 - Do not persist a raw decrementing counter without deadline reconciliation.
 
-## Test gaps
+## Baseline test gaps
+
+The initial audit recorded the gaps below. Tasks 1-9 added the deterministic model/service coverage
+and native evidence described in `progress.md`; the list is retained as historical input rather than a
+statement about the current branch. Direct spoken VoiceOver, announcement, contrast, and
+differentiate-without-color observations remain open.
 
 - Current async timer tests rely on wall-clock sleeps instead of an injected clock.
 - No transition matrix covers phase × roster size × action.
@@ -228,9 +233,9 @@ removed and all Task 9 verification threads archived.
   scene observation that unit tests cannot exercise.
 - No tests cover session restoration, corrupt snapshots, permission status, launch-item failure, or
   accessibility/UI behavior.
-- `TESTING.md` now covers the current-state journeys broadly, but its unchecked items are planned
-  manual checks rather than observed evidence. It must be updated with Tasks 1-9 and executed on a
-  logged-in Mac; deadline recovery and the new break-due state do not exist yet.
+- `TESTING.md` now covers the implemented phase, break, sleep/deadline, recovery, system-status,
+  roster, keyboard, and VoiceOver journeys. Its unchecked items remain planned checks rather than
+  observed evidence and must be reconciled explicitly on a logged-in Mac before Task 10 can pass.
 
 ## Oracle plan review
 
@@ -247,3 +252,28 @@ incorporates its required changes:
 - Core accessibility/reachability, richer roster correction, and floating-panel ownership are split
   into coherent tasks; P2 panel/login behavior does not block the stabilization release.
 - Notification and `SMAppService` status acceptance criteria use the actual platform enum states.
+
+## Final ship-readiness review
+
+On 2026-08-09, an independent ultra reviewer fetched and inspected the complete
+`origin/main...origin/audit/session-reliability-work-item` range at `eff06df`, then the coordinator
+reproduced its material findings against the source, tests, documentation, and plan acceptance criteria.
+
+- No code blocker or high-severity defect was confirmed. The authoritative phase commands, monotonic
+  deadline and wall-clock restoration split, break cadence, roster identity, roster-before-snapshot
+  persistence ordering, recovery receipts, service-backed system status, accessibility semantics, and
+  explicit scope exclusions all match the active plan and focused coverage.
+- The one release-gate omission was documentation: `TESTING.md` described expired relaunch recovery
+  but not an in-process sleep past the deadline. The checklist now includes that exact one-completion,
+  no-replay journey. `python3 scripts/validate-docs.py` and `git diff --check` pass after the correction.
+- Low-risk observations did not justify native-code churn: the floating break Skip capability is true
+  in every reachable break phase despite a missing redundant `.disabled` modifier; Carbon's application
+  event-target callback uses a main-actor assumption consistent with its delivery model; and legacy or
+  tampered over-range duration defaults fall back safely on recovery and are unreachable through current UI.
+- A read-only Mac verifier at `eff06df` used macOS 26.5.2, Xcode 26.6, and Swift 6.3.3. It confirmed
+  the production delta after the 177/177 native pass is evidence-only and found no new code blocker.
+  VoiceOver, Increase Contrast, and Differentiate Without Color were disabled, so their direct
+  observations remain unverified rather than inferred from Accessibility-tree or deterministic evidence.
+- Under the active plan, those Task 9 observations and Task 10's explicit result for each applicable
+  `TESTING.md` journey block ship readiness. Older-macOS repetition, physical hotkey input, forced
+  system-state mutation, and Tasks 11-12 remain accepted non-blocking deferrals.

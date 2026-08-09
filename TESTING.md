@@ -93,6 +93,9 @@ disable Gatekeeper or strip quarantine attributes as part of app-level testing.
 
 - [ ] Quit and relaunch after changing the active order, bench, current role, turn duration, break
       enabled state/cadence/duration, Notifications, and Show Tips; those values are restored.
+- [ ] Start a turn, put the Mac to sleep until after its deadline, and wake it without relaunching;
+      the cycle completes once, advances roles only when allowed, enters regular idle or break due,
+      and does not advance roles or break cadence again after further refreshes.
 - [ ] Quit during a running turn, wait briefly, and relaunch; the same cycle resumes with elapsed
       wall time deducted. Quit long enough for its deadline to pass; relaunch completes that cycle
       once, advances roles only when allowed, and does not repeat the advance on another relaunch.

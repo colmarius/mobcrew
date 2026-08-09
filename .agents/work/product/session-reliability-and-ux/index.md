@@ -23,30 +23,23 @@ The branch was rebased onto `origin/main` at `50659f0` on 2026-08-09. That mainl
 app source or unit tests, so Tasks 1-9 were initially open; it did complete the current-state public
 documentation overhaul, narrowing Task 10 to behavior-change deltas and final observed validation.
 Saved teams, cloud sync, forced full-screen breaks, and other speculative expansion are out of scope.
-Implementation is active on the rebased audit branch. Tasks 1-2 established the authoritative
-session phase and identity-preserving roster operations; Task 3 then separated configured duration
-from current-cycle progress and aligned both controls. Task 4 replaced delivered-tick subtraction
-with deadline-based elapsed time, and Task 5 made explicit break prompts disable-able without hidden
-cadence. Tasks 1-5 passed focused and full native tests on the available Mac runner. Task 6 versioned
-session recovery now also passed focused and full native tests there. Task 7's logged-in Mac permission
-gate proved Carbon registration and delivery do not require Accessibility on the available host; the
-resulting AX-removal and registration-status implementation passed focused, full-suite, and signed-app
-validation using Xcode 26.6 / Swift 6.3. Task 8 now has a service-backed implementation and focused
-tests for truthful Notification and Launch at Login status; Xcode 26.6 focused/full tests and live
-Settings inspection passed. Task 9 accessibility and large-roster reachability is now active.
-The implementation now has single-List roster reachability, identity-preserving Move Up/Down paths,
-contextual semantics across core surfaces, and injected one-shot transition announcements; exact
-Xcode 26.6 focused/full tests pass. An isolated 20-person harness verified initial AX semantics and
-announcement delivery. Manual inspection then found that both main panes retained intrinsic/fixed
-widths when the window expanded, wasting available space and clipping long participant names. A
-responsive layout correction is pushed and passed exact-toolchain focused tests plus native geometry,
-AX, splitter, minimum/expanded-window, and increased-text checks. User inspection confirms the normal
-expanded layout. The first Full Keyboard Access attempt exposed that Tab skipped the borderless
-participant buttons inside the List; an explicit activation-focus correction compiles, passes focused
-tests, and user testing now confirms the roster accepts keyboard focus and traversal. Task 9 awaits only
-spoken VoiceOver/announcement and display-option observations. Task 10's preparatory truth audit
-corrected the remaining wording, and the exact latest branch passed its full Xcode 26.6 suite. Task 10's
-manual-result reconciliation still depends on Task 9.
+Tasks 1-8 are complete. Together they establish one phase-aware session contract, identity-preserving
+roster mutations, unified duration semantics, monotonic deadline timing, optional break decisions,
+idempotent versioned recovery, permission-free Carbon hotkey setup, and truthful Notification and
+Launch at Login status. Task 9's implementation adds single-List roster reachability,
+identity-preserving Move Up/Down paths, contextual semantics, one-shot transition announcements, a
+responsive 600×450+ layout, and explicit activation focus. The latest production source passed all
+177 native executions with Xcode 26.6 / Swift 6.3.3; logged-in geometry, Accessibility-tree,
+increased-text, responsive-layout, and user Full Keyboard Access observations also pass.
+
+An independent ultra review and coordinator source investigation at audit head `eff06df` found no
+code blocker. They confirmed one Task 10 documentation omission: the manual checklist lacked an
+in-process sleep-across-deadline journey. `TESTING.md` now includes that journey and static validation
+passes. A final read-only Mac verifier found no new defect but could not complete the remaining direct
+observations because VoiceOver, Increase Contrast, and Differentiate Without Color were off and the
+verifier was not authorized to alter shared system settings. Tasks 9 and 10 therefore remain open and
+the work item remains blocked on those observations plus explicit per-journey reconciliation of the
+applicable `TESTING.md` checks. Tasks 11-12 remain explicitly deferred and non-blocking.
 
 ## Artifacts
 
@@ -59,6 +52,8 @@ manual-result reconciliation still depends on Task 9.
 
 ## Next Action
 
-- Finish [Task 9](plan.md#task-9-make-core-controls-accessible-and-large-rosters-reachable) spoken
-  VoiceOver/announcement, Increase Contrast, and Differentiate Without Color checks, then reconcile
-  Task 10's remaining explicit manual results. Older macOS coverage is not required.
+- On the logged-in Mac, enable VoiceOver and record spoken core-control semantics plus one-shot Driver
+  handoff, break-due, and break-complete announcements; then check Increase Contrast and Differentiate
+  Without Color one at a time. Reconcile every applicable `TESTING.md` journey as tested, unverified,
+  or explicitly non-applicable. Check Tasks 9-10 only when that evidence supports them, then commit the
+  completed snapshot and run the agent-work closeout helper. Older macOS coverage is not required.

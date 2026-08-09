@@ -5,17 +5,15 @@ Updated: 2026-08-09
 ## Current Slice
 
 - Tasks 1-8 are implemented, natively tested, checked off in the active plan, and pushed.
-- Task 9 implementation has core surfaces with contextual semantics,
-  roster reordering has keyboard/VoiceOver actions, one native List owns active and benched scrolling,
-  and injected announcements cover only meaningful session transitions. Xcode tests and initial native
-  AX inspection pass. User inspection found the main panes did not consume expanded window space; the
-  pushed responsive correction now passes native geometry, splitter, AX, and increased-text checks.
-  Interactive testing then found Full Keyboard Access Tab traversal skipped the List's borderless
-  participant controls. Explicit activation focus now compiles, passes focused tests, and passes user
-  keyboard-focus/traversal inspection. VoiceOver and display-option checks remain.
-- Task 10's final documentation-truth audit is implemented, but its phase gate remains open until Task 9
-  completes and the manual result reconciliation is explicit. The latest exact branch now passes the
-  full native suite.
+- Task 9 implementation and automated/native geometry work are complete: contextual semantics,
+  one native roster List, identity-preserving keyboard/VoiceOver Move actions, meaningful one-shot
+  announcements, responsive panes, increased-text reachability, and user-confirmed Full Keyboard Access
+  all pass their recorded gates. Spoken VoiceOver/announcement, Increase Contrast, and Differentiate
+  Without Color observations remain open, so Task 9 stays unchecked.
+- Task 10's documentation-truth audit and the final independent review are complete. The review found no
+  code blocker and identified one missing in-process sleep-across-deadline checklist journey; that journey
+  is now in `TESTING.md` and static checks pass. Task 10 stays unchecked until every applicable manual
+  journey has an explicit observed, unverified, or non-applicable result.
 
 ## Observed Evidence
 
@@ -268,6 +266,20 @@ Updated: 2026-08-09
   xcresult, and DerivedData; no xcodebuild/xctest or temporary branch remains. The user's primary checkout
   was concurrently fast-forwarded by another actor to the tested commit and remained clean; the verifier
   did not alter or revert it. Remote heads remain only `main` and the authorized audit branch.
+- The independent ultra reviewer fetched `origin/main=50659f0` and audit head `eff06df`, inspected the
+  complete 35-commit range and relevant tests/docs/work artifacts, and reported no code blocker. Coordinator
+  source inspection reproduced the phase, clock, break, recovery-ordering, roster-identity, system-status,
+  and accessibility findings rather than accepting the report mechanically.
+- Final review confirmed Task 10's checklist omitted an in-process sleep-across-deadline journey. The
+  added journey requires one completion after wake with no repeated role/cadence change. Documentation
+  validation and `git diff --check` pass after this text-only correction; no native retest is required.
+- A read-only Mac verifier at exact `eff06df` reported macOS 26.5.2 (25F84), Xcode 26.6 (17F113), and
+  Swift 6.3.3. It did not rerun the suite because `7c67fbd..eff06df` changes only work evidence, and it
+  found no new code blocker. VoiceOver, Increase Contrast, and Differentiate Without Color were off; the
+  verifier preserved shared settings and therefore recorded those direct observations as unverified.
+- The verifier removed `/tmp/mobcrew-final-native-1Wyypm` and created no app, DerivedData, defaults,
+  data, log, process, branch, or remote ref. The user's primary Mac checkout remained clean and unchanged.
+  Remote heads remained only `main` and the authorized audit branch.
 
 ## Verification Status
 
@@ -289,4 +301,5 @@ Updated: 2026-08-09
   checks; Full Keyboard Access passes user inspection after the focus correction. Spoken VoiceOver,
   announcements, and display-option acceptance await user assistance.
 - Task 10's final exact-branch native suite passed all 177 executions using Xcode 26.6 / Swift 6.3.3;
-  static docs validation and `git diff --check` pass. Explicit remaining manual results are still open.
+  static docs validation and `git diff --check` pass after the final sleep-journey correction. Explicit
+  remaining Task 9 observations and applicable manual-journey results are still open.

@@ -208,7 +208,10 @@ validation; it must not recreate the website or treat unchecked manual steps as 
     - Driver, break-due, and break-complete transitions announce once; timer ticks do not announce.
     - VoiceOver, Full Keyboard Access, Increase Contrast, Differentiate Without Color, and increased
       text-size results are recorded on a logged-in Mac.
-  - Notes: Rename and Undo are separated into non-blocking Task 12 so this task remains a coherent accessibility slice.
+  - Notes: Rename and Undo are separated into non-blocking Task 12 so this task remains a coherent
+    accessibility slice. Responsive geometry, Accessibility-tree coverage, increased text, and user
+    Full Keyboard Access observation pass. Spoken VoiceOver semantics/announcements, Increase Contrast,
+    and Differentiate Without Color remain required direct observations, so this task stays unchecked.
 
 ### Task 10: Maintain documentation truth and run final validation
 
@@ -226,7 +229,9 @@ validation; it must not recreate the website or treat unchecked manual steps as 
       applicable manual check; an unchecked checklist is not accepted as execution evidence.
     - No screenshot or marketing claim asserts behavior that was not observed.
   - Notes: Latest main already corrected the baseline public claims and expanded `TESTING.md`. This is
-    the stabilization delta/release gate; Tasks 11-12 do not block it.
+    the stabilization delta/release gate; Tasks 11-12 do not block it. Final review added the missing
+    in-process sleep-across-deadline journey and static documentation validation passes. The logged-in
+    release pass must still classify every applicable manual journey explicitly, so this task stays unchecked.
 
 ## Non-blocking follow-up tasks
 
