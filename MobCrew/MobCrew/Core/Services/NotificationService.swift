@@ -33,7 +33,7 @@ final class NotificationService: ObservableObject, NotificationServiceProtocol {
     static let shared = NotificationService()
 
     private let notificationCenter: NotificationCenterProtocol
-    private let systemSettingsOpener: () -> Void
+    private let systemSettingsOpener: @MainActor () -> Void
     private var permissionRequestInFlight = false
     private var authorizationRefreshGeneration = 0
 
@@ -42,7 +42,7 @@ final class NotificationService: ObservableObject, NotificationServiceProtocol {
 
     init(
         notificationCenter: NotificationCenterProtocol = UNUserNotificationCenter.current(),
-        openSystemSettings: @escaping () -> Void = NotificationService.openSystemNotificationSettings
+        openSystemSettings: @escaping @MainActor () -> Void = NotificationService.openSystemNotificationSettings
     ) {
         self.notificationCenter = notificationCenter
         self.systemSettingsOpener = openSystemSettings

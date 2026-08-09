@@ -77,7 +77,7 @@ struct NotificationServiceTests {
         UNAuthorizationStatus.denied,
         .authorized,
         .provisional,
-        .ephemeral
+        UNAuthorizationStatus(rawValue: 4)!
     ])
     func knownStatusDoesNotRequestPermission(status: UNAuthorizationStatus) async {
         let mockCenter = MockNotificationCenter()
@@ -116,7 +116,7 @@ struct NotificationServiceTests {
             .denied,
             .authorized,
             .provisional,
-            .ephemeral
+            UNAuthorizationStatus(rawValue: 4)!
         ] {
             mockCenter.authorizationStatus = status
 
