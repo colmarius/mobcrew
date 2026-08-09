@@ -113,6 +113,8 @@ gate, not evidence that the configuration is unsupported.
 - [ ] Complete the primary timer, roster, Settings, and break journeys using only the keyboard.
 - [ ] At exactly 600×450 with at least 12 active and 8 benched participants, scroll to every row by
       mouse, keyboard, and VoiceOver; moving a row does not change the current Driver's identity.
+- [ ] Resize that window wider and taller; both split panes and the roster List fill the available
+      space, long participant names gain usable width, and all controls remain reachable.
 - [ ] With Full Keyboard Access, activate participant Move Up/Down, bench/activate, and remove controls;
       with VoiceOver, verify person-specific labels and named Move Up/Down actions.
 - [ ] With VoiceOver, timer, reset, skip, break progress, role, menu, and floating controls expose

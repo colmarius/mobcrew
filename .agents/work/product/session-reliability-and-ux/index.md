@@ -1,6 +1,6 @@
 # MobCrew Session Reliability and UX Stabilization
 
-Status: blocked
+Status: in-progress
 Category: product
 Updated: 2026-08-09
 
@@ -37,8 +37,10 @@ Settings inspection passed. Task 9 accessibility and large-roster reachability i
 The implementation now has single-List roster reachability, identity-preserving Move Up/Down paths,
 contextual semantics across core surfaces, and injected one-shot transition announcements; exact
 Xcode 26.6 focused/full tests pass. An isolated 20-person harness verified initial AX semantics and
-announcement delivery, but interactive VoiceOver, keyboard, scrolling, and display-variant checks
-remain before acceptance because the runner lost window descendants after its first AX inspection.
+announcement delivery. Manual inspection then found that both main panes retained intrinsic/fixed
+widths when the window expanded, wasting available space and clipping long participant names. A
+responsive layout correction is now awaiting native rebuild and interactive accessibility/display
+checks before acceptance.
 
 ## Artifacts
 
@@ -51,7 +53,7 @@ remain before acceptance because the runner lost window descendants after its fi
 
 ## Next Action
 
-- Complete [Task 9](plan.md#task-9-make-core-controls-accessible-and-large-rosters-reachable) with
-  user-assisted checks on the current macOS host: activate Move Up/Down with VoiceOver and Full
-  Keyboard Access, scroll the 20-person roster end-to-end, complete a break, and inspect contrast,
-  Differentiate Without Color, and increased text. Older macOS coverage is not required.
+- Rebuild the isolated [Task 9](plan.md#task-9-make-core-controls-accessible-and-large-rosters-reachable)
+  harness with the responsive-pane correction, verify 600×450 and expanded-window layouts, then finish
+  user-assisted VoiceOver, Full Keyboard Access, scrolling, break-completion, contrast,
+  Differentiate Without Color, and increased-text checks. Older macOS coverage is not required.

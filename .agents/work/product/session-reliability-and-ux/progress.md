@@ -5,10 +5,11 @@ Updated: 2026-08-09
 ## Current Slice
 
 - Tasks 1-8 are implemented, natively tested, checked off in the active plan, and pushed.
-- Task 9 implementation is ready for native verification: core surfaces have contextual semantics,
+- Task 9 implementation has core surfaces with contextual semantics,
   roster reordering has keyboard/VoiceOver actions, one native List owns active and benched scrolling,
   and injected announcements cover only meaningful session transitions. Xcode tests and initial native
-  AX inspection pass; final interactive accessibility/display checks require user assistance.
+  AX inspection pass. User inspection found the main panes did not consume expanded window space; the
+  responsive-layout correction and final interactive accessibility/display checks are in progress.
 
 ## Observed Evidence
 
@@ -204,6 +205,13 @@ Updated: 2026-08-09
   20-person list end-to-end; activate Move Down/Up using VoiceOver and Full Keyboard Access; complete the
   short break; and inspect Increase Contrast, Differentiate Without Color, and increased text. Current
   macOS 26.5.2 coverage is sufficient; no older-version repetition remains.
+- Manual inspection of the retained isolated harness found an expanded main window still presented
+  intrinsic-width roster content and a timer pane capped at 300 points, leaving most available space
+  unused while long names wrapped or truncated. Task 9 therefore remains open.
+- The correction removes the timer-pane maximum, gives both split panes and the single native List
+  flexible width/height, and raises the minimum main content size to the acceptance baseline of
+  600×450. Linux `git diff --check` and documentation validation pass; native build and resized-window
+  inspection remain pending.
 
 ## Verification Status
 

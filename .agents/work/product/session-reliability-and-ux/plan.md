@@ -203,6 +203,8 @@ validation; it must not recreate the website or treat unchecked manual steps as 
       consistent across surfaces and remain clear without color.
     - Move Up/Down actions provide a keyboard and accessibility alternative to dragging while preserving Task 2 invariants.
     - With at least 12 active and 8 benched participants in a 600×450 window, every row remains reachable.
+    - When the main window grows beyond 600×450, both panes and the roster List consume their available
+      space so long names gain room instead of leaving unused fixed-width content.
     - Driver, break-due, and break-complete transitions announce once; timer ticks do not announce.
     - VoiceOver, Full Keyboard Access, Increase Contrast, Differentiate Without Color, and increased
       text-size results are recorded on a logged-in Mac.

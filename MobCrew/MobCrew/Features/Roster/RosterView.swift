@@ -15,6 +15,7 @@ struct RosterView: View {
             }
         }
         .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
     
     private var emptyStateSection: some View {
@@ -111,6 +112,7 @@ struct RosterView: View {
             }
         }
         .listStyle(.plain)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .accessibilityLabel("Roster")
     }
     

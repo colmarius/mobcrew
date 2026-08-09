@@ -10,14 +10,14 @@ struct ContentView: View {
             } else {
                 HSplitView {
                     timerSection
-                        .frame(minWidth: 200, maxWidth: 300)
+                        .frame(minWidth: 250, maxWidth: .infinity, maxHeight: .infinity)
                     
                     RosterView(roster: appState.roster)
-                        .frame(minWidth: 250)
+                        .frame(minWidth: 300, maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
         }
-        .frame(minWidth: 500, minHeight: 450)
+        .frame(minWidth: 600, maxWidth: .infinity, minHeight: 450, maxHeight: .infinity)
     }
     
     private var timerSection: some View {
