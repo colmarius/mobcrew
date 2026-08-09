@@ -57,8 +57,9 @@ Draft creation first revalidates main, local evidence, artifact contents, and re
 discovers an existing draft by exact tag across the paginated releases API. When absent, it creates
 metadata with a REST `POST` whose `target_commitish` is the full target SHA, captures the numeric
 release ID, reads that exact release back, and uploads through that release ID's asset endpoint. A
-matching asset is untouched; duplicate drafts, conflicting metadata, wrong state, wrong asset, extra
-assets, and generic network failures stop. `verify-draft` binds the numeric release/asset IDs,
+single existing draft is allowed through `check` and `prepare` so an interrupted attempt can resume.
+A matching asset is untouched; duplicate drafts, conflicting metadata, wrong state, wrong asset,
+extra assets, and generic network failures stop. `verify-draft` binds the numeric release/asset IDs,
 title/body, target, API digest when supplied, and a freshly downloaded size/SHA in
 `build/MobCrew-0.3.0.remote-evidence`.
 

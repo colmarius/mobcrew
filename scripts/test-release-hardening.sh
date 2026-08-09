@@ -311,7 +311,10 @@ run_check_fail wrong-swift-series MOCK_SWIFT=6.30
 run_check_fail auth MOCK_AUTH=bad
 run_check_fail repo MOCK_REPO=bad
 run_check_fail push MOCK_PUSH=false
-printf 'true\n' >"$STATE/release_present"; run_check_fail existing-draft; reset_state
+printf 'true\n' >"$STATE/release_present"; clear_log
+(cd "$T" && "$WORK/scripts/release.sh" check 1.2.3) >/dev/null
+assert_no_mutation
+touch "$STATE/duplicate_draft"; run_check_fail duplicate-drafts; rm "$STATE/duplicate_draft"; reset_state
 printf 'true\n' >"$STATE/release_present"; printf 'false\n' >"$STATE/draft"; run_check_fail published-release; reset_state
 printf 'true\n' >"$STATE/tag_present"; run_check_fail remote-tag-api; reset_state
 touch "$STATE/tag_query_error"; run_check_fail tag-query-error; reset_state
