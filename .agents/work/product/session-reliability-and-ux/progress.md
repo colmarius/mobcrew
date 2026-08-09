@@ -4,10 +4,10 @@ Updated: 2026-08-09
 
 ## Current Slice
 
-- Tasks 1-7 are implemented, natively tested, checked off in the active plan, and pushed.
-- Task 8 implementation is ready for native verification: system-backed Notification and Launch at
-  Login status remain separate from preference/intent, failed operations refresh truth and surface
-  transient feedback, and Settings provides contextual recovery actions.
+- Tasks 1-8 are implemented, natively tested, checked off in the active plan, and pushed.
+- Task 9 is next: make core timer, break, participant, menu, and floating controls explicitly
+  accessible; add identity-preserving keyboard reordering, transition announcements, and bounded
+  scrolling so 12 active plus 8 benched participants remain reachable in a 600×450 window.
 
 ## Observed Evidence
 
@@ -143,8 +143,24 @@ Updated: 2026-08-09
   the toggle from reality, shows transient errors, and links approval/unavailable recovery to Login Items.
 - Deterministic tests cover all framework statuses, notification preference separation, authorization
   request gating and recovery, registration/unregistration status refresh, thrown operation feedback,
-  external status changes, and injected System Settings actions. Native compilation/tests and live UI
-  inspection remain unverified at this checkpoint.
+  external status changes, and injected System Settings actions.
+- Task 8 exact-toolchain verification used Xcode 26.6 (17F113), Swift 6.3.3, Swift language mode 6,
+  and a detached Mac worktree at pushed commit `787fcb140835513a485849238957a7be83393ba3`.
+  The first focused compile found that the injected Notification settings closure had lost MainActor
+  isolation and that direct `.ephemeral` source references are unavailable on macOS.
+- Fix commit `fea58aef584f038ef57f33934e9f4a98b558aa44` changed only the closure annotation and
+  represented authorization raw value 4 in tests. Focused Task 8 tests then passed 54/54 executed
+  cases (51 logical tests), and the full suite passed 169/169 executed cases (166 logical tests), with
+  no failures, skips, or expected failures. `git diff --check` passed.
+- Read-only live Settings inspection observed Notification authorization **Denied in System Settings**
+  while MobCrew's **Show notifications** preference remained on, and Launch at Login status
+  **Unavailable for this app** with its toggle off and disabled. **Open Settings** and **Open Login
+  Items** recovery controls were present and enabled; all General controls fit at 500×390 content size.
+- No TCC, Notification, Login Item, or other shared system state was reset to force alternate states.
+  Native `.requiresApproval`, register/unregister, operation-alert presentation, recovery destinations,
+  and alternate notification states remain represented by deterministic injected-double tests rather
+  than live mutation. The detached worktree and temporary files were removed, no temporary branch was
+  created, and remote heads remained only `main` and the authorized audit branch.
 
 ## Verification Status
 
@@ -159,3 +175,5 @@ Updated: 2026-08-09
   restored Combine publisher arming, and deterministic failure reconciliation.
 - Task 7 passed 2 focused and all 156 project tests using the required Xcode 26.6 / Swift 6.3 toolchain,
   providing cumulative exact-toolchain compilation and regression coverage for Tasks 1-7.
+- Task 8 passed 54 focused and all 169 executed project test cases using Xcode 26.6 / Swift 6.3.3;
+  live Settings inspection also confirmed independent actual/preference status and unclipped recovery UI.

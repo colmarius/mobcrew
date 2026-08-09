@@ -172,7 +172,7 @@ validation; it must not recreate the website or treat unchecked manual steps as 
 
 ### Task 8: Represent Notification and Launch at Login status honestly
 
-- [ ] **Task 8: Represent Notification and Launch at Login status honestly**
+- [x] **Task 8: Represent Notification and Launch at Login status honestly**
   - Scope: `MobCrew/MobCrew/Core/Services/NotificationService.swift`,
     `MobCrew/MobCrew/Core/Services/LaunchAtLoginService.swift`,
     `MobCrew/MobCrew/Features/Settings/SettingsView.swift`, service/AppState tests

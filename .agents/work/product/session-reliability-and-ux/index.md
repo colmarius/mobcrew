@@ -32,8 +32,8 @@ session recovery now also passed focused and full native tests there. Task 7's l
 gate proved Carbon registration and delivery do not require Accessibility on the available host; the
 resulting AX-removal and registration-status implementation passed focused, full-suite, and signed-app
 validation using Xcode 26.6 / Swift 6.3. Task 8 now has a service-backed implementation and focused
-tests for truthful Notification and Launch at Login status; exact-toolchain native and UI verification
-remain before acceptance.
+tests for truthful Notification and Launch at Login status; Xcode 26.6 focused/full tests and live
+Settings inspection passed. Task 9 accessibility and large-roster reachability is now active.
 
 ## Artifacts
 
@@ -46,9 +46,9 @@ remain before acceptance.
 
 ## Next Action
 
-- Verify [Task 8](plan.md#task-8-represent-notification-and-launch-at-login-status-honestly) on the
-  live Mac runner with Xcode 26.6: run focused service/AppState tests, inspect the real Settings states
-  and recovery actions available without changing unrelated user configuration, then run the full suite.
+- Begin [Task 9](plan.md#task-9-make-core-controls-accessible-and-large-rosters-reachable) by
+  rechecking control semantics, roster scrolling/reordering, and transition sites; add model and
+  accessibility-state tests before changing the main, roster, break, menu, and floating surfaces.
 
 ## Open Questions
 
