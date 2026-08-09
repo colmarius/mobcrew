@@ -66,7 +66,7 @@ validation; it must not recreate the website or treat unchecked manual steps as 
 
 ### Task 3: Unify configured duration and current-cycle semantics
 
-- [ ] **Task 3: Unify configured duration and current-cycle semantics**
+- [x] **Task 3: Unify configured duration and current-cycle semantics**
   - Scope: `MobCrew/MobCrew/Core/Models/TimerState.swift`, `MobCrew/MobCrew/Core/AppState.swift`,
     `MobCrew/MobCrew/ContentView.swift`, `MobCrew/MobCrew/Features/Settings/SettingsView.swift`, timer/AppState tests
   - Depends on: Task 1

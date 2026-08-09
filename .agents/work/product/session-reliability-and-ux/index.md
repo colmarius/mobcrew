@@ -24,9 +24,10 @@ app source or unit tests, so Tasks 1-9 were initially open; it did complete the 
 documentation overhaul, narrowing Task 10 to behavior-change deltas and final observed validation.
 Saved teams, cloud sync, forced full-screen breaks, and other speculative expansion are out of scope.
 Implementation is active on the rebased audit branch. Tasks 1-2 established the authoritative
-session phase and identity-preserving roster operations; their 87 focused tests and the full
-107-test suite passed on the available Mac runner. Task 3 duration semantics are now the active
-slice. Exact Xcode 26.6+ qualification remains outstanding because the runner currently has 26.2.
+session phase and identity-preserving roster operations; Task 3 then separated configured duration
+from current-cycle progress and aligned both controls. Tasks 1-3 passed focused and full native
+tests on the available Mac runner. Task 4 deadline-based timing is now active. Exact Xcode 26.6+
+qualification remains outstanding because the runner currently has 26.2.
 
 ## Artifacts
 
@@ -39,7 +40,7 @@ slice. Exact Xcode 26.6+ qualification remains outstanding because the runner cu
 
 ## Next Action
 
-- Run the focused Mac gate for [Task 3: Unify configured duration and current-cycle semantics](plan.md#task-3-unify-configured-duration-and-current-cycle-semantics), fix any failures, and record evidence before advancing to Task 4.
+- Implement [Task 4: Make countdown deadline-based and deterministic](plan.md#task-4-make-countdown-deadline-based-and-deterministic), beginning with injected-clock tests and the synchronous refresh seam.
 
 ## Open Questions
 

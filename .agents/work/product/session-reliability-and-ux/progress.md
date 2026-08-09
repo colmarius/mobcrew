@@ -4,12 +4,9 @@ Updated: 2026-08-09
 
 ## Current Slice
 
-- Tasks 1-2 are implemented, natively tested, checked off in the active plan, and pushed.
-- Task 3 implementation is ready for its native gate: configured duration is AppState-owned and
-  externally read-only, while TimerState retains current-cycle total/remaining duration.
-- Both duration steppers use one guarded AppState operation and the same 1–60 minute range; focused
-  tests cover idle/running/paused semantics, explicit Reset, next-turn application, break isolation,
-  invalid range values, and persistence.
+- Tasks 1-3 are implemented, natively tested, checked off in the active plan, and pushed.
+- Task 4 is next: replace delivered-tick subtraction with monotonic deadlines, add a separate wall
+  clock for relaunch reconciliation, and keep deterministic synchronous refresh coverage.
 
 ## Observed Evidence
 
@@ -43,10 +40,16 @@ Updated: 2026-08-09
 - Task 3 Linux inspection found no remaining production or test assignment to the now read-only
   configured duration outside AppState initialization/operation. Documentation validation passed
   after reconciling the shared range and lifecycle semantics in `TESTING.md`.
+- Task 3 verification used detached temporary worktree `/tmp/mobcrew-task3-ZMAL5S` at exact commit
+  `83e5e53e6b902ca2cc0bb04cd46a133eeda07de9`; the user's original checkout and untracked bundles
+  remained unchanged, and the temporary worktree was removed after use.
+- Focused Task 3 `xcodebuild test` passed 34/34 across `AppStateTests`, `TimerStateTests`, and
+  `BreakLogicTests`. The full macOS suite passed 113/113 with 0 failures and 0 skips. No fix commit
+  or temporary branch was needed.
 
 ## Verification Status
 
 - Tasks 1-2 passed their focused and full native test gates on macOS using Xcode 26.2 (build 17C52).
-- Task 3 AppState tests and full-suite regression coverage remain pending on the Mac runner.
+- Task 3 passed focused and full-suite regression coverage on the same Xcode 26.2 runner.
 - The project specifies Xcode 26.6+ / Swift 6.3, so the exact-toolchain rerun remains unverified and
   must be repeated before final qualification. No manual UI or accessibility behavior was claimed.
