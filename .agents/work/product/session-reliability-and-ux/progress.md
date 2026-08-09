@@ -4,10 +4,11 @@ Updated: 2026-08-09
 
 ## Current Slice
 
-- Task 1: replace independent regular/break and running flags with one six-case authoritative phase.
-- Keep all session mutations behind guarded AppState commands and give every UI surface the same
-  phase-derived actions, labels, and capabilities.
-- Add hermetic transition coverage with injected notification and active-mobsters-file dependencies.
+- Task 1 implementation is pushed and awaiting native compilation/test evidence.
+- Task 2 makes roster collections and driver index externally read-only, routes permanent removal
+  through model operations, and preserves driver UUID through removal, reactivation, and reordering.
+- Focused Task 2 coverage exercises before/current/after removal, removal to empty, reactivation,
+  reorder, shuffle, malformed indices, and persistence round trips.
 
 ## Observed Evidence
 
@@ -25,9 +26,14 @@ Updated: 2026-08-09
   the six phases × roster sizes 0/1/2 × seven commands without real sleeps or shared notifications.
 - `python3 scripts/validate-docs.py` passed after reconciling README, landing-page, and manual-check
   language with the new break-due and Start/Pause/Resume behavior. `git diff --check` also passed.
+- No live Mac runner was connected when checked after the Task 1 push, so no Xcode result has been
+  inferred. Independent Task 2 implementation proceeded without changing the unverified Task 1 contract.
+- Task 2 source inspection confirms all production active/inactive collection and driver-index
+  writes now live inside `Roster`; `RosterView` permanent removal uses model-owned operations.
 
 ## Verification Status
 
 - The Linux orb does not contain `swift` and cannot run the macOS Xcode target. Task 1 native
   compilation and focused `AppStateTests`, `BreakLogicTests`, `TimerEngineTests`, and
-  `NotificationServiceTests` remain the current gate before its plan checkbox can be completed.
+  `NotificationServiceTests` remain unverified. `RosterTests` and `PersistenceServiceTests` join
+  that focused Mac gate for Task 2; neither plan checkbox is complete yet.

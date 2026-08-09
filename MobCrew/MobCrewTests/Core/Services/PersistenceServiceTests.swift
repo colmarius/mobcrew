@@ -61,6 +61,57 @@ struct PersistenceServiceTests {
         #expect(loaded.activeMobsters[0].id == originalId)
     }
 
+    @Test("normalizes malformed negative driver index while loading")
+    func normalizesNegativeLoadedDriverIndex() throws {
+        let defaults = makeTestUserDefaults()
+        let service = PersistenceService(userDefaults: defaults)
+        let mobsters = [Mobster(name: "Alice"), Mobster(name: "Bob"), Mobster(name: "Charlie")]
+        let persisted = PersistedRoster(
+            activeMobsters: mobsters,
+            inactiveMobsters: [],
+            nextDriverIndex: -1
+        )
+        defaults.set(try JSONEncoder().encode(persisted), forKey: "mobcrew.roster")
+
+        let loaded = service.loadRoster()
+
+        #expect(loaded.nextDriverIndex == 2)
+        #expect(loaded.driver?.id == mobsters[2].id)
+    }
+
+    @Test("normalizes malformed oversized driver index while loading")
+    func normalizesOversizedLoadedDriverIndex() throws {
+        let defaults = makeTestUserDefaults()
+        let service = PersistenceService(userDefaults: defaults)
+        let mobsters = [Mobster(name: "Alice"), Mobster(name: "Bob"), Mobster(name: "Charlie")]
+        let persisted = PersistedRoster(
+            activeMobsters: mobsters,
+            inactiveMobsters: [],
+            nextDriverIndex: 8
+        )
+        defaults.set(try JSONEncoder().encode(persisted), forKey: "mobcrew.roster")
+
+        let loaded = service.loadRoster()
+
+        #expect(loaded.nextDriverIndex == 2)
+        #expect(loaded.driver?.id == mobsters[2].id)
+    }
+
+    @Test("normalized roster remains stable across persistence round trips")
+    func normalizedRosterRoundTrip() {
+        let defaults = makeTestUserDefaults()
+        let service = PersistenceService(userDefaults: defaults)
+        let mobsters = [Mobster(name: "Alice"), Mobster(name: "Bob"), Mobster(name: "Charlie")]
+        let roster = Roster(activeMobsters: mobsters, nextDriverIndex: -4)
+
+        service.saveRoster(roster)
+        let loaded = service.loadRoster()
+
+        #expect(roster.nextDriverIndex == 2)
+        #expect(loaded.nextDriverIndex == 2)
+        #expect(loaded.driver?.id == mobsters[2].id)
+    }
+
     // MARK: - Timer Duration Persistence
 
     @Test("saves and loads timer duration")

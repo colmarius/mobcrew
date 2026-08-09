@@ -23,7 +23,10 @@ Reset or use a fresh test account when a journey depends on first-run permission
 - [ ] With one active person, only Driver is shown and Skip remains disabled.
 - [ ] With two active people, Driver and Navigator are distinct and swap after a turn.
 - [ ] With three or more active people, repeated turns advance through the roster and wrap in order.
-- [ ] Reordering, benching the current driver, and restoring a benched person leave valid role labels.
+- [ ] Removing or benching someone before or after the current driver preserves that driver's identity.
+- [ ] Removing or benching the current driver selects the next active person, wrapping safely at the end.
+- [ ] Drag reordering preserves the current driver; Shuffle deliberately makes the shuffled first
+      person the driver; restoring a benched person preserves the existing driver.
 
 ## Rotation and breaks
 

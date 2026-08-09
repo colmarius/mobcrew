@@ -11,7 +11,7 @@ interrupting the session.
 ## Features
 
 - **Timer** - Configurable turn duration with audio notifications
-- **Roster management** - Driver/navigator rotation with drag-and-drop reordering
+- **Roster management** - Driver/navigator rotation with identity-preserving removal and reordering
 - **Bench** - Temporarily bench inactive mobsters
 - **Floating timer** - Always-on-top window showing countdown
 - **Break timer** - In-window Take Break / Skip Break choice with a pausable countdown

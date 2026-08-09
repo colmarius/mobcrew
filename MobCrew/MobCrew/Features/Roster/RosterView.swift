@@ -139,13 +139,11 @@ struct RosterView: View {
     }
     
     private func removeMobster(at index: Int) {
-        guard roster.activeMobsters.indices.contains(index) else { return }
-        roster.activeMobsters.remove(at: index)
+        roster.removeActiveMobster(at: index)
     }
     
     private func removeInactiveMobster(at index: Int) {
-        guard roster.inactiveMobsters.indices.contains(index) else { return }
-        roster.inactiveMobsters.remove(at: index)
+        roster.removeInactiveMobster(at: index)
     }
 }
 

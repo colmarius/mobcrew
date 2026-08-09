@@ -23,8 +23,9 @@ The branch was rebased onto `origin/main` at `50659f0` on 2026-08-09. That mainl
 app source or unit tests, so Tasks 1-9 remain open; it did complete the current-state public
 documentation overhaul, narrowing Task 10 to behavior-change deltas and final observed validation.
 Saved teams, cloud sync, forced full-screen breaks, and other speculative expansion are out of scope.
-Implementation began on the rebased audit branch with Task 1's authoritative session phase,
-guarded commands, shared surface capabilities, and hermetic transition coverage as the active slice.
+Implementation began on the rebased audit branch. Task 1's authoritative session phase, guarded
+commands, shared surface capabilities, and hermetic transition coverage are pushed but awaiting a
+Mac test gate; independent Task 2 roster invariants are the current implementation slice.
 
 ## Artifacts
 
@@ -37,7 +38,8 @@ guarded commands, shared surface capabilities, and hermetic transition coverage 
 
 ## Next Action
 
-- Complete and verify [Task 1: Make session actions phase-aware and consistent](plan.md#task-1-make-session-actions-phase-aware-and-consistent), then record its evidence and advance to Task 2.
+- Run the focused Mac build/test gate for Tasks 1-2, fix any failures, record observed evidence, and
+  check off only the accepted tasks before advancing to Task 3.
 
 ## Open Questions
 

@@ -48,6 +48,37 @@ struct RosterTests {
         #expect(roster.navigator?.id == alice.id)
     }
 
+    @Test("negative loaded driver index normalizes safely")
+    func negativeDriverIndexNormalizes() {
+        let alice = Mobster(name: "Alice")
+        let bob = Mobster(name: "Bob")
+        let charlie = Mobster(name: "Charlie")
+
+        let roster = Roster(
+            activeMobsters: [alice, bob, charlie],
+            nextDriverIndex: -1
+        )
+
+        #expect(roster.nextDriverIndex == 2)
+        #expect(roster.driver?.id == charlie.id)
+        #expect(roster.navigator?.id == alice.id)
+    }
+
+    @Test("oversized loaded driver index normalizes safely")
+    func oversizedDriverIndexNormalizes() {
+        let alice = Mobster(name: "Alice")
+        let bob = Mobster(name: "Bob")
+        let charlie = Mobster(name: "Charlie")
+
+        let roster = Roster(
+            activeMobsters: [alice, bob, charlie],
+            nextDriverIndex: 8
+        )
+
+        #expect(roster.nextDriverIndex == 2)
+        #expect(roster.driver?.id == charlie.id)
+    }
+
     // MARK: - advanceTurn()
 
     @Test("advanceTurn increments driver index")
@@ -162,6 +193,124 @@ struct RosterTests {
         #expect(roster.activeMobsters.isEmpty)
     }
 
+    @Test("rotateIn preserves the current driver")
+    func rotateInPreservesCurrentDriver() {
+        let alice = Mobster(name: "Alice")
+        let bob = Mobster(name: "Bob")
+        let charlie = Mobster(name: "Charlie")
+        let roster = Roster(
+            activeMobsters: [alice, bob],
+            inactiveMobsters: [charlie],
+            nextDriverIndex: 1
+        )
+
+        roster.rotateIn(at: 0)
+
+        #expect(roster.driver?.id == bob.id)
+        #expect(roster.activeMobsters.map(\.id) == [alice.id, bob.id, charlie.id])
+        #expect(roster.inactiveMobsters.isEmpty)
+    }
+
+    // MARK: - Permanent Removal
+
+    @Test("removing before the current driver preserves driver identity")
+    func removeBeforeCurrentDriver() {
+        let alice = Mobster(name: "Alice")
+        let bob = Mobster(name: "Bob")
+        let charlie = Mobster(name: "Charlie")
+        let dave = Mobster(name: "Dave")
+        let roster = Roster(
+            activeMobsters: [alice, bob, charlie, dave],
+            nextDriverIndex: 2
+        )
+
+        roster.removeActiveMobster(at: 0)
+
+        #expect(roster.activeMobsters.map(\.id) == [bob.id, charlie.id, dave.id])
+        #expect(roster.driver?.id == charlie.id)
+        #expect(roster.nextDriverIndex == 1)
+    }
+
+    @Test("removing the current driver selects the next active participant")
+    func removeCurrentDriver() {
+        let alice = Mobster(name: "Alice")
+        let bob = Mobster(name: "Bob")
+        let charlie = Mobster(name: "Charlie")
+        let dave = Mobster(name: "Dave")
+        let roster = Roster(
+            activeMobsters: [alice, bob, charlie, dave],
+            nextDriverIndex: 2
+        )
+
+        roster.removeActiveMobster(at: 2)
+
+        #expect(roster.activeMobsters.map(\.id) == [alice.id, bob.id, dave.id])
+        #expect(roster.driver?.id == dave.id)
+        #expect(roster.nextDriverIndex == 2)
+    }
+
+    @Test("removing the last current driver wraps to the first participant")
+    func removeLastCurrentDriver() {
+        let alice = Mobster(name: "Alice")
+        let bob = Mobster(name: "Bob")
+        let charlie = Mobster(name: "Charlie")
+        let roster = Roster(
+            activeMobsters: [alice, bob, charlie],
+            nextDriverIndex: 2
+        )
+
+        roster.removeActiveMobster(at: 2)
+
+        #expect(roster.driver?.id == alice.id)
+        #expect(roster.nextDriverIndex == 0)
+    }
+
+    @Test("removing after the current driver preserves driver identity")
+    func removeAfterCurrentDriver() {
+        let alice = Mobster(name: "Alice")
+        let bob = Mobster(name: "Bob")
+        let charlie = Mobster(name: "Charlie")
+        let roster = Roster(
+            activeMobsters: [alice, bob, charlie],
+            nextDriverIndex: 1
+        )
+
+        roster.removeActiveMobster(at: 2)
+
+        #expect(roster.activeMobsters.map(\.id) == [alice.id, bob.id])
+        #expect(roster.driver?.id == bob.id)
+        #expect(roster.nextDriverIndex == 1)
+    }
+
+    @Test("removing the only active participant resets safely")
+    func removeOnlyActiveParticipant() {
+        let roster = Roster(activeMobsters: [Mobster(name: "Alice")])
+
+        roster.removeActiveMobster(at: 0)
+
+        #expect(roster.activeMobsters.isEmpty)
+        #expect(roster.driver == nil)
+        #expect(roster.navigator == nil)
+        #expect(roster.nextDriverIndex == 0)
+    }
+
+    @Test("removing an inactive participant does not affect active roles")
+    func removeInactiveParticipant() {
+        let alice = Mobster(name: "Alice")
+        let bob = Mobster(name: "Bob")
+        let charlie = Mobster(name: "Charlie")
+        let roster = Roster(
+            activeMobsters: [alice, bob],
+            inactiveMobsters: [charlie],
+            nextDriverIndex: 1
+        )
+
+        roster.removeInactiveMobster(at: 0)
+
+        #expect(roster.inactiveMobsters.isEmpty)
+        #expect(roster.driver?.id == bob.id)
+    }
+
     // MARK: - Driver Index Adjustment
 
     @Test("benchMobster adjusts driver index when removing before current driver")
@@ -241,47 +390,51 @@ struct RosterTests {
         #expect(roster.activeMobsters[2].id == bob.id)
     }
 
-    @Test("moveMobster resets driver index to 0")
-    func moveMobsterResetsDriverIndex() {
-        let roster = Roster(activeMobsters: [Mobster(name: "Alice"), Mobster(name: "Bob")], nextDriverIndex: 1)
-
-        roster.moveMobster(from: IndexSet(integer: 1), to: 0)
-
-        #expect(roster.nextDriverIndex == 0)
-    }
-
-    @Test("moveMobster updates driver and navigator based on new positions")
-    func moveMobsterUpdatesRoles() {
+    @Test("moveMobster preserves current driver identity")
+    func moveMobsterPreservesCurrentDriver() {
         let alice = Mobster(name: "Alice")
         let bob = Mobster(name: "Bob")
         let charlie = Mobster(name: "Charlie")
-        let roster = Roster(activeMobsters: [alice, bob, charlie])
+        let roster = Roster(
+            activeMobsters: [alice, bob, charlie],
+            nextDriverIndex: 1
+        )
 
         roster.moveMobster(from: IndexSet(integer: 2), to: 0)
 
-        #expect(roster.driver?.id == charlie.id)
-        #expect(roster.navigator?.id == alice.id)
+        #expect(roster.activeMobsters.map(\.id) == [charlie.id, alice.id, bob.id])
+        #expect(roster.driver?.id == bob.id)
+        #expect(roster.nextDriverIndex == 2)
+    }
+
+    @Test("moveMobster updates navigator relative to preserved driver")
+    func moveMobsterUpdatesNavigator() {
+        let alice = Mobster(name: "Alice")
+        let bob = Mobster(name: "Bob")
+        let charlie = Mobster(name: "Charlie")
+        let roster = Roster(
+            activeMobsters: [alice, bob, charlie],
+            nextDriverIndex: 1
+        )
+
+        roster.moveMobster(from: IndexSet(integer: 2), to: 0)
+
+        #expect(roster.driver?.id == bob.id)
+        #expect(roster.navigator?.id == charlie.id)
     }
 
     // MARK: - shuffle
 
-    @Test("shuffle randomizes order")
-    func shuffleRandomizesOrder() {
+    @Test("shuffle preserves members and establishes the first participant as driver")
+    func shuffleEstablishesFirstDriver() {
         let mobsters = (1...10).map { Mobster(name: "Mobster \($0)") }
-        let roster = Roster(activeMobsters: mobsters)
-        let originalOrder = roster.activeMobsters.map(\.id)
+        let roster = Roster(activeMobsters: mobsters, nextDriverIndex: 5)
 
-        var orderChanged = false
-        for _ in 1...10 {
-            roster.shuffle()
-            let newOrder = roster.activeMobsters.map(\.id)
-            if newOrder != originalOrder {
-                orderChanged = true
-                break
-            }
-        }
+        roster.shuffle()
 
-        #expect(orderChanged, "Shuffle should change order at least once in 10 attempts")
+        #expect(Set(roster.activeMobsters.map(\.id)) == Set(mobsters.map(\.id)))
+        #expect(roster.nextDriverIndex == 0)
+        #expect(roster.driver?.id == roster.activeMobsters.first?.id)
     }
 
     @Test("shuffle resets nextDriverIndex to 0")
