@@ -3,6 +3,9 @@
 ## Baseline and method
 
 - Audited revision: `main` at merge commit `03fb0ea169c545ab8f1e7cee86e91d7503eb846a`.
+- Re-evaluated revision: `origin/main` at `50659f0fc5b5d5ed1b5f5452ad4cbc8c24e6c5c2`
+  after rebasing on 2026-08-09. The range from the audited revision changed no `MobCrew/` app source
+  or tests; it changed public documentation, release tooling, and release evidence.
 - Scope: `AGENTS.md`, `README.md`, `TESTING.md`, landing-page claims, the complete
   `MobCrew/MobCrew` source tree, project settings and entitlements, and all tests.
 - Environment limitation: the audit ran in a Linux orb without Xcode, so native macOS UI behavior,
@@ -26,14 +29,31 @@ friction. Adding broad features before this stabilization would amplify existing
 | P0 | Running/paused timer, break phase, remaining time, and break cadence are discarded on relaunch. | Confirmed | `MobCrew/MobCrew/Core/AppState.swift:26-28,55-72`; `MobCrew/MobCrew/Core/Services/PersistenceService.swift:12-19` | Task 6 |
 | P0 | Permanent active-roster deletion bypasses driver-index repair and can change the driver unexpectedly. | Confirmed | `MobCrew/MobCrew/Features/Roster/RosterView.swift:141-149`; `MobCrew/MobCrew/Core/Models/Roster.swift:37-42,60-69` | Task 2 |
 | P1 | Main-window and Settings duration changes have contradictory behavior; paused and idle are not distinguishable. | Confirmed | `MobCrew/MobCrew/ContentView.swift:125-145`; `MobCrew/MobCrew/Features/Settings/SettingsView.swift:40-52`; `MobCrew/MobCrew/Core/AppState.swift:138-149` | Task 3 |
-| P1 | A blocking Accessibility alert appears at launch, “Not Now” is not remembered, and the public shortcut/action are wrong. | Confirmed flow and mismatch; permission need unverified | `MobCrew/MobCrew/App/AppDelegate.swift:16-18,36-96`; `README.md:14`; `docs/index.html:110-115` | Task 7 |
+| P1 | A blocking Accessibility alert appears at launch, “Not Now” is not remembered, and permission may be unnecessary for Carbon hotkey registration. | Confirmed flow; permission need unverified | `MobCrew/MobCrew/App/AppDelegate.swift:16-18,36-96`; `MobCrew/MobCrew/Core/Services/GlobalHotkeyService.swift:28-87,106-159` | Task 7 |
 | P1 | Automatic breaks cannot be disabled, start without a Take/Skip decision, and end without feedback. | Confirmed | `MobCrew/MobCrew/Core/AppState.swift:15-28,83-127`; `MobCrew/MobCrew/Features/Settings/SettingsView.swift:113-147` | Task 5 |
 | P1 | Notification and Launch at Login toggles can claim success while macOS denied or failed the operation. | Confirmed | `MobCrew/MobCrew/Core/Services/NotificationService.swift:22-30`; `MobCrew/MobCrew/Core/Services/LaunchAtLoginService.swift:10-24`; `MobCrew/MobCrew/Features/Settings/SettingsView.swift:27-38,54-57` | Task 8 |
 | P1 | Roster persistence is scene-observed, not model-owned: saves fire only from SwiftUI `.onChange` observers, and `skipTurn()`/timer completion never call `saveRoster()` directly. | Confirmed | `MobCrew/MobCrew/App/MobCrewApp.swift:19-27`; `MobCrew/MobCrew/Core/AppState.swift:83-97,129-136,157-163` | Tasks 2, 6 |
 | P1 | Roster correction and ordering are destructive or pointer-first: no rename, removal Undo, or Move Up/Down. | Confirmed absence; interaction quality needs Mac observation | `MobCrew/MobCrew/Features/Roster/RosterView.swift:45-58,78-117`; `MobCrew/MobCrew/Features/Roster/MobsterRow.swift:10-44` | Tasks 9, 12 |
 | P1 | Critical controls lack explicit contextual accessibility semantics and transition announcements. | Confirmed absence; exact VoiceOver output unobserved | `MobCrew/MobCrew/ContentView.swift:97-122`; `MobCrew/MobCrew/Features/Break/BreakProgressView.swift:7-15`; `MobCrew/MobCrew/Features/Roster/MobsterRow.swift:24-56` | Task 9 |
 | P2 | The floating timer is forced open, only hideable by hotkey, and repositioned on every show. | Confirmed | `MobCrew/MobCrew/App/MobCrewApp.swift:48-53`; `MobCrew/MobCrew/Features/FloatingTimer/FloatingTimerController.swift:19-25,54-66` | Task 11 |
-| P2 | Public and manual documentation is materially stale. | Confirmed | `README.md:9-17`; `TESTING.md:5-35`; `docs/index.html:79-115,133-137` | Tasks 5, 7, 10 |
+
+## Work completed on latest main
+
+The public-documentation and release-hardening work merged after the original audit resolved the
+current-state documentation defects without changing app behavior:
+
+- `README.md` and `docs/index.html` now describe the actual ⌘⇧L floating-timer action, in-window
+  break presentation, optional programming quotations, fixed shortcuts, local persistence, and
+  current permission behavior.
+- `TESTING.md` now records the 7-minute default, both currently inconsistent duration ranges, roster
+  edge states, breaks, fixed shortcuts, permission refusal, notifications, menu/floating/login flows,
+  persistence, keyboard/VoiceOver, display, Spaces, and release-artifact qualification.
+- `scripts/validate-docs.py` and the release workflow provide a reusable static documentation gate.
+
+This completes the old “repair stale public/manual documentation” work. It does **not** satisfy any
+app-behavior task, prove the manual checklist was executed, or remove the need to update documentation
+when Tasks 1-9 intentionally change session semantics. Task 10 is therefore retained as a final delta
+and observed-validation gate rather than a website rewrite.
 
 ## Confirmed defects and smallest corrections
 
@@ -138,8 +158,9 @@ registration state and offer recovery actions.
   scene observation that unit tests cannot exercise.
 - No tests cover session restoration, corrupt snapshots, permission status, launch-item failure, or
   accessibility/UI behavior.
-- `TESTING.md` omits breaks, permission refusal, notifications, launch at login, sleep/wake, recovery,
-  accessibility, and cross-surface action consistency.
+- `TESTING.md` now covers the current-state journeys broadly, but its unchecked items are planned
+  manual checks rather than observed evidence. It must be updated with Tasks 1-9 and executed on a
+  logged-in Mac; deadline recovery and the new break-due state do not exist yet.
 
 ## Oracle plan review
 

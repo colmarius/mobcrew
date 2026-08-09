@@ -2,7 +2,7 @@
 
 Status: planned
 Category: product
-Updated: 2026-08-08
+Updated: 2026-08-09
 
 ## Why
 
@@ -19,6 +19,9 @@ while lower-confidence floating/login and richer roster correction remain non-bl
 A 2026-08-08 independent source-validated review confirmed all findings and citations, added the
 scene-observed roster-persistence defect to Tasks 2/6, and fixed the break-cadence-while-disabled
 ambiguity in Task 5.
+The branch was rebased onto `origin/main` at `50659f0` on 2026-08-09. That mainline work changed no
+app source or unit tests, so Tasks 1-9 remain open; it did complete the current-state public
+documentation overhaul, narrowing Task 10 to behavior-change deltas and final observed validation.
 Saved teams, cloud sync, forced full-screen breaks, and other speculative expansion are out of scope.
 
 ## Artifacts

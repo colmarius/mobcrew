@@ -5,6 +5,14 @@ authoritative session model, protects roster invariants, corrects elapsed-time a
 then addresses break policy, permissions, system status, accessibility, and documentation. Confirmed
 but lower-priority floating-panel and richer roster-correction work remains non-blocking follow-up.
 
+## Re-evaluation after latest main
+
+This branch was rebased onto `origin/main` at `50659f0` on 2026-08-09. Comparing that revision with
+the audited merge commit found no changes under `MobCrew/`, so Tasks 1-9 and the non-blocking app
+follow-ups remain unsatisfied. Main did complete a public-documentation, manual-checklist, and release
+hardening effort. Task 10 now owns only documentation deltas caused by Tasks 1-9 plus final observed
+validation; it must not recreate the website or treat unchecked manual steps as completed evidence.
+
 ## Goals
 
 - Make main-window, menu-bar, and floating-panel actions obey one session-state contract.
@@ -196,19 +204,23 @@ but lower-priority floating-panel and richer roster-correction work remains non-
       text-size results are recorded on a logged-in Mac.
   - Notes: Rename and Undo are separated into non-blocking Task 12 so this task remains a coherent accessibility slice.
 
-### Task 10: Reconcile release documentation and validation
+### Task 10: Maintain documentation truth and run final validation
 
-- [ ] **Task 10: Reconcile release documentation and validation**
+- [ ] **Task 10: Maintain documentation truth and run final validation**
   - Scope: `README.md`, `docs/index.html`, `TESTING.md`, relevant previews/UI tests, release notes if applicable
   - Depends on: Tasks 1-9
   - Acceptance:
-    - Default duration, range, hotkey key/action, break presentation, Tips behavior, and Settings claims match implementation.
-    - Known-false claims are corrected with their owning tasks rather than intentionally remaining stale until this gate.
-    - `TESTING.md` covers cross-surface actions, breaks, permission refusal, notifications, launch at
-      login, sleep/wake, session recovery, large rosters, keyboard, and VoiceOver.
-    - A logged-in Mac release pass records Xcode build/test results and every manual check that cannot be automated.
+    - Behavior-changing Tasks 1-9 update affected README, website, and manual checks in the same task;
+      the completed current-state documentation overhaul is not recreated.
+    - `python3 scripts/validate-docs.py` passes after final reconciliation, including default duration,
+      range, hotkey key/action, break presentation, Tips behavior, and Settings claims.
+    - `TESTING.md` describes the implemented phase model, break-due choice, deadline/sleep behavior,
+      session recovery, system-status UI, large-roster behavior, keyboard operation, and VoiceOver checks.
+    - A logged-in Mac release pass records Xcode build/test output and an explicit result for every
+      applicable manual check; an unchecked checklist is not accepted as execution evidence.
     - No screenshot or marketing claim asserts behavior that was not observed.
-  - Notes: This is the stabilization release gate; Tasks 11-12 do not block it.
+  - Notes: Latest main already corrected the baseline public claims and expanded `TESTING.md`. This is
+    the stabilization delta/release gate; Tasks 11-12 do not block it.
 
 ## Non-blocking follow-up tasks
 
@@ -290,6 +302,7 @@ but lower-priority floating-panel and richer roster-correction work remains non-
   `AppStateTests`, `BreakLogicTests`, `PersistenceServiceTests`, and service tests.
 - Run deterministic clock tests without wall-clock sleeps and transition-matrix tests without system services.
 - Simulate repeated recovery and interruption between snapshot and roster persistence writes.
+- Run `python3 scripts/validate-docs.py` after any public/manual documentation change.
 - Execute and record the Mac-only validation list in `research.md` before Task 10 is accepted.
 - Inspect Accessibility Inspector/VoiceOver output and exercise Full Keyboard Access; screenshots alone are not proof.
 
