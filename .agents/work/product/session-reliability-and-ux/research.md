@@ -35,7 +35,7 @@ friction. Adding broad features before this stabilization would amplify existing
 | P1 | Roster persistence is scene-observed, not model-owned: saves fire only from SwiftUI `.onChange` observers, and `skipTurn()`/timer completion never call `saveRoster()` directly. | Confirmed | `MobCrew/MobCrew/App/MobCrewApp.swift:19-27`; `MobCrew/MobCrew/Core/AppState.swift:83-97,129-136,157-163` | Tasks 2, 6 |
 | P1 | Roster correction and ordering are destructive or pointer-first: no rename, removal Undo, or Move Up/Down. | Confirmed absence; interaction quality needs Mac observation | `MobCrew/MobCrew/Features/Roster/RosterView.swift:45-58,78-117`; `MobCrew/MobCrew/Features/Roster/MobsterRow.swift:10-44` | Tasks 9, 12 |
 | P1 | Critical controls lack explicit contextual accessibility semantics and transition announcements. | Confirmed absence; exact VoiceOver output unobserved | `MobCrew/MobCrew/ContentView.swift:97-122`; `MobCrew/MobCrew/Features/Break/BreakProgressView.swift:7-15`; `MobCrew/MobCrew/Features/Roster/MobsterRow.swift:24-56` | Task 9 |
-| P2 | The floating timer is forced open, only hideable by hotkey, and repositioned on every show. | Confirmed | `MobCrew/MobCrew/App/MobCrewApp.swift:48-53`; `MobCrew/MobCrew/Features/FloatingTimer/FloatingTimerController.swift:19-25,54-66` | Task 11 |
+| P2 | The floating timer is forced open, only hideable by hotkey, and repositioned on every show. | Confirmed | `MobCrew/MobCrew/App/MobCrewApp.swift:29-41,48-53` (menu bar exposes no show/hide action); `MobCrew/MobCrew/App/AppDelegate.swift:21-34` (toggle wired only to the global hotkey; `hide()` only at termination); `MobCrew/MobCrew/Features/FloatingTimer/FloatingTimerController.swift:19-25,54-66` | Task 11 |
 
 ## Work completed on latest main
 
