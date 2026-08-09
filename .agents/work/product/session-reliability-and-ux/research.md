@@ -136,6 +136,23 @@ registration state and offer recovery actions.
 7. Large roster behavior with active and benched participants in a normally sized window.
 8. Launch-at-login window behavior and restoration of panel visibility/position.
 
+### Observed Task 7 result: Carbon hotkey does not require Accessibility
+
+On 2026-08-09, the logged-in Mac runner (macOS 26.5.2, arm64, Xcode 26.2) ran an
+ad-hoc-signed AppKit/Carbon receiver with unique bundle ID
+`local.mobcrew.task7.denied-receiver.20260809`. The receiver reported
+`AXIsProcessTrusted=false`, then registered MobCrew's exact key code 37 plus `cmdKey | shiftKey`
+with `RegisterEventHotKey` status `0` (`noErr`). An already-authorized, noninteractive CGEvent sender
+posted ⌘⇧L, and the denied receiver observed one `kEventHotKeyPressed` callback before unregistering.
+No TCC state, System Settings value, global shortcut, or user default was changed.
+
+Duplicate registration inside one process returned `-9878` (`eventHotKeyExistsErr`), establishing a
+registration failure distinct from TCC denial. On this OS, a separate process could register the same
+chord concurrently, so cross-process exclusivity must not be inferred from Carbon registration alone.
+No physical keypress was observed, and older supported macOS versions remain unverified. The available
+Mac evidence nevertheless selects Task 7's permission-unnecessary branch: remove the AX launch prompt,
+dependency, and polling; surface Carbon registration state and retry instead.
+
 ## Explicit deferrals
 
 - Do not implement a forced full-screen break solely to satisfy stale marketing copy.

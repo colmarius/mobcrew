@@ -16,8 +16,7 @@ interrupting the session.
 - **Floating timer** - Always-on-top window showing countdown
 - **Optional break timer** - Enable or disable in-window Take Break / Skip Break prompts with a
   pausable countdown and completion alert
-- **Global hotkey** - ⌘⇧L toggles the floating timer from anywhere (requires Accessibility
-  permission)
+- **Global hotkey** - ⌘⇧L toggles the floating timer from anywhere
 - **Menu bar** - Quick access from the menu bar
 - **Auto-rotation** - Automatic driver/navigator swap when timer ends
 - **Session recovery** - Running, paused, and pending-break state survives relaunch
@@ -48,10 +47,6 @@ Do not disable Gatekeeper or remove quarantine attributes to install the app.
 
 ### Optional permissions
 
-- **Accessibility:** used only so the fixed global shortcut **⌘⇧L** can toggle the floating timer.
-  Choosing **Not Now** does not prevent the timer, roster, menu-bar controls, or floating-window
-  controls from working. You can grant access later in **System Settings → Privacy & Security →
-  Accessibility**.
 - **Notifications:** requested when the timer is first started and used for optional turn and break
   alerts. The timer continues to work if notifications are denied, and alerts can also be disabled
   in MobCrew's General settings.

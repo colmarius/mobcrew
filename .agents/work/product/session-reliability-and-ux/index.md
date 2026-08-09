@@ -29,7 +29,9 @@ from current-cycle progress and aligned both controls. Task 4 replaced delivered
 with deadline-based elapsed time, and Task 5 made explicit break prompts disable-able without hidden
 cadence. Tasks 1-5 passed focused and full native tests on the available Mac runner. Task 6 versioned
 session recovery now also passed focused and full native tests there. Task 7's logged-in Mac permission
-gate is next. Exact Xcode 26.6+ qualification remains outstanding because the runner currently has 26.2.
+gate proved Carbon registration and delivery do not require Accessibility on the available host; the
+resulting AX-removal and registration-status implementation awaits native acceptance. Exact Xcode 26.6+
+qualification remains outstanding because the runner currently has 26.2.
 
 ## Artifacts
 
@@ -42,9 +44,9 @@ gate is next. Exact Xcode 26.6+ qualification remains outstanding because the ru
 
 ## Next Action
 
-- Execute [Task 7's logged-in Mac gate](plan.md#task-7-verify-and-correct-global-hotkey-permission-setup): record whether Carbon registration and delivery work with Accessibility denied, distinguish permission failure from shortcut conflict, and only then choose the smallest permission-flow correction.
+- Compile and test [Task 7](plan.md#task-7-verify-and-correct-global-hotkey-permission-setup), then launch the ad-hoc-signed app with Accessibility denied to verify no prompt, Active Settings status, and actual ⌘⇧L delivery before checking it complete.
 
 ## Open Questions
 
-- [ ] Confirm on a logged-in Mac whether Carbon hotkey registration needs Accessibility permission
-  on every supported macOS version; Task 7 uses the result as an implementation gate.
+- [ ] Repeat the Accessibility-denied Carbon check on older supported macOS versions when those hosts
+  become available; macOS 26.5.2 is the only currently observed version.

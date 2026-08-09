@@ -5,8 +5,9 @@ Updated: 2026-08-09
 ## Current Slice
 
 - Tasks 1-6 are implemented, natively tested, checked off in the active plan, and pushed.
-- Task 7 is next: establish on the logged-in Mac whether the Carbon global hotkey actually requires
-  Accessibility permission, then preserve or remove the permission flow based on observed evidence.
+- Task 7's logged-in Mac gate established that the Carbon hotkey registers and receives delivery while
+  the receiver is not Accessibility-trusted. The permission-unnecessary implementation is authored
+  locally and awaits native compile/tests plus signed-app validation before Task 7 can be checked off.
 
 ## Observed Evidence
 
@@ -107,6 +108,17 @@ Updated: 2026-08-09
 - The Task 6 disposable worktree and logs were removed. The user's primary checkout and unrelated
   untracked bundles were preserved, and remote heads remained only the authorized audit branch and
   `main`; no temporary branch was created.
+- Task 7's temporary ad-hoc-signed receiver on macOS 26.5.2 reported `AXIsProcessTrusted=false`,
+  registered key code 37 with `cmdKey | shiftKey` at Carbon status `0`, and received one
+  `kEventHotKeyPressed` callback from an already-authorized noninteractive sender. Same-process
+  duplicate registration returned `-9878` (`eventHotKeyExistsErr`), distinct from TCC denial.
+- The selected implementation removes launch-time AX prompting/imports/polling, publishes Carbon
+  registration state, shows Active or the actual error plus Try Again in Shortcuts settings, and uses
+  one Swift definition for key code, modifiers, display chord, and toggle action. README, testing,
+  release guidance, and landing-page claims now match; the static docs check enforces that agreement.
+- The Task 7 empirical probe changed no TCC or user setting, removed all temporary artifacts, preserved
+  the user's primary checkout and bundles, and created no local or remote branch. A physical keypress
+  and older supported macOS versions remain unverified.
 
 ## Verification Status
 

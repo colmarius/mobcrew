@@ -307,7 +307,7 @@
               <h3>Fixed shortcuts and menu bar</h3>
               <p>
                 Use menu-bar controls or press <kbd>⌘⇧L</kbd> to toggle the
-                floating timer after granting optional Accessibility access.
+                floating timer from another app without Accessibility access.
               </p>
             </article>
           </div>
@@ -494,13 +494,11 @@
         </div>
         <div class="faq-list">
           <details>
-            <summary>Why does MobCrew ask for Accessibility access?</summary>
+            <summary>Does the global shortcut need Accessibility access?</summary>
             <p>
-              Only so the fixed global shortcut <kbd>⌘⇧L</kbd> can toggle the
-              floating timer from another app. Choosing Not Now does not block
-              the timer, roster, menu-bar controls, or the panel's own controls.
-              Grant it later in System Settings → Privacy &amp; Security →
-              Accessibility.
+              No. The fixed global shortcut <kbd>⌘⇧L</kbd> uses macOS Carbon
+              hotkey registration to toggle the floating timer from another app
+              without requesting Accessibility access.
             </p>
           </details>
           <details>

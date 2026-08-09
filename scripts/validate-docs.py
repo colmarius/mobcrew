@@ -32,6 +32,10 @@ STALE_CLAIMS = {
     "unverified current-release architecture claim": re.compile(
         r"architectures? in the current public release remain unverified", re.IGNORECASE
     ),
+    "Accessibility-required global shortcut claim": re.compile(
+        r"(?:requires?|after granting|only so).{0,80}Accessibility(?: access| permission)?",
+        re.IGNORECASE | re.DOTALL,
+    ),
 }
 
 
@@ -164,6 +168,44 @@ def validate(docs_root: Path) -> list[str]:
                 line = content.count("\n", 0, match.start()) + 1
                 errors.append(f"{path}:{line}: stale claim found ({description})")
 
+    hotkey_source = repository_root / "MobCrew/MobCrew/Core/Services/GlobalHotkeyService.swift"
+    settings_source = repository_root / "MobCrew/MobCrew/Features/Settings/SettingsView.swift"
+    readme = repository_root / "README.md"
+    if hotkey_source.is_file():
+        source = hotkey_source.read_text(encoding="utf-8")
+        required_definition = (
+            "keyCode: UInt32(kVK_ANSI_L)",
+            "modifiers: UInt32(cmdKey | shiftKey)",
+            'displayName: "⌘⇧L"',
+            'actionDescription: "Toggle floating timer"',
+        )
+        for fragment in required_definition:
+            if fragment not in source:
+                errors.append(f"{hotkey_source}: fixed shortcut definition is missing {fragment!r}")
+        for stale_api in ("AXIsProcessTrusted", "ApplicationServices"):
+            if stale_api in source:
+                errors.append(f"{hotkey_source}: obsolete Accessibility dependency remains: {stale_api}")
+    else:
+        errors.append(f"missing global hotkey source: {hotkey_source}")
+
+    if settings_source.is_file():
+        settings = settings_source.read_text(encoding="utf-8")
+        for fragment in (
+            "GlobalHotkeyService.shortcut.displayName",
+            "GlobalHotkeyService.shortcut.actionDescription",
+        ):
+            if fragment not in settings:
+                errors.append(f"{settings_source}: Settings does not use {fragment}")
+
+    if readme.is_file() and "**Global hotkey** - ⌘⇧L toggles the floating timer" not in readme.read_text(
+        encoding="utf-8"
+    ):
+        errors.append(f"{readme}: global hotkey text does not match ⌘⇧L / Toggle floating timer")
+
+    normalized_html = re.sub(r"\s+", " ", html)
+    if not re.search(r"<kbd>⌘⇧L</kbd> to toggle the floating timer", normalized_html):
+        errors.append(f"{index}: global hotkey text does not match ⌘⇧L / Toggle floating timer")
+
     for expected_file in ("assets/styles.css", "favicon.png", "robots.txt", "sitemap.xml"):
         if not (docs_root / expected_file).is_file():
             errors.append(f"{docs_root}: missing required static file: {expected_file}")
@@ -194,6 +236,7 @@ def main() -> int:
     print("- required search/social metadata is present")
     print("- images declare alternatives and intrinsic dimensions")
     print("- runtime Tailwind and known stale claims are absent")
+    print("- app, Settings, README, and landing-page global shortcut text agrees")
     return 0
 
 

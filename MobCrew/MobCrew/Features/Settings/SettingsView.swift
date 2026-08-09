@@ -69,14 +69,42 @@ private struct GeneralSettingsTab: View {
 }
 
 private struct ShortcutsSettingsTab: View {
+    @ObservedObject private var hotkeyService = GlobalHotkeyService.shared
+
     var body: some View {
         Form {
             Section("Keyboard Shortcuts") {
-                ShortcutRow(shortcut: "⌘⇧L", description: "Toggle floating timer", note: "Global")
+                ShortcutRow(
+                    shortcut: GlobalHotkeyService.shortcut.displayName,
+                    description: GlobalHotkeyService.shortcut.actionDescription,
+                    note: "Global"
+                )
                 ShortcutRow(shortcut: "⌘↩", description: "Start/Pause timer")
                 ShortcutRow(shortcut: "⌘⇧S", description: "Skip turn")
                 ShortcutRow(shortcut: "⌘,", description: "Open Settings")
                 ShortcutRow(shortcut: "Esc", description: "Dismiss break screen")
+            }
+
+            Section("Global Shortcut Status") {
+                switch hotkeyService.registrationState {
+                case .notRegistered:
+                    Label("Not registered", systemImage: "keyboard.badge.ellipsis")
+                        .foregroundStyle(.secondary)
+                case .registered:
+                    Label("Active", systemImage: "checkmark.circle.fill")
+                        .foregroundStyle(.green)
+                case .failed:
+                    Label("Unavailable", systemImage: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.red)
+                    if let description = hotkeyService.registrationState.failureDescription {
+                        Text(description)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    Button("Try Again") {
+                        hotkeyService.retryRegistration()
+                    }
+                }
             }
         }
         .formStyle(.grouped)

@@ -1,36 +1,58 @@
 import Foundation
 import Carbon
-import AppKit
 import Combine
-@preconcurrency import ApplicationServices
+
+struct GlobalHotkeyDefinition: Equatable {
+    let keyCode: UInt32
+    let modifiers: UInt32
+    let displayName: String
+    let actionDescription: String
+}
+
+enum GlobalHotkeyRegistrationState: Equatable {
+    case notRegistered
+    case registered
+    case failed(OSStatus)
+
+    var failureDescription: String? {
+        guard case .failed(let status) = self else { return nil }
+        if status == eventHotKeyExistsErr {
+            return "Carbon reports that this shortcut is already registered (error \(status))."
+        }
+        return "MobCrew could not register the global shortcut (error \(status))."
+    }
+}
 
 @MainActor
 final class GlobalHotkeyService: ObservableObject {
     static let shared = GlobalHotkeyService()
+    static let shortcut = GlobalHotkeyDefinition(
+        keyCode: UInt32(kVK_ANSI_L),
+        modifiers: UInt32(cmdKey | shiftKey),
+        displayName: "⌘⇧L",
+        actionDescription: "Toggle floating timer"
+    )
     
     private var hotkeyRef: EventHotKeyRef?
     private var eventHandler: EventHandlerRef?
     private var callback: (@MainActor () -> Void)?
+    @Published private(set) var registrationState: GlobalHotkeyRegistrationState = .notRegistered
     
-    @Published private(set) var isAccessibilityGranted: Bool = false
-    private var permissionPollingTimer: DispatchSourceTimer?
-    private var onPermissionGranted: (@MainActor () -> Void)?
-    
-    private init() {
-        isAccessibilityGranted = AXIsProcessTrusted()
-    }
+    private init() {}
     
     isolated deinit {
         unregister()
-        stopPolling()
     }
     
-    /// Registers Cmd+Shift+L as a global hotkey
+    /// Registers the fixed global shortcut.
     /// - Parameter callback: Called when the hotkey is pressed
     /// - Returns: true if registration succeeded
     @discardableResult
     func register(callback: @escaping @MainActor () -> Void) -> Bool {
-        guard hotkeyRef == nil else { return true }
+        guard hotkeyRef == nil else {
+            registrationState = .registered
+            return true
+        }
         
         self.callback = callback
         
@@ -56,22 +78,20 @@ final class GlobalHotkeyService: ObservableObject {
         )
         
         guard handlerResult == noErr else {
+            registrationState = .failed(handlerResult)
             print("Failed to install event handler: \(handlerResult)")
             return false
         }
         
-        // Cmd+Shift+L: modifiers = cmdKey + shiftKey, keyCode = 37 (L)
         let hotkeyID = EventHotKeyID(
             signature: OSType(0x4D4F4243),  // "MOBC" for MobCrew
             id: 1
         )
-        
-        let modifiers = UInt32(cmdKey | shiftKey)
-        let keyCode: UInt32 = 37  // 'L' key
+        let shortcut = Self.shortcut
         
         let registerResult = RegisterEventHotKey(
-            keyCode,
-            modifiers,
+            shortcut.keyCode,
+            shortcut.modifiers,
             hotkeyID,
             GetApplicationEventTarget(),
             0,
@@ -79,12 +99,20 @@ final class GlobalHotkeyService: ObservableObject {
         )
         
         if registerResult != noErr {
+            registrationState = .failed(registerResult)
             print("Failed to register hotkey: \(registerResult)")
             removeEventHandler()
             return false
         }
         
+        registrationState = .registered
         return true
+    }
+
+    @discardableResult
+    func retryRegistration() -> Bool {
+        guard let callback else { return false }
+        return register(callback: callback)
     }
     
     func unregister() {
@@ -94,67 +122,13 @@ final class GlobalHotkeyService: ObservableObject {
         }
         removeEventHandler()
         callback = nil
+        registrationState = .notRegistered
     }
     
     private func removeEventHandler() {
         if let eventHandler = eventHandler {
             RemoveEventHandler(eventHandler)
             self.eventHandler = nil
-        }
-    }
-    
-    /// Checks if accessibility permission is granted (required for global hotkeys to work reliably)
-    static var hasAccessibilityPermission: Bool {
-        AXIsProcessTrusted()
-    }
-    
-    /// Prompts user for accessibility permission and opens System Settings
-    static func requestAccessibilityPermission() {
-        // This triggers the system prompt which adds the app to the list
-        let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue(): true] as CFDictionary
-        AXIsProcessTrustedWithOptions(options)
-        
-        // Also open System Settings directly for convenience
-        if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility") {
-            NSWorkspace.shared.open(url)
-        }
-    }
-    
-    /// Starts polling for accessibility permission changes
-    /// - Parameter onGranted: Called once when permission is granted
-    func startPollingForPermission(onGranted: @escaping @MainActor () -> Void) {
-        guard !isAccessibilityGranted else {
-            onGranted()
-            return
-        }
-        
-        onPermissionGranted = onGranted
-        
-        permissionPollingTimer = DispatchSource.makeTimerSource(queue: .main)
-        permissionPollingTimer?.schedule(deadline: .now() + 0.5, repeating: 0.5)
-        permissionPollingTimer?.setEventHandler { [weak self] in
-            MainActor.assumeIsolated {
-                self?.checkPermissionStatus()
-            }
-        }
-        permissionPollingTimer?.resume()
-    }
-    
-    /// Stops polling for permission changes
-    func stopPolling() {
-        permissionPollingTimer?.cancel()
-        permissionPollingTimer = nil
-        onPermissionGranted = nil
-    }
-    
-    private func checkPermissionStatus() {
-        let wasGranted = isAccessibilityGranted
-        isAccessibilityGranted = AXIsProcessTrusted()
-        
-        if isAccessibilityGranted && !wasGranted {
-            let onGranted = onPermissionGranted
-            stopPolling()
-            onGranted?()
         }
     }
 }

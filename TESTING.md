@@ -53,19 +53,19 @@ Reset or use a fresh test account when a journey depends on first-run permission
 
 - [ ] ⌘↩ starts, pauses, and resumes the turn timer.
 - [ ] ⌘⇧S skips a turn when at least two active people are present.
-- [ ] ⌘⇧L toggles the floating timer from outside MobCrew after Accessibility access is granted.
+- [ ] ⌘⇧L toggles the floating timer from outside MobCrew without Accessibility access.
 - [ ] ⌘, opens Settings.
 - [ ] Esc dismisses the in-window break screen.
 
 ## Permissions
 
-Use a fresh macOS account or reset only MobCrew's permission in System Settings before each first-run
-path. Do not disable Gatekeeper or strip quarantine attributes as part of app-level testing.
+Use a fresh macOS account or reset only the permission under test before each first-run path. Do not
+disable Gatekeeper or strip quarantine attributes as part of app-level testing.
 
-- [ ] Deny or defer Accessibility access at first launch; timer, roster, menu-bar controls, and
-      floating-window controls remain usable without the global shortcut.
-- [ ] Grant MobCrew access later in **System Settings → Privacy & Security → Accessibility**; ⌘⇧L
-      then toggles the floating timer.
+- [ ] Launch with MobCrew absent from or disabled in **Privacy & Security → Accessibility**; no
+      Accessibility prompt appears, and ⌘⇧L still toggles the floating timer from another app.
+- [ ] **Settings → Shortcuts** reports the global shortcut as Active. If registration fails, it shows
+      the Carbon error and **Try Again** instead of claiming an Accessibility problem.
 - [ ] Deny Notifications when first starting the timer; timer and break behavior continue normally.
 - [ ] Grant Notifications in System Settings and enable them in MobCrew; turn-complete, break-due,
       and break-complete alerts are delivered once per transition.

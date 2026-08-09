@@ -80,9 +80,10 @@ The DMG had `com.apple.quarantine` before mounting, but it was not launched; the
 not establish notarization status or predict the exact Gatekeeper first-launch result.
 
 For each machine record target/version/digests, macOS/hardware, trust outputs, install and first
-launch/Gatekeeper, Accessibility and Notifications allow/deny/recovery, launch at login, timer,
-rotation, breaks, persistence, upgrade from the previous release, release notes/latest link, and
-problem-notice plan. Publication consumes an exact-schema data file (values must be `tested`):
+launch/Gatekeeper, the global hotkey with Accessibility denied, Notifications allow/deny/recovery,
+launch at login, timer, rotation, breaks, persistence, upgrade from the previous release, release
+notes/latest link, and problem-notice plan. Publication consumes an exact-schema data file (values
+must be `tested`):
 
 ```text
 schema=mobcrew-qualification-v1
