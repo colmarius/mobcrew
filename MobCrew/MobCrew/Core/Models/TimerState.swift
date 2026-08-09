@@ -1,22 +1,56 @@
 import Foundation
 
-enum TimerType: String, Codable {
-    case regular
-    case breakTimer
+enum SessionPhase: String, Codable, CaseIterable, Hashable, Sendable {
+    case regularIdle
+    case regularRunning
+    case regularPaused
+    case breakDue
+    case breakRunning
+    case breakPaused
+
+    var isRegular: Bool {
+        switch self {
+        case .regularIdle, .regularRunning, .regularPaused:
+            true
+        case .breakDue, .breakRunning, .breakPaused:
+            false
+        }
+    }
+
+    var isBreak: Bool {
+        !isRegular
+    }
+
+    var isRunning: Bool {
+        self == .regularRunning || self == .breakRunning
+    }
+}
+
+enum SessionPrimaryAction: Hashable, Sendable {
+    case start
+    case pause
+    case resume
+    case takeBreak
 }
 
 @Observable
 final class TimerState {
-    var secondsRemaining: Int
-    var totalSeconds: Int
-    var isRunning: Bool
-    var timerType: TimerType
+    private(set) var secondsRemaining: Int
+    private(set) var totalSeconds: Int
 
-    init(secondsRemaining: Int = 0, totalSeconds: Int = 0, isRunning: Bool = false, timerType: TimerType = .regular) {
+    init(secondsRemaining: Int = 0, totalSeconds: Int = 0) {
         self.secondsRemaining = secondsRemaining
         self.totalSeconds = totalSeconds
-        self.isRunning = isRunning
-        self.timerType = timerType
+    }
+
+    func reset(duration: Int) {
+        secondsRemaining = duration
+        totalSeconds = duration
+    }
+
+    func elapseOneSecond() {
+        guard secondsRemaining > 0 else { return }
+        secondsRemaining -= 1
     }
 
     var displayTime: String {

@@ -21,12 +21,12 @@ struct NotificationServiceTests {
         #expect(request.content.sound == .default)
     }
     
-    @Test("break started notification has correct content")
-    func breakStartedNotificationContent() {
+    @Test("break due notification has correct content")
+    func breakDueNotificationContent() {
         let mockCenter = MockNotificationCenter()
         let service = NotificationService(notificationCenter: mockCenter)
         
-        service.sendBreakStarted(duration: 300)
+        service.sendBreakDue(duration: 300)
         
         #expect(mockCenter.addedRequests.count == 1)
         let request = mockCenter.addedRequests.first!
@@ -35,12 +35,12 @@ struct NotificationServiceTests {
         #expect(request.content.sound == .default)
     }
     
-    @Test("break started notification formats minutes correctly")
-    func breakStartedNotificationMinutesFormat() {
+    @Test("break due notification formats minutes correctly")
+    func breakDueNotificationMinutesFormat() {
         let mockCenter = MockNotificationCenter()
         let service = NotificationService(notificationCenter: mockCenter)
         
-        service.sendBreakStarted(duration: 600)
+        service.sendBreakDue(duration: 600)
         
         let request = mockCenter.addedRequests.first!
         #expect(request.content.body == "Take a 10 minute break")

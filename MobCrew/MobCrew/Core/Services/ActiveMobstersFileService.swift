@@ -7,7 +7,11 @@ protocol FileManagerProtocol {
 
 extension FileManager: FileManagerProtocol {}
 
-final class ActiveMobstersFileService {
+protocol ActiveMobstersFileServiceProtocol {
+    func writeActiveMobsters(_ roster: Roster)
+}
+
+final class ActiveMobstersFileService: ActiveMobstersFileServiceProtocol {
     private let fileManager: FileManagerProtocol
     private let fileURL: URL
     

@@ -48,15 +48,18 @@ private struct FloatingNormalView: View {
             turnsSinceBreak: appState.turnsSinceBreak
         )
         
-        Button(action: { appState.toggleTimer() }) {
-            Image(systemName: appState.timerState.isRunning ? "pause.fill" : "play.fill")
+        Button(action: { appState.performPrimaryAction() }) {
+            Image(systemName: appState.primaryActionSystemImage)
                 .font(.system(size: 16, weight: .semibold))
                 .foregroundStyle(.white)
                 .frame(width: 32, height: 32)
-                .background(appState.timerState.isRunning ? Color.orange : Color.green)
+                .background(appState.isRunning ? Color.orange : Color.green)
                 .clipShape(Circle())
         }
         .buttonStyle(.plain)
+        .disabled(!appState.canPerformPrimaryAction)
+        .help(appState.primaryActionLabel)
+        .accessibilityLabel(appState.primaryActionLabel)
     }
 }
 
@@ -76,8 +79,20 @@ private struct FloatingBreakView: View {
             .font(.system(size: 36, weight: .bold, design: .monospaced))
             .foregroundStyle(.white)
         
-        Button(action: { appState.skipBreak() }) {
-            Text("Skip")
+        Button(action: { appState.performPrimaryAction() }) {
+            Label(appState.primaryActionLabel, systemImage: appState.primaryActionSystemImage)
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundStyle(.white)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 6)
+                .background(Color.white.opacity(0.25))
+                .clipShape(Capsule())
+        }
+        .buttonStyle(.plain)
+        .disabled(!appState.canPerformPrimaryAction)
+
+        Button(action: { appState.performSkipAction() }) {
+            Text(appState.skipActionLabel)
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(.white)
                 .padding(.horizontal, 16)
@@ -117,11 +132,7 @@ private struct RoleLabel: View {
 }
 
 #Preview("Break State") {
-    FloatingTimerView(appState: {
-        let state = AppState()
-        state.isOnBreak = true
-        return state
-    }())
+    FloatingTimerView(appState: AppState.previewing(.breakDue))
     .padding()
     .background(Color.gray)
 }

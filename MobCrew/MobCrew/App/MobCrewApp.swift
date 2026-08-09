@@ -27,17 +27,7 @@ struct MobCrewApp: App {
         }
         
         MenuBarExtra("MobCrew", systemImage: "stopwatch") {
-            MenuBarView(
-                driverName: appState.roster.driver?.name,
-                navigatorName: appState.roster.navigator?.name,
-                isRunning: appState.timerState.isRunning,
-                onToggle: {
-                    appState.toggleTimer()
-                },
-                onSkip: {
-                    appState.skipTurn()
-                }
-            )
+            MenuBarView(appState: appState)
         }
         
         Settings {

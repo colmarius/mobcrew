@@ -3,193 +3,434 @@ import Foundation
 @testable import MobCrew
 
 @MainActor
+private final class AppStateNotificationSpy: NotificationServiceProtocol {
+    enum Event: Equatable {
+        case permissionRequested
+        case timerCompleted(driver: String, navigator: String)
+        case breakDue(duration: Int)
+    }
+
+    var events: [Event] = []
+
+    func requestPermission() {
+        events.append(.permissionRequested)
+    }
+
+    func sendTimerComplete(driver: String, navigator: String) {
+        events.append(.timerCompleted(driver: driver, navigator: navigator))
+    }
+
+    func sendBreakDue(duration: Int) {
+        events.append(.breakDue(duration: duration))
+    }
+}
+
+@MainActor
+private final class ActiveMobstersWriterSpy: ActiveMobstersFileServiceProtocol {
+    var writeCount = 0
+
+    func writeActiveMobsters(_ roster: Roster) {
+        writeCount += 1
+    }
+}
+
+@MainActor
 @Suite("AppState Tests")
 struct AppStateTests {
+    private struct Fixture {
+        let appState: AppState
+        let timerEngine: TimerEngine
+        let notifications: AppStateNotificationSpy
+        let activeMobstersWriter: ActiveMobstersWriterSpy
+    }
+
+    private enum Command: CaseIterable {
+        case start
+        case pause
+        case resume
+        case reset
+        case skipTurn
+        case takeBreak
+        case skipBreak
+    }
+
+    private struct StateSnapshot: Equatable {
+        let phase: SessionPhase
+        let secondsRemaining: Int
+        let totalSeconds: Int
+        let activeIDs: [UUID]
+        let inactiveIDs: [UUID]
+        let driverID: UUID?
+        let turnsSinceBreak: Int
+        let tipID: UUID
+        let notificationEvents: [AppStateNotificationSpy.Event]
+        let activeMobstersWriteCount: Int
+    }
 
     private func makeTestUserDefaults() -> UserDefaults {
         let suiteName = "com.mobcrew.tests.\(UUID().uuidString)"
         return UserDefaults(suiteName: suiteName)!
     }
 
-    private func makeAppState(userDefaults: UserDefaults? = nil) -> AppState {
+    private func makeFixture(
+        userDefaults: UserDefaults? = nil,
+        timerDuration: Int = 420,
+        breakInterval: Int = 5,
+        breakDuration: Int = 300
+    ) -> Fixture {
         let defaults = userDefaults ?? makeTestUserDefaults()
         let persistenceService = PersistenceService(userDefaults: defaults)
-        return AppState(persistenceService: persistenceService)
+        persistenceService.saveTimerDuration(timerDuration)
+        let timerEngine = TimerEngine()
+        let notifications = AppStateNotificationSpy()
+        let activeMobstersWriter = ActiveMobstersWriterSpy()
+        let appState = AppState(
+            persistenceService: persistenceService,
+            notificationService: notifications,
+            activeMobstersFileService: activeMobstersWriter,
+            timerEngine: timerEngine
+        )
+        appState.breakInterval = breakInterval
+        appState.breakDuration = breakDuration
+        return Fixture(
+            appState: appState,
+            timerEngine: timerEngine,
+            notifications: notifications,
+            activeMobstersWriter: activeMobstersWriter
+        )
+    }
+
+    private func setActiveRosterSize(_ count: Int, in appState: AppState) {
+        while appState.roster.activeMobsters.count < count {
+            appState.roster.addMobster(name: "Person \(appState.roster.activeMobsters.count + 1)")
+        }
+        while appState.roster.activeMobsters.count > count {
+            appState.roster.benchMobster(at: appState.roster.activeMobsters.count - 1)
+        }
+    }
+
+    private func prepare(
+        phase: SessionPhase,
+        rosterSize: Int
+    ) -> Fixture {
+        let fixture = makeFixture(timerDuration: 1, breakInterval: 1, breakDuration: 60)
+        let setupRosterSize: Int
+        switch phase {
+        case .regularIdle:
+            setupRosterSize = rosterSize
+        case .regularRunning, .regularPaused, .breakDue, .breakRunning, .breakPaused:
+            setupRosterSize = max(1, rosterSize)
+        }
+        setActiveRosterSize(setupRosterSize, in: fixture.appState)
+
+        switch phase {
+        case .regularIdle:
+            break
+        case .regularRunning:
+            fixture.appState.startTimer()
+        case .regularPaused:
+            fixture.appState.startTimer()
+            fixture.appState.pauseTimer()
+        case .breakDue:
+            fixture.appState.startTimer()
+            fixture.timerEngine.processTick()
+        case .breakRunning:
+            fixture.appState.startTimer()
+            fixture.timerEngine.processTick()
+            fixture.appState.takeBreak()
+        case .breakPaused:
+            fixture.appState.startTimer()
+            fixture.timerEngine.processTick()
+            fixture.appState.takeBreak()
+            fixture.appState.pauseTimer()
+        }
+
+        setActiveRosterSize(rosterSize, in: fixture.appState)
+        fixture.notifications.events.removeAll()
+        fixture.activeMobstersWriter.writeCount = 0
+        #expect(fixture.appState.sessionPhase == phase)
+        return fixture
+    }
+
+    private func snapshot(_ fixture: Fixture) -> StateSnapshot {
+        StateSnapshot(
+            phase: fixture.appState.sessionPhase,
+            secondsRemaining: fixture.appState.timerState.secondsRemaining,
+            totalSeconds: fixture.appState.timerState.totalSeconds,
+            activeIDs: fixture.appState.roster.activeMobsters.map(\.id),
+            inactiveIDs: fixture.appState.roster.inactiveMobsters.map(\.id),
+            driverID: fixture.appState.roster.driver?.id,
+            turnsSinceBreak: fixture.appState.turnsSinceBreak,
+            tipID: fixture.appState.currentTip.id,
+            notificationEvents: fixture.notifications.events,
+            activeMobstersWriteCount: fixture.activeMobstersWriter.writeCount
+        )
+    }
+
+    private func perform(_ command: Command, on appState: AppState) {
+        switch command {
+        case .start:
+            appState.startTimer()
+        case .pause:
+            appState.pauseTimer()
+        case .resume:
+            appState.resumeTimer()
+        case .reset:
+            appState.resetTimer()
+        case .skipTurn:
+            appState.skipTurn()
+        case .takeBreak:
+            appState.takeBreak()
+        case .skipBreak:
+            appState.skipBreak()
+        }
+    }
+
+    private func expectedPhase(
+        after command: Command,
+        from phase: SessionPhase,
+        rosterSize: Int
+    ) -> SessionPhase? {
+        switch command {
+        case .start:
+            return phase == .regularIdle && rosterSize >= 1 ? .regularRunning : nil
+        case .pause:
+            switch phase {
+            case .regularRunning: return .regularPaused
+            case .breakRunning: return .breakPaused
+            default: return nil
+            }
+        case .resume:
+            if phase == .regularPaused && rosterSize >= 1 { return .regularRunning }
+            if phase == .breakPaused { return .breakRunning }
+            return nil
+        case .reset:
+            return phase.isRegular ? .regularIdle : nil
+        case .skipTurn:
+            return phase.isRegular && rosterSize >= 2 ? .regularRunning : nil
+        case .takeBreak:
+            return phase == .breakDue ? .breakRunning : nil
+        case .skipBreak:
+            return phase.isBreak ? .regularIdle : nil
+        }
     }
 
     // MARK: - Initial State
 
-    @Test("initial state has default timer duration")
-    func initialStateHasDefaultDuration() {
-        let appState = makeAppState()
+    @Test("initial state is regular idle with default duration")
+    func initialStateIsRegularIdle() {
+        let fixture = makeFixture()
 
-        #expect(appState.timerDuration == 420) // 7 minutes default
+        #expect(fixture.appState.timerDuration == 420)
+        #expect(fixture.appState.sessionPhase == .regularIdle)
+        #expect(fixture.appState.timerState.secondsRemaining == 420)
+        #expect(fixture.appState.roster.activeMobsters.isEmpty)
+        #expect(fixture.appState.roster.inactiveMobsters.isEmpty)
     }
 
-    @Test("initial state has empty roster")
-    func initialStateHasEmptyRoster() {
-        let appState = makeAppState()
+    // MARK: - Transition Matrix
 
-        #expect(appState.roster.activeMobsters.isEmpty)
-        #expect(appState.roster.inactiveMobsters.isEmpty)
+    @Test("every phase and roster size guards every session command")
+    func commandTransitionMatrix() {
+        for phase in SessionPhase.allCases {
+            for rosterSize in 0...2 {
+                for command in Command.allCases {
+                    let fixture = prepare(phase: phase, rosterSize: rosterSize)
+                    let before = snapshot(fixture)
+
+                    perform(command, on: fixture.appState)
+
+                    if let expectedPhase = expectedPhase(
+                        after: command,
+                        from: phase,
+                        rosterSize: rosterSize
+                    ) {
+                        #expect(
+                            fixture.appState.sessionPhase == expectedPhase,
+                            "\(command) from \(phase) with \(rosterSize) participants"
+                        )
+
+                        if command == .skipTurn {
+                            #expect(fixture.appState.roster.driver?.id != before.driverID)
+                            #expect(fixture.activeMobstersWriter.writeCount == 1)
+                        } else {
+                            #expect(fixture.appState.roster.driver?.id == before.driverID)
+                        }
+
+                        if command == .skipBreak || command == .reset || command == .skipTurn {
+                            #expect(fixture.appState.timerState.secondsRemaining == fixture.appState.timerDuration)
+                            #expect(fixture.appState.timerState.totalSeconds == fixture.appState.timerDuration)
+                        }
+
+                        if command == .skipBreak {
+                            #expect(fixture.appState.turnsSinceBreak == 0)
+                        }
+                    } else {
+                        #expect(
+                            snapshot(fixture) == before,
+                            "\(command) must be a complete no-op from \(phase) with \(rosterSize) participants"
+                        )
+                    }
+                }
+            }
+        }
     }
 
-    @Test("initial state has timer not running")
-    func initialStateTimerNotRunning() {
-        let appState = makeAppState()
+    @Test("capabilities and labels derive from phase and roster size")
+    func capabilityMatrix() {
+        let expectedPrimary: [SessionPhase: (SessionPrimaryAction, String)] = [
+            .regularIdle: (.start, "Start"),
+            .regularRunning: (.pause, "Pause"),
+            .regularPaused: (.resume, "Resume"),
+            .breakDue: (.takeBreak, "Take Break"),
+            .breakRunning: (.pause, "Pause Break"),
+            .breakPaused: (.resume, "Resume Break")
+        ]
 
-        #expect(appState.timerState.isRunning == false)
+        for phase in SessionPhase.allCases {
+            for rosterSize in 0...2 {
+                let fixture = prepare(phase: phase, rosterSize: rosterSize)
+                let appState = fixture.appState
+                let expected = expectedPrimary[phase]!
+
+                #expect(appState.primaryAction == expected.0)
+                #expect(appState.primaryActionLabel == expected.1)
+                #expect(appState.canPerformPrimaryAction == (
+                    phase != .regularIdle && phase != .regularPaused || rosterSize >= 1
+                ))
+                #expect(appState.canResetTimer == phase.isRegular)
+                #expect(appState.canSkipTurn == (phase.isRegular && rosterSize >= 2))
+                #expect(appState.canSkipBreak == phase.isBreak)
+                #expect(appState.skipActionLabel == (phase.isBreak ? "Skip Break" : "Skip Turn"))
+                #expect(appState.canPerformSkipAction == (
+                    phase.isBreak || phase.isRegular && rosterSize >= 2
+                ))
+            }
+        }
     }
 
-    // MARK: - Timer Completion (Task 2)
+    @Test("primary and skip dispatchers use phase-aware commands")
+    func sharedActionDispatchers() {
+        let regular = prepare(phase: .regularIdle, rosterSize: 1)
+        regular.appState.performPrimaryAction()
+        #expect(regular.appState.sessionPhase == .regularRunning)
+        regular.appState.performPrimaryAction()
+        #expect(regular.appState.sessionPhase == .regularPaused)
+        regular.appState.performPrimaryAction()
+        #expect(regular.appState.sessionPhase == .regularRunning)
 
-    @Test("timer completion advances turn")
-    func timerCompletionAdvancesTurn() async throws {
-        let appState = makeAppState()
-        appState.roster.addMobster(name: "Alice")
-        appState.roster.addMobster(name: "Bob")
-
-        let initialDriver = appState.roster.driver
-        #expect(initialDriver?.name == "Alice")
-
-        appState.timerEngine.reset(duration: 1)
-        appState.timerEngine.start()
-
-        try await Task.sleep(for: .milliseconds(1500))
-
-        #expect(appState.roster.driver?.name == "Bob")
+        let breakFixture = prepare(phase: .breakDue, rosterSize: 2)
+        let driverID = breakFixture.appState.roster.driver?.id
+        breakFixture.appState.performPrimaryAction()
+        #expect(breakFixture.appState.sessionPhase == .breakRunning)
+        breakFixture.appState.performSkipAction()
+        #expect(breakFixture.appState.sessionPhase == .regularIdle)
+        #expect(breakFixture.appState.roster.driver?.id == driverID)
     }
 
-    @Test("timer completion resets timer to configured duration")
-    func timerCompletionResetsTimer() async throws {
-        let appState = makeAppState()
-        appState.roster.addMobster(name: "Alice")
-        appState.timerDuration = 300
+    // MARK: - Completion
 
-        appState.timerEngine.reset(duration: 1)
-        appState.timerEngine.start()
+    @Test("regular completion advances only when at least two participants remain")
+    func regularCompletionRosterGuards() {
+        for rosterSize in 0...2 {
+            let fixture = makeFixture(timerDuration: 1, breakInterval: 10)
+            setActiveRosterSize(max(1, rosterSize), in: fixture.appState)
+            fixture.appState.startTimer()
+            setActiveRosterSize(rosterSize, in: fixture.appState)
+            let driverBeforeCompletion = fixture.appState.roster.driver?.id
 
-        try await Task.sleep(for: .milliseconds(1500))
+            fixture.timerEngine.processTick()
 
-        #expect(appState.timerState.secondsRemaining == 300)
-        #expect(appState.timerState.totalSeconds == 300)
+            #expect(fixture.appState.sessionPhase == .regularIdle)
+            #expect(fixture.appState.turnsSinceBreak == 1)
+            if rosterSize == 2 {
+                #expect(fixture.appState.roster.driver?.id != driverBeforeCompletion)
+                #expect(fixture.activeMobstersWriter.writeCount == 1)
+            } else {
+                #expect(fixture.appState.roster.driver?.id == driverBeforeCompletion)
+                #expect(fixture.activeMobstersWriter.writeCount == 0)
+            }
+        }
     }
 
-    @Test("timer completion stops timer")
-    func timerCompletionStopsTimer() async throws {
-        let appState = makeAppState()
-        appState.roster.addMobster(name: "Alice")
+    @Test("paused or already completed publishers cannot complete a cycle")
+    func stalePublisherDeliveryIsIgnored() {
+        let fixture = makeFixture(timerDuration: 1, breakInterval: 10)
+        setActiveRosterSize(2, in: fixture.appState)
+        let initialDriverID = fixture.appState.roster.driver?.id
+        fixture.appState.startTimer()
+        fixture.appState.pauseTimer()
 
-        appState.timerEngine.reset(duration: 1)
-        appState.timerEngine.start()
+        fixture.timerEngine.processTick()
 
-        try await Task.sleep(for: .milliseconds(1500))
+        #expect(fixture.appState.sessionPhase == .regularPaused)
+        #expect(fixture.appState.timerState.secondsRemaining == 1)
+        #expect(fixture.appState.roster.driver?.id == initialDriverID)
+        #expect(fixture.appState.turnsSinceBreak == 0)
 
-        #expect(appState.timerEngine.isRunning == false)
+        fixture.appState.resumeTimer()
+        fixture.timerEngine.processTick()
+        fixture.timerEngine.processTick()
+
+        #expect(fixture.appState.sessionPhase == .regularIdle)
+        #expect(fixture.appState.turnsSinceBreak == 1)
     }
 
-    // MARK: - SkipTurn (Task 3)
-
-    @Test("skipTurn advances turn")
-    func skipTurnAdvancesTurn() {
-        let appState = makeAppState()
-        appState.roster.addMobster(name: "Alice")
-        appState.roster.addMobster(name: "Bob")
-
-        #expect(appState.roster.driver?.name == "Alice")
-
-        appState.skipTurn()
-
-        #expect(appState.roster.driver?.name == "Bob")
-    }
-
-    @Test("skipTurn resets timer to configured duration")
-    func skipTurnResetsTimer() {
-        let appState = makeAppState()
-        appState.roster.addMobster(name: "Alice")
-        appState.timerDuration = 600
-
-        appState.timerEngine.reset(duration: 100)
-
-        appState.skipTurn()
-
-        #expect(appState.timerState.secondsRemaining == 600)
-        #expect(appState.timerState.totalSeconds == 600)
-    }
-
-    @Test("skipTurn starts timer automatically")
-    func skipTurnStartsTimer() {
-        let appState = makeAppState()
-        appState.roster.addMobster(name: "Alice")
-
-        #expect(appState.timerEngine.isRunning == false)
-
-        appState.skipTurn()
-
-        #expect(appState.timerEngine.isRunning == true)
-
-        appState.timerEngine.stop()
-    }
-
-    // MARK: - Timer Duration Persistence (Task 4)
+    // MARK: - Timer Duration Persistence
 
     @Test("changing timer duration triggers save")
     func changingTimerDurationTriggersSave() {
         let defaults = makeTestUserDefaults()
         let service = PersistenceService(userDefaults: defaults)
-        let appState = AppState(persistenceService: service)
+        let fixture = makeFixture(userDefaults: defaults)
 
-        appState.timerDuration = 900
+        fixture.appState.timerDuration = 900
 
-        let savedDuration = service.loadTimerDuration()
-        #expect(savedDuration == 900)
+        #expect(service.loadTimerDuration() == 900)
     }
 
     @Test("timer duration persists across AppState instances")
     func timerDurationPersistsAcrossInstances() {
         let defaults = makeTestUserDefaults()
+        let first = makeFixture(userDefaults: defaults)
+        first.appState.timerDuration = 1200
 
-        let service1 = PersistenceService(userDefaults: defaults)
-        let appState1 = AppState(persistenceService: service1)
-        appState1.timerDuration = 1200
+        let second = makeFixture(userDefaults: defaults, timerDuration: 1200)
 
-        let service2 = PersistenceService(userDefaults: defaults)
-        let appState2 = AppState(persistenceService: service2)
-
-        #expect(appState2.timerDuration == 1200)
+        #expect(second.appState.timerDuration == 1200)
     }
 
-    // MARK: - Roster Persistence (Task 5)
+    // MARK: - Roster Persistence
 
     @Test("saveRoster persists roster state")
     func saveRosterPersistsState() {
         let defaults = makeTestUserDefaults()
         let service = PersistenceService(userDefaults: defaults)
-        let appState = AppState(persistenceService: service)
+        let fixture = makeFixture(userDefaults: defaults)
+        fixture.appState.roster.addMobster(name: "Alice")
+        fixture.appState.roster.addMobster(name: "Bob")
 
-        appState.roster.addMobster(name: "Alice")
-        appState.roster.addMobster(name: "Bob")
-        appState.saveRoster()
+        fixture.appState.saveRoster()
 
         let loadedRoster = service.loadRoster()
-        #expect(loadedRoster.activeMobsters.count == 2)
-        #expect(loadedRoster.activeMobsters[0].name == "Alice")
-        #expect(loadedRoster.activeMobsters[1].name == "Bob")
+        #expect(loadedRoster.activeMobsters.map(\.name) == ["Alice", "Bob"])
     }
 
     @Test("roster persists across AppState instances")
     func rosterPersistsAcrossInstances() {
         let defaults = makeTestUserDefaults()
+        let first = makeFixture(userDefaults: defaults)
+        first.appState.roster.addMobster(name: "Charlie")
+        first.appState.saveRoster()
 
-        let service1 = PersistenceService(userDefaults: defaults)
-        let appState1 = AppState(persistenceService: service1)
-        appState1.roster.addMobster(name: "Charlie")
-        appState1.saveRoster()
+        let service = PersistenceService(userDefaults: defaults)
+        let second = AppState(
+            persistenceService: service,
+            notificationService: AppStateNotificationSpy(),
+            activeMobstersFileService: ActiveMobstersWriterSpy(),
+            timerEngine: TimerEngine()
+        )
 
-        let service2 = PersistenceService(userDefaults: defaults)
-        let appState2 = AppState(persistenceService: service2)
-
-        #expect(appState2.roster.activeMobsters.count == 1)
-        #expect(appState2.roster.activeMobsters[0].name == "Charlie")
+        #expect(second.roster.activeMobsters.map(\.name) == ["Charlie"])
     }
 }

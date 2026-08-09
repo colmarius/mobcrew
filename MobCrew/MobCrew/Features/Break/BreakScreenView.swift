@@ -15,7 +15,7 @@ struct BreakScreenView: View {
             VStack(spacing: 32) {
                 Spacer()
                 
-                Text("Break Time!")
+                Text(appState.sessionPhase == .breakDue ? "Break Due" : "Break Time!")
                     .font(.system(size: 48, weight: .bold, design: .rounded))
                     .foregroundStyle(.primary)
                 
@@ -30,14 +30,26 @@ struct BreakScreenView: View {
                 
                 Spacer()
                 
-                Button(action: { appState.skipBreak() }) {
-                    Text("Skip Break")
-                        .font(.headline)
-                        .padding(.horizontal, 24)
-                        .padding(.vertical, 12)
+                HStack(spacing: 16) {
+                    Button(action: { appState.performPrimaryAction() }) {
+                        Text(appState.primaryActionLabel)
+                            .font(.headline)
+                            .padding(.horizontal, 24)
+                            .padding(.vertical, 12)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .disabled(!appState.canPerformPrimaryAction)
+
+                    Button(action: { appState.performSkipAction() }) {
+                        Text(appState.skipActionLabel)
+                            .font(.headline)
+                            .padding(.horizontal, 24)
+                            .padding(.vertical, 12)
+                    }
+                    .buttonStyle(.bordered)
+                    .disabled(!appState.canPerformSkipAction)
+                    .keyboardShortcut(.escape, modifiers: [])
                 }
-                .buttonStyle(.bordered)
-                .keyboardShortcut(.escape, modifiers: [])
                 
                 Spacer()
                     .frame(height: 40)
@@ -54,10 +66,6 @@ struct BreakScreenView: View {
 }
 
 #Preview {
-    BreakScreenView(appState: {
-        let state = AppState()
-        state.isOnBreak = true
-        return state
-    }())
+    BreakScreenView(appState: AppState.previewing(.breakDue))
     .frame(width: 500, height: 400)
 }

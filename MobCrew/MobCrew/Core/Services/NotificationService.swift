@@ -9,7 +9,14 @@ protocol NotificationCenterProtocol {
 extension UNUserNotificationCenter: NotificationCenterProtocol {}
 
 @MainActor
-final class NotificationService {
+protocol NotificationServiceProtocol {
+    func requestPermission()
+    func sendTimerComplete(driver: String, navigator: String)
+    func sendBreakDue(duration: Int)
+}
+
+@MainActor
+final class NotificationService: NotificationServiceProtocol {
     static let shared = NotificationService()
     
     private let notificationCenter: NotificationCenterProtocol
@@ -49,7 +56,7 @@ final class NotificationService {
         }
     }
     
-    func sendBreakStarted(duration: Int) {
+    func sendBreakDue(duration: Int) {
         let minutes = duration / 60
         let content = UNMutableNotificationContent()
         content.title = "Break Time!"

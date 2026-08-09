@@ -5,13 +5,13 @@ import Foundation
 final class AppState {
     let roster: Roster
     let timerState: TimerState
-    let timerEngine: TimerEngine
+    private(set) var sessionPhase: SessionPhase = .regularIdle
     var timerDuration: Int {
         didSet {
             persistenceService.saveTimerDuration(timerDuration)
         }
     }
-    
+
     // Break system properties
     var breakInterval: Int = 5 {
         didSet {
@@ -23,9 +23,7 @@ final class AppState {
             persistenceService.saveBreakDuration(breakDuration)
         }
     }
-    var turnsSinceBreak: Int = 0
-    var isOnBreak: Bool = false
-    var breakSecondsRemaining: Int = 0
+    private(set) var turnsSinceBreak: Int = 0
     var currentTip: Tip = Tip.random()
     var notificationsEnabled: Bool = true {
         didSet {
@@ -37,128 +35,311 @@ final class AppState {
             persistenceService.saveShowTips(showTips)
         }
     }
-    
+
     private let persistenceService: PersistenceService
-    private let notificationService: NotificationService
-    private let activeMobstersFileService: ActiveMobstersFileService
+    private let notificationService: any NotificationServiceProtocol
+    private let activeMobstersFileService: any ActiveMobstersFileServiceProtocol
+    private let timerEngine: TimerEngine
     private var hasRequestedNotificationPermission = false
-    
+
     init(
         persistenceService: PersistenceService = PersistenceService(),
-        notificationService: NotificationService = .shared,
-        activeMobstersFileService: ActiveMobstersFileService = ActiveMobstersFileService()
+        notificationService: any NotificationServiceProtocol = NotificationService.shared,
+        activeMobstersFileService: any ActiveMobstersFileServiceProtocol = ActiveMobstersFileService(),
+        timerEngine: TimerEngine = TimerEngine()
     ) {
         self.persistenceService = persistenceService
         self.notificationService = notificationService
         self.activeMobstersFileService = activeMobstersFileService
-        
+        self.timerEngine = timerEngine
+
         let loadedRoster = persistenceService.loadRoster()
         let loadedDuration = persistenceService.loadTimerDuration() ?? 420 // 7 minutes default
         let loadedBreakInterval = persistenceService.loadBreakInterval() ?? 5
         let loadedBreakDuration = persistenceService.loadBreakDuration() ?? 300 // 5 minutes default
         let loadedNotificationsEnabled = persistenceService.loadNotificationsEnabled() ?? true
         let loadedShowTips = persistenceService.loadShowTips() ?? false
-        
+
         self.roster = loadedRoster
         self.notificationsEnabled = loadedNotificationsEnabled
         self.showTips = loadedShowTips
         self.timerDuration = loadedDuration
         self.breakInterval = loadedBreakInterval
         self.breakDuration = loadedBreakDuration
-        self.timerState = TimerState(
-            secondsRemaining: loadedDuration,
-            totalSeconds: loadedDuration
-        )
-        self.timerEngine = TimerEngine(state: timerState)
-        
+        self.timerState = timerEngine.state
+        timerEngine.reset(duration: loadedDuration)
+
         setupBindings()
     }
-    
+
+    var isOnBreak: Bool {
+        sessionPhase.isBreak
+    }
+
+    var isRunning: Bool {
+        sessionPhase.isRunning
+    }
+
+    var primaryAction: SessionPrimaryAction {
+        switch sessionPhase {
+        case .regularIdle:
+            .start
+        case .regularRunning, .breakRunning:
+            .pause
+        case .regularPaused, .breakPaused:
+            .resume
+        case .breakDue:
+            .takeBreak
+        }
+    }
+
+    var primaryActionLabel: String {
+        switch sessionPhase {
+        case .regularIdle:
+            "Start"
+        case .regularRunning:
+            "Pause"
+        case .regularPaused:
+            "Resume"
+        case .breakDue:
+            "Take Break"
+        case .breakRunning:
+            "Pause Break"
+        case .breakPaused:
+            "Resume Break"
+        }
+    }
+
+    var primaryActionSystemImage: String {
+        switch primaryAction {
+        case .start, .resume:
+            "play.fill"
+        case .pause:
+            "pause.fill"
+        case .takeBreak:
+            "cup.and.saucer.fill"
+        }
+    }
+
+    var canPerformPrimaryAction: Bool {
+        switch sessionPhase {
+        case .regularIdle, .regularPaused:
+            !roster.activeMobsters.isEmpty
+        case .regularRunning, .breakDue, .breakRunning, .breakPaused:
+            true
+        }
+    }
+
+    var canResetTimer: Bool {
+        sessionPhase.isRegular
+    }
+
+    var canSkipTurn: Bool {
+        sessionPhase.isRegular && roster.activeMobsters.count >= 2
+    }
+
+    var canSkipBreak: Bool {
+        sessionPhase.isBreak
+    }
+
+    var skipActionLabel: String {
+        sessionPhase.isBreak ? "Skip Break" : "Skip Turn"
+    }
+
+    var canPerformSkipAction: Bool {
+        sessionPhase.isBreak ? canSkipBreak : canSkipTurn
+    }
+
     private func setupBindings() {
         timerEngine.configure(onComplete: { [weak self] in
             self?.handleTimerComplete()
         })
     }
-    
+
     private func handleTimerComplete() {
-        if isOnBreak {
+        switch sessionPhase {
+        case .regularRunning:
+            completeRegularTurn()
+        case .breakRunning:
             completeBreak()
-        } else {
-            roster.advanceTurn()
-            updateActiveMobstersFile()
-            turnsSinceBreak += 1
-            
-            if turnsSinceBreak >= breakInterval {
-                triggerBreak()
-            } else {
-                sendTimerCompleteNotification()
-                timerEngine.reset(duration: timerDuration)
-            }
+        case .regularIdle, .regularPaused, .breakDue, .breakPaused:
+            return
         }
     }
-    
+
+    private func completeRegularTurn() {
+        sessionPhase = .regularIdle
+        let shouldAdvanceRoles = roster.activeMobsters.count >= 2
+        if shouldAdvanceRoles {
+            roster.advanceTurn()
+        }
+        turnsSinceBreak += 1
+
+        if turnsSinceBreak >= breakInterval {
+            timerEngine.reset(duration: breakDuration)
+            sessionPhase = .breakDue
+        } else {
+            timerEngine.reset(duration: timerDuration)
+        }
+
+        if shouldAdvanceRoles {
+            updateActiveMobstersFile()
+        }
+        if sessionPhase == .breakDue {
+            sendBreakDueNotification()
+        } else {
+            sendTimerCompleteNotification()
+        }
+    }
+
     private func sendTimerCompleteNotification() {
         guard notificationsEnabled else { return }
         let driver = roster.driver?.name ?? "Next Driver"
         let navigator = roster.navigator?.name ?? "Next Navigator"
         notificationService.sendTimerComplete(driver: driver, navigator: navigator)
     }
-    
-    func triggerBreak() {
-        isOnBreak = true
-        breakSecondsRemaining = breakDuration
-        if notificationsEnabled {
-            notificationService.sendBreakStarted(duration: breakDuration)
-        }
-        timerEngine.reset(duration: breakDuration)
-        timerEngine.start()
+
+    private func sendBreakDueNotification() {
+        guard notificationsEnabled else { return }
+        notificationService.sendBreakDue(duration: breakDuration)
     }
-    
+
     private func completeBreak() {
-        isOnBreak = false
+        sessionPhase = .regularIdle
         turnsSinceBreak = 0
-        breakSecondsRemaining = 0
         timerEngine.reset(duration: timerDuration)
     }
-    
-    func skipBreak() {
-        timerEngine.stop()
-        completeBreak()
+
+    func performPrimaryAction() {
+        switch primaryAction {
+        case .start:
+            startTimer()
+        case .pause:
+            pauseTimer()
+        case .resume:
+            resumeTimer()
+        case .takeBreak:
+            takeBreak()
+        }
     }
-    
+
+    func performSkipAction() {
+        if sessionPhase.isBreak {
+            skipBreak()
+        } else {
+            skipTurn()
+        }
+    }
+
+    func startTimer() {
+        guard sessionPhase == .regularIdle else { return }
+        guard !roster.activeMobsters.isEmpty else { return }
+        guard timerState.secondsRemaining > 0 else { return }
+
+        sessionPhase = .regularRunning
+        guard timerEngine.start() else {
+            sessionPhase = .regularIdle
+            return
+        }
+        currentTip = Tip.random()
+        requestNotificationPermissionIfNeeded()
+    }
+
+    func pauseTimer() {
+        switch sessionPhase {
+        case .regularRunning:
+            sessionPhase = .regularPaused
+        case .breakRunning:
+            sessionPhase = .breakPaused
+        case .regularIdle, .regularPaused, .breakDue, .breakPaused:
+            return
+        }
+        timerEngine.stop()
+    }
+
+    func resumeTimer() {
+        let pausedPhase = sessionPhase
+        let runningPhase: SessionPhase
+        switch pausedPhase {
+        case .regularPaused:
+            guard !roster.activeMobsters.isEmpty else { return }
+            runningPhase = .regularRunning
+        case .breakPaused:
+            runningPhase = .breakRunning
+        case .regularIdle, .regularRunning, .breakDue, .breakRunning:
+            return
+        }
+        guard timerState.secondsRemaining > 0 else { return }
+
+        sessionPhase = runningPhase
+        guard timerEngine.start() else {
+            sessionPhase = pausedPhase
+            return
+        }
+    }
+
+    func resetTimer() {
+        guard sessionPhase.isRegular else { return }
+        sessionPhase = .regularIdle
+        timerEngine.reset(duration: timerDuration)
+    }
+
+    func takeBreak() {
+        guard sessionPhase == .breakDue else { return }
+        guard timerState.secondsRemaining > 0 else { return }
+
+        sessionPhase = .breakRunning
+        guard timerEngine.start() else {
+            sessionPhase = .breakDue
+            return
+        }
+    }
+
+    func skipBreak() {
+        guard sessionPhase.isBreak else { return }
+        sessionPhase = .regularIdle
+        turnsSinceBreak = 0
+        timerEngine.reset(duration: timerDuration)
+    }
+
     func saveRoster() {
         persistenceService.saveRoster(roster)
         activeMobstersFileService.writeActiveMobsters(roster)
     }
-    
+
     func updateActiveMobstersFile() {
         activeMobstersFileService.writeActiveMobsters(roster)
     }
-    
-    func resetTimer() {
-        timerEngine.reset(duration: timerDuration)
-    }
-    
-    func toggleTimer() {
-        requestNotificationPermissionIfNeeded()
-        let wasRunning = timerState.isRunning
-        timerEngine.toggle()
-        if !wasRunning && timerState.isRunning {
-            currentTip = Tip.random()
-        }
-    }
-    
+
     private func requestNotificationPermissionIfNeeded() {
+        guard notificationsEnabled else { return }
         guard !hasRequestedNotificationPermission else { return }
         hasRequestedNotificationPermission = true
         notificationService.requestPermission()
     }
-    
+
     func skipTurn() {
-        roster.advanceTurn()
-        updateActiveMobstersFile()
+        guard canSkipTurn else { return }
+
+        sessionPhase = .regularIdle
         timerEngine.reset(duration: timerDuration)
-        timerEngine.start()
+        roster.advanceTurn()
+        sessionPhase = .regularRunning
+        guard timerEngine.start() else {
+            sessionPhase = .regularIdle
+            return
+        }
         currentTip = Tip.random()
+        requestNotificationPermissionIfNeeded()
+        updateActiveMobstersFile()
+    }
+
+    static func previewing(_ sessionPhase: SessionPhase) -> AppState {
+        let appState = AppState()
+        appState.sessionPhase = sessionPhase
+        if sessionPhase.isBreak {
+            appState.timerEngine.reset(duration: appState.breakDuration)
+        }
+        return appState
     }
 }

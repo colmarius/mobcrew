@@ -6,8 +6,8 @@ Reset or use a fresh test account when a journey depends on first-run permission
 ## Core timer and settings
 
 - [ ] A fresh profile starts with a 7-minute turn duration.
-- [ ] Play starts the countdown, Pause stops it, Reset restores the configured duration, and the
-      progress bar tracks the remaining time.
+- [ ] Start begins the countdown, Pause freezes it, Resume continues it, Reset restores the
+      configured duration, and the progress bar tracks the remaining time.
 - [ ] The main-window duration stepper accepts 1-30 minutes.
 - [ ] **Settings → General → Turn duration** accepts 1-60 minutes, and the main-window value reflects
       the saved setting even when it is above the main stepper's adjustment range.
@@ -18,7 +18,8 @@ Reset or use a fresh test account when a journey depends on first-run permission
 
 - [ ] Add, remove, reorder, and shuffle active mobsters.
 - [ ] Bench an active mobster and rotate a benched mobster back into the active roster.
-- [ ] With zero active people, neither Driver nor Navigator is shown and rotation is harmless.
+- [ ] With zero active people, neither Driver nor Navigator is shown, Start and Skip Turn are
+      disabled, and Pause/Reset remain available if the roster became empty during a turn.
 - [ ] With one active person, only Driver is shown and Skip remains disabled.
 - [ ] With two active people, Driver and Navigator are distinct and swap after a turn.
 - [ ] With three or more active people, repeated turns advance through the roster and wrap in order.
@@ -27,16 +28,18 @@ Reset or use a fresh test account when a journey depends on first-run permission
 ## Rotation and breaks
 
 - [ ] Skip advances the roles, resets the turn timer, and starts the next turn.
-- [ ] Timer completion advances roles automatically; it starts a break when one is due, otherwise it
-      resets to the configured turn duration and remains paused.
+- [ ] Timer completion advances roles only with at least two active people; it offers a break when
+      one is due, otherwise it resets to the configured turn duration and remains idle.
 - [ ] After the configured number of turns, the break screen replaces content inside the main
-      window and the break countdown starts.
+      window and offers **Take Break** / **Skip Break** without starting the countdown.
+- [ ] Take Break starts the prepared countdown; Pause Break freezes it and Resume Break continues it.
 - [ ] Break duration and cadence accept their Settings ranges and persist.
 - [ ] **Skip Break** and Esc leave the break screen, reset break progress, and restore the turn timer.
+- [ ] Skip Turn is harmless in break-due, running-break, and paused-break states and never advances roles.
 
 ## Fixed keyboard shortcuts
 
-- [ ] ⌘↩ starts and pauses the turn timer.
+- [ ] ⌘↩ starts, pauses, and resumes the turn timer.
 - [ ] ⌘⇧S skips a turn when at least two active people are present.
 - [ ] ⌘⇧L toggles the floating timer from outside MobCrew after Accessibility access is granted.
 - [ ] ⌘, opens Settings.
@@ -52,17 +55,18 @@ path. Do not disable Gatekeeper or strip quarantine attributes as part of app-le
 - [ ] Grant MobCrew access later in **System Settings → Privacy & Security → Accessibility**; ⌘⇧L
       then toggles the floating timer.
 - [ ] Deny Notifications when first starting the timer; timer and break behavior continue normally.
-- [ ] Grant Notifications in System Settings and enable them in MobCrew; turn-complete and
-      break-started alerts are delivered.
+- [ ] Grant Notifications in System Settings and enable them in MobCrew; turn-complete and break-due
+      alerts are delivered once per transition.
 - [ ] Disable Notifications in MobCrew; no new turn or break alert is sent.
 
 ## Floating window, menu bar, and launch at login
 
 - [ ] The floating timer appears on launch with the current countdown, Driver, and Navigator.
-- [ ] Its play/pause control changes the same timer as the main window, and its break state offers a
-      working Skip control.
+- [ ] Its Start/Pause/Resume control changes the same timer as the main window, and its break state
+      offers phase-aware Take/Pause/Resume and Skip Break controls.
 - [ ] It remains above normal windows, can be moved, and follows the app across Spaces as intended.
-- [ ] The menu-bar item shows current roles; Start/Stop, Skip, and Settings act on the same app state.
+- [ ] The menu-bar item shows current roles; Start/Pause/Resume, phase-aware Skip Turn/Skip Break,
+      and Settings act on the same app state.
 - [ ] Enabling **Launch at Login** registers MobCrew; after logging out and back in, MobCrew starts.
 - [ ] Disabling **Launch at Login** unregisters it and the next login does not start MobCrew.
 

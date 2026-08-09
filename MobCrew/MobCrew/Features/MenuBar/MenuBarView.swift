@@ -1,33 +1,31 @@
 import SwiftUI
 
 struct MenuBarView: View {
-    let driverName: String?
-    let navigatorName: String?
-    let isRunning: Bool
-    let onToggle: () -> Void
-    let onSkip: () -> Void
+    let appState: AppState
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             VStack(alignment: .leading, spacing: 4) {
-                RoleRow(role: "Driver", name: driverName)
-                RoleRow(role: "Navigator", name: navigatorName)
+                RoleRow(role: "Driver", name: appState.roster.driver?.name)
+                RoleRow(role: "Navigator", name: appState.roster.navigator?.name)
             }
             
             Divider()
             
             HStack(spacing: 8) {
-                Button(action: onToggle) {
+                Button(action: { appState.performPrimaryAction() }) {
                     Label(
-                        isRunning ? "Stop" : "Start",
-                        systemImage: isRunning ? "stop.fill" : "play.fill"
+                        appState.primaryActionLabel,
+                        systemImage: appState.primaryActionSystemImage
                     )
                 }
+                .disabled(!appState.canPerformPrimaryAction)
                 .keyboardShortcut(.space, modifiers: [])
                 
-                Button(action: onSkip) {
-                    Label("Skip", systemImage: "forward.fill")
+                Button(action: { appState.performSkipAction() }) {
+                    Label(appState.skipActionLabel, systemImage: "forward.fill")
                 }
+                .disabled(!appState.canPerformSkipAction)
                 .keyboardShortcut(.rightArrow, modifiers: .command)
             }
             
@@ -60,12 +58,6 @@ private struct RoleRow: View {
 }
 
 #Preview {
-    MenuBarView(
-        driverName: "Alice",
-        navigatorName: "Bob",
-        isRunning: false,
-        onToggle: {},
-        onSkip: {}
-    )
+    MenuBarView(appState: AppState())
     .frame(width: 200)
 }

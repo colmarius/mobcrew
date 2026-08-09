@@ -1,6 +1,6 @@
 # MobCrew Session Reliability and UX Stabilization
 
-Status: planned
+Status: in-progress
 Category: product
 Updated: 2026-08-09
 
@@ -23,19 +23,21 @@ The branch was rebased onto `origin/main` at `50659f0` on 2026-08-09. That mainl
 app source or unit tests, so Tasks 1-9 remain open; it did complete the current-state public
 documentation overhaul, narrowing Task 10 to behavior-change deltas and final observed validation.
 Saved teams, cloud sync, forced full-screen breaks, and other speculative expansion are out of scope.
+Implementation began on the rebased audit branch with Task 1's authoritative session phase,
+guarded commands, shared surface capabilities, and hermetic transition coverage as the active slice.
 
 ## Artifacts
 
 - Research: [Audit findings](research.md)
 - PRD: none
 - Plan: [Session reliability and UX stabilization plan](plan.md)
-- Progress: none
+- Progress: [Execution progress](progress.md)
 - Decisions: none
 - Handoffs: none
 
 ## Next Action
 
-- Implement [Task 1: Make session actions phase-aware and consistent](plan.md#task-1-make-session-actions-phase-aware-and-consistent).
+- Complete and verify [Task 1: Make session actions phase-aware and consistent](plan.md#task-1-make-session-actions-phase-aware-and-consistent), then record its evidence and advance to Task 2.
 
 ## Open Questions
 
