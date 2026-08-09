@@ -7,7 +7,8 @@ Updated: 2026-08-09
 - Tasks 1-8 are implemented, natively tested, checked off in the active plan, and pushed.
 - Task 9 implementation is ready for native verification: core surfaces have contextual semantics,
   roster reordering has keyboard/VoiceOver actions, one native List owns active and benched scrolling,
-  and injected announcements cover only meaningful session transitions.
+  and injected announcements cover only meaningful session transitions. Xcode tests pass, but the
+  logged-in UI/accessibility matrix is blocked on a reconnected Mac runner.
 
 ## Observed Evidence
 
@@ -174,7 +175,21 @@ Updated: 2026-08-09
 - AppState posts macOS 14+ `AccessibilityNotification.Announcement` through one injected MainActor closure.
   Natural handoff, break due, break complete, and manual turn skip each emit one contextual message; ordinary
   ticks, manual break skip, and restoration reconciliation emit none. Deterministic tests cover these paths,
-  readable timer state, and move invariants. Xcode compilation and logged-in accessibility checks remain open.
+  readable timer state, and move invariants. Logged-in accessibility checks remain open.
+- Task 9 native tests used Xcode 26.6 (17F113), Swift 6.3.3, Swift language mode 6, and a detached
+  worktree at exact pushed commit `69132db345a10d8063ac8834c05377d89d708e4f`. Focused
+  `AppStateTests` and `RosterTests` passed 85/85; the full suite passed 177/177 executed cases
+  (174 logical tests), with no failures, skips, or expected failures. No fix commit was required.
+- The native UI pass did not launch an app or claim visual/AX behavior. Its temporary isolated harness
+  patch hit an executor lease-acknowledgement timeout and post-error inspection proved no patch applied.
+  The agent stopped rather than retrying against real MobCrew data. The detached worktree stayed clean,
+  was removed with all logs/DerivedData, and no preferences, roster/session data, active-roster file,
+  accessibility setting, temporary branch, or remote ref changed.
+- The viable remaining gate is a disposable, uncommitted `MobCrewApp` launch-argument path that injects
+  a unique UserDefaults suite and `/tmp` active-roster file, seeds 12 active plus 8 benched people, and
+  leaves production construction unchanged. It must verify the 600×450 AX tree, scrolling, Move actions,
+  native Stepper, VoiceOver announcement behavior, Full Keyboard Access, contrast/color differentiation,
+  and increased text. The live Mac runner was no longer connected when immediately rechecked.
 
 ## Verification Status
 
@@ -191,3 +206,5 @@ Updated: 2026-08-09
   providing cumulative exact-toolchain compilation and regression coverage for Tasks 1-7.
 - Task 8 passed 54 focused and all 169 executed project test cases using Xcode 26.6 / Swift 6.3.3;
   live Settings inspection also confirmed independent actual/preference status and unclipped recovery UI.
+- Task 9 passed 85 focused and all 177 executed project test cases using Xcode 26.6 / Swift 6.3.3.
+  Logged-in UI/assistive-technology acceptance remains explicitly unverified pending runner access.

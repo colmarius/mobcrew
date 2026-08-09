@@ -1,6 +1,6 @@
 # MobCrew Session Reliability and UX Stabilization
 
-Status: in-progress
+Status: blocked
 Category: product
 Updated: 2026-08-09
 
@@ -36,7 +36,8 @@ tests for truthful Notification and Launch at Login status; Xcode 26.6 focused/f
 Settings inspection passed. Task 9 accessibility and large-roster reachability is now active.
 The implementation now has single-List roster reachability, identity-preserving Move Up/Down paths,
 contextual semantics across core surfaces, and injected one-shot transition announcements; exact
-Xcode and logged-in accessibility validation remain before acceptance.
+Xcode 26.6 focused/full tests pass. Logged-in accessibility validation remains before acceptance;
+the live Mac runner disconnected after its isolated harness attempt was safely abandoned.
 
 ## Artifacts
 
@@ -49,9 +50,9 @@ Xcode and logged-in accessibility validation remain before acceptance.
 
 ## Next Action
 
-- Verify [Task 9](plan.md#task-9-make-core-controls-accessible-and-large-rosters-reachable) on the
-  live Xcode 26.6 Mac: run focused AppState/Roster tests, inspect 12 active plus 8 benched rows at
-  600×450, then record VoiceOver, Full Keyboard Access, contrast/color, and increased-text results.
+- Reconnect the live Mac runner, then finish [Task 9](plan.md#task-9-make-core-controls-accessible-and-large-rosters-reachable)
+  with a temporary uncommitted isolated `MobCrewApp` launch-argument harness: inspect 12 active plus
+  8 benched rows at 600×450 and record VoiceOver, Full Keyboard Access, contrast/color, and text results.
 
 ## Open Questions
 
