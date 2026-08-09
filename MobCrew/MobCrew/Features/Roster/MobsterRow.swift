@@ -57,6 +57,7 @@ struct MobsterRow: View {
                     Image(systemName: "arrow.up")
                 }
                 .buttonStyle(.borderless)
+                .focusable(onMoveUp != nil, interactions: .activate)
                 .disabled(onMoveUp == nil)
                 .help("Move \(mobster.name) up")
                 .accessibilityLabel("Move \(mobster.name) up")
@@ -66,6 +67,7 @@ struct MobsterRow: View {
                     Image(systemName: "arrow.down")
                 }
                 .buttonStyle(.borderless)
+                .focusable(onMoveDown != nil, interactions: .activate)
                 .disabled(onMoveDown == nil)
                 .help("Move \(mobster.name) down")
                 .accessibilityLabel("Move \(mobster.name) down")
@@ -77,6 +79,7 @@ struct MobsterRow: View {
                     .foregroundStyle(isActive ? .orange : .green)
             }
             .buttonStyle(.borderless)
+            .focusable(true, interactions: .activate)
             .help(isActive ? "Move \(mobster.name) to bench" : "Return \(mobster.name) to active rotation")
             .accessibilityLabel(isActive ? "Bench \(mobster.name)" : "Activate \(mobster.name)")
             .accessibilityHint(
@@ -90,6 +93,7 @@ struct MobsterRow: View {
                     .foregroundStyle(.red)
             }
             .buttonStyle(.borderless)
+            .focusable(true, interactions: .activate)
             .help("Remove \(mobster.name) permanently")
             .accessibilityLabel("Remove \(mobster.name) permanently")
             .accessibilityHint("Deletes this participant from the roster.")

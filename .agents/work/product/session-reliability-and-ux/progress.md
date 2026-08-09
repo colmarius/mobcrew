@@ -10,7 +10,9 @@ Updated: 2026-08-09
   and injected announcements cover only meaningful session transitions. Xcode tests and initial native
   AX inspection pass. User inspection found the main panes did not consume expanded window space; the
   pushed responsive correction now passes native geometry, splitter, AX, and increased-text checks.
-  Interactive VoiceOver, Full Keyboard Access, and display-option checks remain.
+  Interactive testing then found Full Keyboard Access Tab traversal skipped the List's borderless
+  participant controls. Explicit activation focus is implemented and awaits native verification;
+  VoiceOver and display-option checks also remain.
 - Task 10's final documentation-truth audit is implemented, but its phase gate remains open until Task 9
   completes and the latest exact branch passes the full native suite/manual result reconciliation.
 
@@ -234,6 +236,13 @@ Updated: 2026-08-09
   Resume, Tips wording did not distinguish the turn timer, “Rotate and recover” omitted relaunch
   recovery, and the local-data answer omitted the session snapshot. The smallest text-only corrections
   now match implemented behavior; docs validation and the full native branch gate follow.
+- User Full Keyboard Access testing could not Tab into the Active List, despite the controls' complete
+  AX action exposure. Oracle review distinguished AX enrollment from keyboard activation focus and
+  recommended the smallest correction: `.focusable(..., interactions: .activate)` on each Move,
+  Bench/Activate, and Remove button, with unavailable boundary moves excluded from focus.
+- The correction does not change button style, List ownership, model operations, drag reorder, or
+  VoiceOver actions. Real visible Tab/Shift-Tab focus and Space-triggered mutation are required before
+  this slice can pass; AX enumeration alone is explicitly insufficient.
 
 ## Verification Status
 
