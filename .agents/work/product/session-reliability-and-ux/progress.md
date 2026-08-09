@@ -4,10 +4,9 @@ Updated: 2026-08-09
 
 ## Current Slice
 
-- Tasks 1-4 are implemented, natively tested, checked off in the active plan, and pushed.
-- Task 5 implementation is ready for its native gate: optional breaks persist with an enabled default,
-  disabling clears pending prompts and cadence without cancelling accepted breaks, and break completion
-  uses one fixed cue through the existing notification preference.
+- Tasks 1-5 are implemented, natively tested, checked off in the active plan, and pushed.
+- Task 6 is next: add a versioned semantic session snapshot with ordered roster/snapshot writes,
+  deadline reconciliation, and idempotent expired-state recovery.
 
 ## Observed Evidence
 
@@ -72,6 +71,13 @@ Updated: 2026-08-09
 - Main and floating cadence indicators now hide when disabled; Settings keeps break configuration
   visible but disabled beneath an `Enable Breaks` toggle. Break completion returns through the
   authoritative regular-idle transition before sending one fixed local notification.
+- Task 5 verification used detached temporary worktree `/tmp/mobcrew-task5-audit-8c2fd33` at exact
+  commit `8c2fd3385e3e55fd7c0e6e4590f73f4bdf5e8b58`. Focused `BreakLogicTests`,
+  `AppStateTests`, `PersistenceServiceTests`, and `NotificationServiceTests` passed 53/53 with no
+  failures or skips; all 128 project tests passed with no failures or skips.
+- Task 5 required no fixes. `git diff --check` and documentation validation passed. The disposable
+  worktree and temporary logs were removed; the user's primary checkout and unrelated bundles were
+  preserved exactly, and no temporary local or remote branch was created.
 
 ## Verification Status
 
@@ -79,7 +85,7 @@ Updated: 2026-08-09
 - Task 3 passed focused and full-suite regression coverage on the same Xcode 26.2 runner.
 - Task 4 passed 53 focused and all 118 project tests on the same Xcode 26.2 runner, including Swift 6
   compilation of the actor-isolated Combine publisher path.
-- Task 5 implementation has passed Linux source inspection, whitespace validation, and documentation
-  validation; native compile, focused tests, and the full macOS suite are the current unverified gate.
+- Task 5 passed 53 focused and all 128 project tests on the same Xcode 26.2 runner, including Swift 6
+  compilation of its AppState, notification protocol, persistence, Settings, and conditional cadence UI.
 - The project specifies Xcode 26.6+ / Swift 6.3, so the exact-toolchain rerun remains unverified and
   must be repeated before final qualification. No manual UI or accessibility behavior was claimed.

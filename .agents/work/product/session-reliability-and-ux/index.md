@@ -26,9 +26,10 @@ Saved teams, cloud sync, forced full-screen breaks, and other speculative expans
 Implementation is active on the rebased audit branch. Tasks 1-2 established the authoritative
 session phase and identity-preserving roster operations; Task 3 then separated configured duration
 from current-cycle progress and aligned both controls. Task 4 replaced delivered-tick subtraction
-with deadline-based elapsed time. Tasks 1-4 passed focused and full native tests on the available Mac
-runner. Task 5 optional-break behavior is now active. Exact Xcode 26.6+ qualification remains
-outstanding because the runner currently has 26.2.
+with deadline-based elapsed time, and Task 5 made explicit break prompts disable-able without hidden
+cadence. Tasks 1-5 passed focused and full native tests on the available Mac runner. Task 6 versioned
+session recovery is now active. Exact Xcode 26.6+ qualification remains outstanding because the
+runner currently has 26.2.
 
 ## Artifacts
 
@@ -41,7 +42,7 @@ outstanding because the runner currently has 26.2.
 
 ## Next Action
 
-- Run focused and full native gates for [Task 5: Make breaks optional and finalize break transitions](plan.md#task-5-make-breaks-optional-and-finalize-break-transitions), apply only bounded compile/test fixes, and then record observed evidence.
+- Implement [Task 6: Persist and recover a versioned session snapshot](plan.md#task-6-persist-and-recover-a-versioned-session-snapshot), beginning with versioned decoding, recovery ordering, and idempotence tests.
 
 ## Open Questions
 

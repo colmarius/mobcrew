@@ -98,7 +98,7 @@ validation; it must not recreate the website or treat unchecked manual steps as 
 
 ### Task 5: Make breaks optional and finalize break transitions
 
-- [ ] **Task 5: Make breaks optional and finalize break transitions**
+- [x] **Task 5: Make breaks optional and finalize break transitions**
   - Scope: `MobCrew/MobCrew/Core/AppState.swift`, `MobCrew/MobCrew/Core/Services/PersistenceService.swift`,
     break/settings/main/floating/menu views, notification service, break/AppState tests
   - Depends on: Task 1
