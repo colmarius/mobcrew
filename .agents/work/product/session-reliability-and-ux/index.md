@@ -44,8 +44,9 @@ AX, splitter, minimum/expanded-window, and increased-text checks. User inspectio
 expanded layout. Task 9 now awaits only interactive VoiceOver, Full Keyboard Access, and display-option
 observations before acceptance. The first Full Keyboard Access attempt exposed that Tab skipped the
 borderless participant buttons inside the List; an explicit activation-focus correction now awaits
-native traversal and Space-activation verification. Task 10's preparatory truth audit corrected the
-remaining shortcut, Tips, recovery, and local-session-data wording; its final gate depends on Task 9.
+native traversal and Space-activation verification. It compiles and passes focused tests, but the host's
+Full Keyboard Access setting was off during automated verification. Task 10's preparatory truth audit
+corrected the remaining wording; its final gate depends on Task 9.
 
 ## Artifacts
 
@@ -58,8 +59,8 @@ remaining shortcut, Tips, recovery, and local-session-data wording; its final ga
 
 ## Next Action
 
-- Build the explicit participant-button focus correction for
-  [Task 9](plan.md#task-9-make-core-controls-accessible-and-large-rosters-reachable), prove real
-  Tab/Shift-Tab traversal and Space activation in the 20-person List, then finish VoiceOver,
-  announcement, Increase Contrast, and Differentiate Without Color checks. Run Task 10's final
-  full-suite/documentation gate after acceptance. Older macOS coverage is not required.
+- Enable macOS Full Keyboard Access, then use the open corrected
+  [Task 9](plan.md#task-9-make-core-controls-accessible-and-large-rosters-reachable) harness to prove
+  real Tab/Shift-Tab traversal and Space activation in the 20-person List. Finish VoiceOver,
+  announcement, Increase Contrast, and Differentiate Without Color checks, then run Task 10's final
+  full-suite/documentation gate. Older macOS coverage is not required.

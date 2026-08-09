@@ -243,6 +243,14 @@ Updated: 2026-08-09
 - The correction does not change button style, List ownership, model operations, drag reorder, or
   VoiceOver actions. Real visible Tab/Shift-Tab focus and Space-triggered mutation are required before
   this slice can pass; AX enumeration alone is explicitly insufficient.
+- Exact commit `722479ba9f5681ed9714ebd7a7262c6ab3fa114b` compiled under Xcode 26.6 /
+  Swift 6.3.3 and passed 85/85 focused `RosterTests` plus `AppStateTests`. The isolated host reported
+  Full Keyboard Access off (`FullKeyboardAccessEnabled=0`) and ordinary Keyboard Navigation off
+  (`AppleKeyboardUIMode=0`), so no synthetic Tab/Shift-Tab/Space events were sent and behavioral focus
+  remains unverified rather than failed.
+- The prior harness was safely retired. A corrected, isolated one-minute 12-active/8-benched app remains
+  open from exact commit `722479b`; production preferences/data and the user's primary checkout were
+  unchanged, and no temporary branch or remote ref was created.
 
 ## Verification Status
 
