@@ -81,7 +81,7 @@ validation; it must not recreate the website or treat unchecked manual steps as 
 
 ### Task 4: Make countdown deadline-based and deterministic
 
-- [ ] **Task 4: Make countdown deadline-based and deterministic**
+- [x] **Task 4: Make countdown deadline-based and deterministic**
   - Scope: `MobCrew/MobCrew/Core/Services/TimerEngine.swift`, `MobCrew/MobCrew/Core/Models/TimerState.swift`, TimerEngine tests
   - Depends on: Tasks 1, 3
   - Acceptance:

@@ -4,10 +4,9 @@ Updated: 2026-08-09
 
 ## Current Slice
 
-- Tasks 1-3 are implemented, natively tested, checked off in the active plan, and pushed.
-- Task 4 implementation is ready for its native gate: delivered-tick subtraction is replaced with
-  monotonic deadlines, wall time is isolated to deadline encoding/restoration, and deterministic
-  synchronous refresh tests cover elapsed-time and completion behavior.
+- Tasks 1-4 are implemented, natively tested, checked off in the active plan, and pushed.
+- Task 5 is next: persist enabled-by-default optional breaks, clear pending break state when disabled,
+  and ensure disabled turns cannot accumulate surprise cadence across re-enable.
 
 ## Observed Evidence
 
@@ -54,12 +53,21 @@ Updated: 2026-08-09
 - The engine keeps exact remaining duration privately, exposes only rounded UI state, and converts a
   validated restored wall-clock remainder once into a fresh monotonic deadline. Publisher arming is
   separate from restore establishment for Task 6 recovery ordering.
+- Task 4 verification used a detached temporary Mac worktree at exact pushed commit `21401c78c8adb43962df05251fada5891b3a0e2d`.
+  The initial focused run compiled and passed 52 tests but exposed one test-fixture precision failure:
+  binary-inexact `1.2 - 0.2` correctly remained just above one second under exact `ceil` semantics.
+- Commit `c6fb95d96b48ce77ad6f641b188b9773af676fb1` changed only that test to exactly
+  representable `1.25`/`0.25` inputs. The focused `TimerEngineTests`, `AppStateTests`,
+  `BreakLogicTests`, and `TimerStateTests` gate then passed 53/53 with 0 failures or skips.
+- The full macOS suite passed 118/118 with 0 failures or skips. The disposable worktree was clean and
+  removed; the user's primary checkout and its two unrelated untracked bundles remained unchanged.
+  No temporary local or remote branch was created.
 
 ## Verification Status
 
 - Tasks 1-2 passed their focused and full native test gates on macOS using Xcode 26.2 (build 17C52).
 - Task 3 passed focused and full-suite regression coverage on the same Xcode 26.2 runner.
-- Task 4 implementation has passed Linux source inspection and whitespace validation; native compile,
-  focused tests, and the full macOS suite are the current gate and have not yet been claimed.
+- Task 4 passed 53 focused and all 118 project tests on the same Xcode 26.2 runner, including Swift 6
+  compilation of the actor-isolated Combine publisher path.
 - The project specifies Xcode 26.6+ / Swift 6.3, so the exact-toolchain rerun remains unverified and
   must be repeated before final qualification. No manual UI or accessibility behavior was claimed.

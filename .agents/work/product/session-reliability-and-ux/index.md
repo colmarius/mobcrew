@@ -25,9 +25,10 @@ documentation overhaul, narrowing Task 10 to behavior-change deltas and final ob
 Saved teams, cloud sync, forced full-screen breaks, and other speculative expansion are out of scope.
 Implementation is active on the rebased audit branch. Tasks 1-2 established the authoritative
 session phase and identity-preserving roster operations; Task 3 then separated configured duration
-from current-cycle progress and aligned both controls. Tasks 1-3 passed focused and full native
-tests on the available Mac runner. Task 4 deadline-based timing is now active. Exact Xcode 26.6+
-qualification remains outstanding because the runner currently has 26.2.
+from current-cycle progress and aligned both controls. Task 4 replaced delivered-tick subtraction
+with deadline-based elapsed time. Tasks 1-4 passed focused and full native tests on the available Mac
+runner. Task 5 optional-break behavior is now active. Exact Xcode 26.6+ qualification remains
+outstanding because the runner currently has 26.2.
 
 ## Artifacts
 
@@ -40,7 +41,7 @@ qualification remains outstanding because the runner currently has 26.2.
 
 ## Next Action
 
-- Run the native focused and full-suite gates for [Task 4: Make countdown deadline-based and deterministic](plan.md#task-4-make-countdown-deadline-based-and-deterministic), apply only bounded compile/test fixes, and record observed evidence before checking it complete.
+- Implement [Task 5: Make breaks optional and finalize break transitions](plan.md#task-5-make-breaks-optional-and-finalize-break-transitions), beginning with persistence-default and disabled-cadence tests.
 
 ## Open Questions
 
