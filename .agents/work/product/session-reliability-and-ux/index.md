@@ -39,9 +39,10 @@ contextual semantics across core surfaces, and injected one-shot transition anno
 Xcode 26.6 focused/full tests pass. An isolated 20-person harness verified initial AX semantics and
 announcement delivery. Manual inspection then found that both main panes retained intrinsic/fixed
 widths when the window expanded, wasting available space and clipping long participant names. A
-responsive layout correction is pushed. The retained test harness also fixed its SwiftUI root at
-600×450 instead of only choosing that initial window size, so native rebuild and interactive
-accessibility/display checks need a reconnected Mac runner before acceptance.
+responsive layout correction is pushed and passed exact-toolchain focused tests plus native geometry,
+AX, splitter, minimum/expanded-window, and increased-text checks. User inspection confirms the normal
+expanded layout. Task 9 now awaits only interactive VoiceOver, Full Keyboard Access, and display-option
+observations before acceptance.
 
 ## Artifacts
 
@@ -54,8 +55,8 @@ accessibility/display checks need a reconnected Mac runner before acceptance.
 
 ## Next Action
 
-- Reconnect the Mac `amp --no-tui` runner, then rebuild the isolated
-  [Task 9](plan.md#task-9-make-core-controls-accessible-and-large-rosters-reachable) harness without its
-  fixed root frame. Verify 600×450 and expanded-window layouts, then finish user-assisted VoiceOver,
-  Full Keyboard Access, scrolling, break-completion, contrast, Differentiate Without Color, and
-  increased-text checks. Older macOS coverage is not required.
+- Finish [Task 9](plan.md#task-9-make-core-controls-accessible-and-large-rosters-reachable) against the
+  open isolated app: activate one person-specific Move action with VoiceOver and Full Keyboard Access,
+  confirm handoff/break announcements, and inspect Increase Contrast plus Differentiate Without Color.
+  Then record the results and run Task 10's final full-suite/documentation gate. Older macOS coverage
+  is not required.

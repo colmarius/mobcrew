@@ -180,6 +180,24 @@ made the real floating panel transition onscreen → hidden → onscreen. App-sp
 physical keypress were not independently observed; the denied-receiver experiment above establishes
 the permission result without changing TCC state.
 
+### Observed Task 9 result: responsive accessible roster layout
+
+On 2026-08-09, the logged-in Mac runner (macOS 26.5.2, arm64, Xcode 26.6, Swift 6.3.3)
+tested exact commit `5b0e88937efdd71ed8c6741dc3dea122a00142fa` with an isolated 12-active,
+8-benched roster. `AppStateTests` and `RosterTests` passed 85/85. At 600×450 content the split panes
+measured 299/300 points and the roster outline 268×378; at 1000×700 they measured 499/500 and
+468×628. A real pointer drag moved the splitter and reallocated the panes without changing height.
+
+One AX roster outline owned all 20 long-name participants and 64 person-specific Move, Bench,
+Activate, and Remove action titles in complete minimum and expanded snapshots. Increased-text checks
+kept all main controls, 22 outline rows, and actions reachable at both sizes. The floating panel's AX
+children remained in bounds; visible long-name ellipsis at its intentional 180-point width is recorded
+for non-blocking Task 11 rather than expanding release-critical scope. AXPress on Skip emitted one
+contextual handoff announcement. User inspection of the expanded normal-text app confirmed both panes
+and the List filled available space with readable long names and no visible overlap. Spoken VoiceOver,
+Full Keyboard Access, Increase Contrast, Differentiate Without Color, and break-complete announcement
+checks remain interactive gates; current-host evidence is sufficient and older-macOS repetition is not required.
+
 ## Explicit deferrals
 
 - Do not implement a forced full-screen break solely to satisfy stale marketing copy.

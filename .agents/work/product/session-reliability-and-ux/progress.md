@@ -9,8 +9,8 @@ Updated: 2026-08-09
   roster reordering has keyboard/VoiceOver actions, one native List owns active and benched scrolling,
   and injected announcements cover only meaningful session transitions. Xcode tests and initial native
   AX inspection pass. User inspection found the main panes did not consume expanded window space; the
-  responsive-layout correction is pushed, but the Mac runner disconnected before rebuild and final
-  interactive accessibility/display checks.
+  pushed responsive correction now passes native geometry, splitter, AX, and increased-text checks.
+  Interactive VoiceOver, Full Keyboard Access, and display-option checks remain.
 
 ## Observed Evidence
 
@@ -202,20 +202,32 @@ Updated: 2026-08-09
   descendants and screen capture failed, so it did not claim end-to-end scrolling, native Move activation,
   break-complete output, spoken VoiceOver behavior, Full Keyboard Access, colors, contrast/differentiation,
   or increased-text layout. Global accessibility settings remained unchanged.
-- Remaining Task 9 acceptance is interactive user-assisted validation on the current Mac: scroll the
-  20-person list end-to-end; activate Move Down/Up using VoiceOver and Full Keyboard Access; complete the
-  short break; and inspect Increase Contrast, Differentiate Without Color, and increased text. Current
-  macOS 26.5.2 coverage is sufficient; no older-version repetition remains.
+- Remaining Task 9 acceptance is interactive user-assisted validation on the current Mac: activate
+  Move Down/Up using spoken VoiceOver and Full Keyboard Access, complete the short break, and inspect
+  Increase Contrast plus Differentiate Without Color. Current macOS 26.5.2 coverage is sufficient;
+  no older-version repetition remains.
 - Manual inspection of the retained isolated harness found an expanded main window still presented
   fixed-width content. The harness itself fixed the SwiftUI root at 600×450 rather than only setting the
   initial NSWindow size; production also capped the timer pane at 300 points and allowed the roster to
   keep an intrinsic width, leaving space unused while long names wrapped or truncated. Task 9 remains open.
 - The correction removes the timer-pane maximum, gives both split panes and the single native List
   flexible width/height, and raises the minimum main content size to the acceptance baseline of
-  600×450. Linux `git diff --check` and documentation validation pass; native build and resized-window
-  inspection remain pending.
-- The Mac runner disappeared while the replacement-harness task was being created. No child thread was
-  created and the operation was not retried. Reconnection is the exact native-verification gate.
+  600×450. Linux `git diff --check` and documentation validation pass.
+- After reconnection, exact pushed commit `5b0e88937efdd71ed8c6741dc3dea122a00142fa`
+  passed 85/85 focused `AppStateTests` and `RosterTests` using Xcode 26.6 (17F113), Swift 6.3.3,
+  and Swift language mode 6. The isolated harness changed only launch-gated construction and preserved
+  production `ContentView`/`RosterView` source exactly.
+- At 600×450 content, the split panes measured 299/300 points and the roster outline 268×378. At
+  1000×700 they measured 499/500 and 468×628, proving both hosted content and the single List consumed
+  added width/height. A real splitter drag changed panes to 579/420 and the outline to 388 points wide.
+- Complete minimum and expanded AX snapshots placed all 20 long-name participants and 64 person-specific
+  actions under one roster outline. Increased-text checks retained all main controls, 22 outline rows,
+  and all actions in bounds at both sizes; the 180×160 floating panel retained in-bounds AX children,
+  with expected long-name ellipsis deferred to non-blocking Task 11 observation.
+- AXPress on Skip produced one contextual handoff announcement. The user-inspected expanded screenshot
+  shows both panes/List filling the window, readable long main-window names, and no visible overlap.
+  The replacement harness now uses a valid one-minute turn seed, only sets the initial NSWindow content
+  size, and remains open for interactive assistive-technology/display checks.
 
 ## Verification Status
 
@@ -233,4 +245,5 @@ Updated: 2026-08-09
 - Task 8 passed 54 focused and all 169 executed project test cases using Xcode 26.6 / Swift 6.3.3;
   live Settings inspection also confirmed independent actual/preference status and unclipped recovery UI.
 - Task 9 passed 85 focused and all 177 executed project test cases using Xcode 26.6 / Swift 6.3.3.
-  Initial logged-in AX semantics passed; interactive assistive/display acceptance awaits user assistance.
+  The responsive follow-up also passed 85/85 focused tests and logged-in native geometry/AX/increased-text
+  checks; interactive VoiceOver, Full Keyboard Access, and display-option acceptance awaits user assistance.
