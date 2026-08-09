@@ -23,6 +23,8 @@ private final class AppStateNotificationSpy: NotificationServiceProtocol {
     func sendBreakDue(duration: Int) {
         events.append(.breakDue(duration: duration))
     }
+
+    func sendBreakComplete() {}
 }
 
 @MainActor
@@ -250,10 +252,23 @@ struct AppStateTests {
         let fixture = makeFixture()
 
         #expect(fixture.appState.timerDuration == 420)
+        #expect(fixture.appState.breaksEnabled)
         #expect(fixture.appState.sessionPhase == .regularIdle)
         #expect(fixture.appState.timerState.secondsRemaining == 420)
         #expect(fixture.appState.roster.activeMobsters.isEmpty)
         #expect(fixture.appState.roster.inactiveMobsters.isEmpty)
+    }
+
+    @Test("stored disabled breaks load across AppState instances")
+    func breaksEnabledPersistsAcrossInstances() {
+        let defaults = makeTestUserDefaults()
+        let first = makeFixture(userDefaults: defaults)
+        first.appState.setBreaksEnabled(false)
+
+        let second = makeFixture(userDefaults: defaults, timerDuration: nil)
+
+        #expect(first.appState.breaksEnabled == false)
+        #expect(second.appState.breaksEnabled == false)
     }
 
     // MARK: - Transition Matrix

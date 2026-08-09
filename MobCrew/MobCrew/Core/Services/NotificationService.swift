@@ -13,6 +13,7 @@ protocol NotificationServiceProtocol {
     func requestPermission()
     func sendTimerComplete(driver: String, navigator: String)
     func sendBreakDue(duration: Int)
+    func sendBreakComplete()
 }
 
 @MainActor
@@ -72,6 +73,25 @@ final class NotificationService: NotificationServiceProtocol {
         notificationCenter.add(request) { error in
             if let error = error {
                 print("Failed to send break notification: \(error)")
+            }
+        }
+    }
+
+    func sendBreakComplete() {
+        let content = UNMutableNotificationContent()
+        content.title = "Break Complete"
+        content.body = "Ready for the next turn."
+        content.sound = .default
+
+        let request = UNNotificationRequest(
+            identifier: UUID().uuidString,
+            content: content,
+            trigger: nil
+        )
+
+        notificationCenter.add(request) { error in
+            if let error = error {
+                print("Failed to send break completion notification: \(error)")
             }
         }
     }

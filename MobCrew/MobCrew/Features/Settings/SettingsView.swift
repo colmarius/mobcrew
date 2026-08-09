@@ -116,6 +116,11 @@ private struct BreakSettingsTab: View {
     var body: some View {
         Form {
             Section("Breaks") {
+                Toggle("Enable Breaks", isOn: Binding(
+                    get: { appState.breaksEnabled },
+                    set: { appState.setBreaksEnabled($0) }
+                ))
+
                 Stepper(value: Binding(
                     get: { appState.breakInterval },
                     set: { appState.breakInterval = $0 }
@@ -128,6 +133,7 @@ private struct BreakSettingsTab: View {
                             .foregroundStyle(.secondary)
                     }
                 }
+                .disabled(!appState.breaksEnabled)
                 
                 Stepper(value: Binding(
                     get: { appState.breakDuration / 60 },
@@ -141,6 +147,7 @@ private struct BreakSettingsTab: View {
                             .foregroundStyle(.secondary)
                     }
                 }
+                .disabled(!appState.breaksEnabled)
             }
         }
         .formStyle(.grouped)

@@ -14,7 +14,8 @@ interrupting the session.
 - **Roster management** - Driver/navigator rotation with identity-preserving removal and reordering
 - **Bench** - Temporarily bench inactive mobsters
 - **Floating timer** - Always-on-top window showing countdown
-- **Break timer** - In-window Take Break / Skip Break choice with a pausable countdown
+- **Optional break timer** - Enable or disable in-window Take Break / Skip Break prompts with a
+  pausable countdown and completion alert
 - **Global hotkey** - ⌘⇧L toggles the floating timer from anywhere (requires Accessibility
   permission)
 - **Menu bar** - Quick access from the menu bar

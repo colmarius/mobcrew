@@ -8,6 +8,7 @@ private final class BreakNotificationSpy: NotificationServiceProtocol {
         case permissionRequested
         case timerCompleted
         case breakDue(duration: Int)
+        case breakCompleted
     }
 
     var events: [Event] = []
@@ -22,6 +23,10 @@ private final class BreakNotificationSpy: NotificationServiceProtocol {
 
     func sendBreakDue(duration: Int) {
         events.append(.breakDue(duration: duration))
+    }
+
+    func sendBreakComplete() {
+        events.append(.breakCompleted)
     }
 }
 
@@ -59,12 +64,16 @@ struct BreakLogicTests {
 
     private func makeFixture(
         breakInterval: Int = 1,
-        breakDuration: Int = 60
+        breakDuration: Int = 60,
+        breaksEnabled: Bool? = nil
     ) -> Fixture {
         let suiteName = "com.mobcrew.tests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!
         let persistenceService = PersistenceService(userDefaults: defaults)
         persistenceService.saveTimerDuration(1)
+        if let breaksEnabled {
+            persistenceService.saveBreaksEnabled(breaksEnabled)
+        }
         let monotonicClock = BreakMonotonicClock()
         let timerEngine = TimerEngine(
             monotonicClock: monotonicClock,
@@ -118,6 +127,129 @@ struct BreakLogicTests {
         ])
     }
 
+    @Test("disabled breaks do not accumulate cadence or prompt after re-enable")
+    func disabledBreaksResetCadenceAcrossReEnable() {
+        let fixture = makeFixture(breakInterval: 2)
+        completeRegularTurn(fixture)
+        #expect(fixture.appState.turnsSinceBreak == 1)
+
+        fixture.appState.setBreaksEnabled(false)
+        #expect(fixture.appState.turnsSinceBreak == 0)
+
+        for _ in 0..<2 {
+            completeRegularTurn(fixture)
+            #expect(fixture.appState.sessionPhase == .regularIdle)
+            #expect(fixture.appState.turnsSinceBreak == 0)
+        }
+        #expect(fixture.notifications.events.filter { event in
+            if case .breakDue = event { return true }
+            return false
+        }.isEmpty)
+
+        fixture.appState.setBreaksEnabled(true)
+        #expect(fixture.appState.sessionPhase == .regularIdle)
+        #expect(fixture.appState.turnsSinceBreak == 0)
+
+        completeRegularTurn(fixture)
+        #expect(fixture.appState.sessionPhase == .regularIdle)
+        #expect(fixture.appState.turnsSinceBreak == 1)
+        completeRegularTurn(fixture)
+        #expect(fixture.appState.sessionPhase == .breakDue)
+        #expect(fixture.appState.turnsSinceBreak == 2)
+    }
+
+    @Test("persisted disabled breaks suppress cadence from the first turn")
+    func persistedDisabledBreaksSuppressCadence() {
+        let fixture = makeFixture(breakInterval: 1, breaksEnabled: false)
+
+        completeRegularTurn(fixture)
+
+        #expect(fixture.appState.breaksEnabled == false)
+        #expect(fixture.appState.sessionPhase == .regularIdle)
+        #expect(fixture.appState.turnsSinceBreak == 0)
+        #expect(fixture.notifications.events == [
+            .permissionRequested,
+            .timerCompleted
+        ])
+    }
+
+    @Test("disabling breaks preserves a current regular cycle")
+    func disablingBreaksPreservesRegularCycle() {
+        for shouldPause in [false, true] {
+            let fixture = makeFixture(breakInterval: 2)
+            completeRegularTurn(fixture)
+            fixture.appState.startTimer()
+            fixture.monotonicClock.advance(by: 0.25)
+            fixture.timerEngine.refresh()
+            if shouldPause {
+                fixture.appState.pauseTimer()
+            }
+            let phase = fixture.appState.sessionPhase
+            let remaining = fixture.appState.timerState.secondsRemaining
+
+            fixture.appState.setBreaksEnabled(false)
+
+            #expect(fixture.appState.sessionPhase == phase)
+            #expect(fixture.appState.timerState.secondsRemaining == remaining)
+            #expect(fixture.timerEngine.isRunning == !shouldPause)
+            #expect(fixture.appState.turnsSinceBreak == 0)
+            fixture.appState.resetTimer()
+        }
+    }
+
+    @Test("disabling a due break clears the prompt without completing or advancing")
+    func disablingDueBreakReturnsToRegularIdle() {
+        let fixture = makeFixture(breakDuration: 180)
+        completeRegularTurn(fixture)
+        let driverID = fixture.appState.roster.driver?.id
+        let writeCount = fixture.activeMobstersWriter.writeCount
+        fixture.notifications.events.removeAll()
+
+        fixture.appState.setBreaksEnabled(false)
+
+        #expect(fixture.appState.sessionPhase == .regularIdle)
+        #expect(fixture.appState.turnsSinceBreak == 0)
+        #expect(fixture.appState.timerState.totalSeconds == fixture.appState.timerDuration)
+        #expect(fixture.appState.timerState.secondsRemaining == fixture.appState.timerDuration)
+        #expect(fixture.timerEngine.isRunning == false)
+        #expect(fixture.appState.roster.driver?.id == driverID)
+        #expect(fixture.activeMobstersWriter.writeCount == writeCount)
+        #expect(fixture.notifications.events.isEmpty)
+    }
+
+    @Test("disabling breaks preserves an accepted running or paused break")
+    func disablingBreaksPreservesAcceptedBreak() {
+        for shouldPause in [false, true] {
+            let fixture = makeFixture(breakDuration: 180)
+            completeRegularTurn(fixture)
+            fixture.appState.takeBreak()
+            if shouldPause {
+                fixture.appState.pauseTimer()
+            }
+            let phase = fixture.appState.sessionPhase
+            let remaining = fixture.appState.timerState.secondsRemaining
+            fixture.notifications.events.removeAll()
+
+            fixture.appState.setBreaksEnabled(false)
+
+            #expect(fixture.appState.sessionPhase == phase)
+            #expect(fixture.appState.timerState.secondsRemaining == remaining)
+            #expect(fixture.timerEngine.isRunning == !shouldPause)
+            #expect(fixture.appState.turnsSinceBreak == 0)
+
+            if shouldPause {
+                fixture.appState.resumeTimer()
+                #expect(fixture.appState.sessionPhase == .breakRunning)
+                fixture.appState.skipBreak()
+                #expect(fixture.notifications.events.isEmpty)
+            } else {
+                elapse(180, in: fixture)
+                #expect(fixture.appState.sessionPhase == .regularIdle)
+                #expect(fixture.notifications.events == [.breakCompleted])
+            }
+        }
+    }
+
     @Test("taking a due break starts the prepared countdown without notifying twice")
     func takeBreakStartsPreparedCountdown() {
         let fixture = makeFixture(breakInterval: 1, breakDuration: 180)
@@ -158,6 +290,7 @@ struct BreakLogicTests {
         let fixture = makeFixture(breakDuration: 1)
         completeRegularTurn(fixture)
         fixture.appState.takeBreak()
+        fixture.notifications.events.removeAll()
         fixture.monotonicClock.advance(by: 1)
 
         fixture.appState.pauseTimer()
@@ -165,6 +298,7 @@ struct BreakLogicTests {
         #expect(fixture.appState.sessionPhase == .regularIdle)
         #expect(fixture.appState.turnsSinceBreak == 0)
         #expect(fixture.appState.timerState.secondsRemaining == fixture.appState.timerDuration)
+        #expect(fixture.notifications.events == [.breakCompleted])
     }
 
     @Test("skipping every break phase never advances the roster")
@@ -180,6 +314,7 @@ struct BreakLogicTests {
             }
             let driverID = fixture.appState.roster.driver?.id
             let writeCount = fixture.activeMobstersWriter.writeCount
+            let eventCount = fixture.notifications.events.count
 
             fixture.appState.skipBreak()
 
@@ -189,6 +324,7 @@ struct BreakLogicTests {
             #expect(fixture.appState.turnsSinceBreak == 0)
             #expect(fixture.appState.timerState.secondsRemaining == fixture.appState.timerDuration)
             #expect(fixture.timerEngine.isRunning == false)
+            #expect(fixture.notifications.events.count == eventCount)
         }
     }
 
@@ -223,6 +359,7 @@ struct BreakLogicTests {
         let driverAfterRegularCompletion = fixture.appState.roster.driver?.id
         let writesAfterRegularCompletion = fixture.activeMobstersWriter.writeCount
         fixture.appState.takeBreak()
+        fixture.notifications.events.removeAll()
 
         elapse(1, in: fixture)
         fixture.timerEngine.refresh()
@@ -233,6 +370,25 @@ struct BreakLogicTests {
         #expect(fixture.activeMobstersWriter.writeCount == writesAfterRegularCompletion)
         #expect(fixture.appState.timerState.secondsRemaining == fixture.appState.timerDuration)
         #expect(fixture.timerEngine.isRunning == false)
+        #expect(fixture.notifications.events == [.breakCompleted])
+
+        fixture.timerEngine.refresh()
+        #expect(fixture.notifications.events == [.breakCompleted])
+    }
+
+    @Test("break completion cue follows the existing notification preference")
+    func breakCompletionRespectsNotificationPreference() {
+        let fixture = makeFixture(breakDuration: 1)
+        completeRegularTurn(fixture)
+        fixture.appState.takeBreak()
+        fixture.notifications.events.removeAll()
+        fixture.appState.notificationsEnabled = false
+
+        elapse(1, in: fixture)
+
+        #expect(fixture.appState.sessionPhase == .regularIdle)
+        #expect(fixture.appState.turnsSinceBreak == 0)
+        #expect(fixture.notifications.events.isEmpty)
     }
 
     @Test("ordinary completion notifies once and returns to regular idle")

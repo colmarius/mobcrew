@@ -5,8 +5,9 @@ Updated: 2026-08-09
 ## Current Slice
 
 - Tasks 1-4 are implemented, natively tested, checked off in the active plan, and pushed.
-- Task 5 is next: persist enabled-by-default optional breaks, clear pending break state when disabled,
-  and ensure disabled turns cannot accumulate surprise cadence across re-enable.
+- Task 5 implementation is ready for its native gate: optional breaks persist with an enabled default,
+  disabling clears pending prompts and cadence without cancelling accepted breaks, and break completion
+  uses one fixed cue through the existing notification preference.
 
 ## Observed Evidence
 
@@ -62,6 +63,15 @@ Updated: 2026-08-09
 - The full macOS suite passed 118/118 with 0 failures or skips. The disposable worktree was clean and
   removed; the user's primary checkout and its two unrelated untracked bundles remained unchanged.
   No temporary local or remote branch was created.
+- Oracle review for Task 5 resolved disabled-state integration: a pending `breakDue` clears to regular
+  idle, while an explicitly accepted running or paused break remains controllable. Disabling resets
+  cadence and every disabled regular completion keeps it at zero; re-enable performs no immediate check.
+- Task 5 tests cover missing-key enabled behavior, true/false persistence, initially disabled cadence,
+  reset across disable/re-enable, regular and accepted-break preservation, due clearing, lifecycle
+  transitions, completion cue idempotence, and the existing Notifications preference.
+- Main and floating cadence indicators now hide when disabled; Settings keeps break configuration
+  visible but disabled beneath an `Enable Breaks` toggle. Break completion returns through the
+  authoritative regular-idle transition before sending one fixed local notification.
 
 ## Verification Status
 
@@ -69,5 +79,7 @@ Updated: 2026-08-09
 - Task 3 passed focused and full-suite regression coverage on the same Xcode 26.2 runner.
 - Task 4 passed 53 focused and all 118 project tests on the same Xcode 26.2 runner, including Swift 6
   compilation of the actor-isolated Combine publisher path.
+- Task 5 implementation has passed Linux source inspection, whitespace validation, and documentation
+  validation; native compile, focused tests, and the full macOS suite are the current unverified gate.
 - The project specifies Xcode 26.6+ / Swift 6.3, so the exact-toolchain rerun remains unverified and
   must be repeated before final qualification. No manual UI or accessibility behavior was claimed.

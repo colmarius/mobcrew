@@ -179,6 +179,26 @@ struct PersistenceServiceTests {
         #expect(loaded == nil)
     }
 
+    @Test("saves and loads whether breaks are enabled")
+    func breaksEnabledRoundTrip() {
+        let defaults = makeTestUserDefaults()
+        let service = PersistenceService(userDefaults: defaults)
+
+        service.saveBreaksEnabled(false)
+        #expect(service.loadBreaksEnabled() == false)
+
+        service.saveBreaksEnabled(true)
+        #expect(service.loadBreaksEnabled() == true)
+    }
+
+    @Test("returns nil for breaks enabled when no setting exists")
+    func breaksEnabledReturnsNilWhenNoData() {
+        let defaults = makeTestUserDefaults()
+        let service = PersistenceService(userDefaults: defaults)
+
+        #expect(service.loadBreaksEnabled() == nil)
+    }
+
     // MARK: - Edge Cases
 
     @Test("handles empty roster")

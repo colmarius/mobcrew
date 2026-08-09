@@ -45,6 +45,20 @@ struct NotificationServiceTests {
         let request = mockCenter.addedRequests.first!
         #expect(request.content.body == "Take a 10 minute break")
     }
+
+    @Test("break complete notification has fixed content")
+    func breakCompleteNotificationContent() {
+        let mockCenter = MockNotificationCenter()
+        let service = NotificationService(notificationCenter: mockCenter)
+
+        service.sendBreakComplete()
+
+        #expect(mockCenter.addedRequests.count == 1)
+        let request = mockCenter.addedRequests.first!
+        #expect(request.content.title == "Break Complete")
+        #expect(request.content.body == "Ready for the next turn.")
+        #expect(request.content.sound == .default)
+    }
     
     @Test("request permission only prompts once")
     func requestPermissionOnlyOnce() {

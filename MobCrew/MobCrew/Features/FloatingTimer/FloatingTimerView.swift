@@ -43,10 +43,12 @@ private struct FloatingNormalView: View {
             RoleLabel(role: "Navigator", name: appState.roster.navigator?.name, isDriver: false)
         }
         
-        BreakProgressView(
-            breakInterval: appState.breakInterval,
-            turnsSinceBreak: appState.turnsSinceBreak
-        )
+        if appState.breaksEnabled {
+            BreakProgressView(
+                breakInterval: appState.breakInterval,
+                turnsSinceBreak: appState.turnsSinceBreak
+            )
+        }
         
         Button(action: { appState.performPrimaryAction() }) {
             Image(systemName: appState.primaryActionSystemImage)

@@ -25,6 +25,7 @@ final class AppState {
             persistenceService.saveBreakDuration(breakDuration)
         }
     }
+    private(set) var breaksEnabled: Bool
     private(set) var turnsSinceBreak: Int = 0
     var currentTip: Tip = Tip.random()
     var notificationsEnabled: Bool = true {
@@ -59,6 +60,7 @@ final class AppState {
         let loadedDuration = persistenceService.loadTimerDuration() ?? 420 // 7 minutes default
         let loadedBreakInterval = persistenceService.loadBreakInterval() ?? 5
         let loadedBreakDuration = persistenceService.loadBreakDuration() ?? 300 // 5 minutes default
+        let loadedBreaksEnabled = persistenceService.loadBreaksEnabled() ?? true
         let loadedNotificationsEnabled = persistenceService.loadNotificationsEnabled() ?? true
         let loadedShowTips = persistenceService.loadShowTips() ?? false
 
@@ -68,6 +70,7 @@ final class AppState {
         self.timerDuration = loadedDuration
         self.breakInterval = loadedBreakInterval
         self.breakDuration = loadedBreakDuration
+        self.breaksEnabled = loadedBreaksEnabled
         self.timerState = timerEngine.state
         timerEngine.reset(duration: loadedDuration)
 
@@ -175,9 +178,13 @@ final class AppState {
         if shouldAdvanceRoles {
             roster.advanceTurn()
         }
-        turnsSinceBreak += 1
+        if breaksEnabled {
+            turnsSinceBreak += 1
+        } else {
+            turnsSinceBreak = 0
+        }
 
-        if turnsSinceBreak >= breakInterval {
+        if breaksEnabled && turnsSinceBreak >= breakInterval {
             timerEngine.reset(duration: breakDuration)
             sessionPhase = .breakDue
         } else {
@@ -210,6 +217,12 @@ final class AppState {
         sessionPhase = .regularIdle
         turnsSinceBreak = 0
         timerEngine.reset(duration: timerDuration)
+        sendBreakCompleteNotification()
+    }
+
+    private func sendBreakCompleteNotification() {
+        guard notificationsEnabled else { return }
+        notificationService.sendBreakComplete()
     }
 
     func performPrimaryAction() {
@@ -299,6 +312,19 @@ final class AppState {
         guard Self.timerDurationMinutesRange.contains(minutes) else { return }
         timerDuration = minutes * 60
         if sessionPhase == .regularIdle {
+            timerEngine.reset(duration: timerDuration)
+        }
+    }
+
+    func setBreaksEnabled(_ enabled: Bool) {
+        guard breaksEnabled != enabled else { return }
+        breaksEnabled = enabled
+        persistenceService.saveBreaksEnabled(enabled)
+
+        guard !enabled else { return }
+        turnsSinceBreak = 0
+        if sessionPhase == .breakDue {
+            sessionPhase = .regularIdle
             timerEngine.reset(duration: timerDuration)
         }
     }

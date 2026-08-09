@@ -14,6 +14,7 @@ final class PersistenceService {
         static let timerDuration = "mobcrew.timerDuration"
         static let breakInterval = "mobcrew.breakInterval"
         static let breakDuration = "mobcrew.breakDuration"
+        static let breaksEnabled = "mobcrew.breaksEnabled"
         static let notificationsEnabled = "mobcrew.notificationsEnabled"
         static let showTips = "mobcrew.showTips"
     }
@@ -86,6 +87,17 @@ final class PersistenceService {
     func loadBreakDuration() -> Int? {
         let value = userDefaults.integer(forKey: Keys.breakDuration)
         return value > 0 ? value : nil
+    }
+
+    func saveBreaksEnabled(_ enabled: Bool) {
+        userDefaults.set(enabled, forKey: Keys.breaksEnabled)
+    }
+
+    func loadBreaksEnabled() -> Bool? {
+        guard userDefaults.object(forKey: Keys.breaksEnabled) != nil else {
+            return nil
+        }
+        return userDefaults.bool(forKey: Keys.breaksEnabled)
     }
     
     // MARK: - Notifications Settings Persistence

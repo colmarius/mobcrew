@@ -39,7 +39,13 @@ Reset or use a fresh test account when a journey depends on first-run permission
 - [ ] After the configured number of turns, the break screen replaces content inside the main
       window and offers **Take Break** / **Skip Break** without starting the countdown.
 - [ ] Take Break starts the prepared countdown; Pause Break freezes it and Resume Break continues it.
-- [ ] Break duration and cadence accept their Settings ranges and persist.
+- [ ] **Enable Breaks** defaults on; disabling it clears a pending break prompt, hides cadence dots,
+      and prevents completed turns from accumulating break cadence.
+- [ ] Re-enabling breaks starts cadence again from zero and does not immediately offer a surprise break.
+- [ ] Disabling breaks during an accepted running or paused break preserves that break and its controls.
+- [ ] Break duration, cadence, and enabled state accept their Settings controls and persist.
+- [ ] A naturally completed break returns to regular idle and sends one **Break Complete** alert when
+      Notifications are enabled; Skip Break and clearing a pending prompt do not send that alert.
 - [ ] **Skip Break** and Esc leave the break screen, reset break progress, and restore the turn timer.
 - [ ] Skip Turn is harmless in break-due, running-break, and paused-break states and never advances roles.
 
@@ -61,8 +67,8 @@ path. Do not disable Gatekeeper or strip quarantine attributes as part of app-le
 - [ ] Grant MobCrew access later in **System Settings → Privacy & Security → Accessibility**; ⌘⇧L
       then toggles the floating timer.
 - [ ] Deny Notifications when first starting the timer; timer and break behavior continue normally.
-- [ ] Grant Notifications in System Settings and enable them in MobCrew; turn-complete and break-due
-      alerts are delivered once per transition.
+- [ ] Grant Notifications in System Settings and enable them in MobCrew; turn-complete, break-due,
+      and break-complete alerts are delivered once per transition.
 - [ ] Disable Notifications in MobCrew; no new turn or break alert is sent.
 
 ## Floating window, menu bar, and launch at login
@@ -79,7 +85,7 @@ path. Do not disable Gatekeeper or strip quarantine attributes as part of app-le
 ## Persistence
 
 - [ ] Quit and relaunch after changing the active order, bench, current role, turn duration, break
-      cadence/duration, Notifications, and Show Tips; those values are restored.
+      enabled state/cadence/duration, Notifications, and Show Tips; those values are restored.
 - [ ] The current active names are written locally to
       `~/Library/Application Support/MobCrew/active-mobsters` after roster/role changes.
 

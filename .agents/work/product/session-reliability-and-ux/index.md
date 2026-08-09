@@ -41,7 +41,7 @@ outstanding because the runner currently has 26.2.
 
 ## Next Action
 
-- Implement [Task 5: Make breaks optional and finalize break transitions](plan.md#task-5-make-breaks-optional-and-finalize-break-transitions), beginning with persistence-default and disabled-cadence tests.
+- Run focused and full native gates for [Task 5: Make breaks optional and finalize break transitions](plan.md#task-5-make-breaks-optional-and-finalize-break-transitions), apply only bounded compile/test fixes, and then record observed evidence.
 
 ## Open Questions
 
