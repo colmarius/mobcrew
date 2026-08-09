@@ -35,6 +35,8 @@ cat >"$WORK/CHANGELOG.md" <<'EOF'
 ## [1.2.3] - 2026-08-09
 
 Release v1.2.3
+
+- Multiline release notes
 EOF
 git -C "$WORK" add .
 git -C "$WORK" -c user.name=test -c user.email=test@example.invalid \
@@ -66,7 +68,7 @@ read_state() { cat "${STATE:?}/$1"; }
 write_live() {
   printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
     "$(read_state release_id)" "$(read_state draft)" v1.2.3 "$(read_state target)" \
-    "$(read_state title)" "$(read_state body)" false "$(read_state asset_count)" \
+    "$(read_state title)" "$(printf '%s' "$(read_state body)" | base64 | tr -d '\n')" false "$(read_state asset_count)" \
     "$(read_state asset_id)" "$(read_state asset_name)" "$(read_state asset_size)" \
     "$(read_state asset_digest)"
 }
@@ -116,7 +118,7 @@ case "$1" in
           shift 2
           test "$1" = -f && test "$2" = "name=MobCrew 1.2.3"
           shift 2
-          test "$1" = -f && test "$2" = "body=Release v1.2.3"
+          test "$1" = -f && test "$2" = "body=$(read_state body)"
           shift 2
           test "$1" = -F && test "$2" = "draft=true"
           shift 2
@@ -227,6 +229,14 @@ export PATH="$MOCK:$PATH" GH_LOG STATE TEST_REMOTE="$REMOTE"
 
 read_state() { cat "$STATE/$1"; }
 
+write_expected_body() {
+  cat >"$STATE/body" <<'EOF'
+Release v1.2.3
+
+- Multiline release notes
+EOF
+}
+
 reset_state() {
   rm -f "$STATE/tag_query_error" "$STATE/tag_conflict" "$STATE/duplicate_draft" "$STATE/server-asset"
   printf 'false\n' >"$STATE/release_present"
@@ -235,7 +245,7 @@ reset_state() {
   printf 'true\n' >"$STATE/draft"
   printf '%s\n' "$(git -C "$WORK" rev-parse HEAD)" >"$STATE/target"
   printf 'MobCrew 1.2.3\n' >"$STATE/title"
-  printf 'Release v1.2.3\n' >"$STATE/body"
+  write_expected_body
   printf '0\n' >"$STATE/asset_count"
   printf '\n' >"$STATE/asset_id"
   printf '\n' >"$STATE/asset_name"
@@ -428,7 +438,7 @@ set_matching_asset "$DMG"; printf 'Wrong title\n' >"$STATE/title"
 run_fail conflicting-title "$WORK/scripts/release.sh" create-draft 1.2.3; assert_no_mutation
 printf 'MobCrew 1.2.3\n' >"$STATE/title"; printf 'wrong body\n' >"$STATE/body"
 run_fail conflicting-body "$WORK/scripts/release.sh" create-draft 1.2.3; assert_no_mutation
-printf 'Release v1.2.3\n' >"$STATE/body"; printf '%040d\n' 0 >"$STATE/target"
+write_expected_body; printf '%040d\n' 0 >"$STATE/target"
 run_fail conflicting-target "$WORK/scripts/release.sh" create-draft 1.2.3; assert_no_mutation
 printf '%s\n' "$TARGET" >"$STATE/target"; printf 'false\n' >"$STATE/draft"
 run_fail published-state "$WORK/scripts/release.sh" create-draft 1.2.3; assert_no_mutation
