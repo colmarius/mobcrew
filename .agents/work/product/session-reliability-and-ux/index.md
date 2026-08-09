@@ -41,11 +41,10 @@ announcement delivery. Manual inspection then found that both main panes retaine
 widths when the window expanded, wasting available space and clipping long participant names. A
 responsive layout correction is pushed and passed exact-toolchain focused tests plus native geometry,
 AX, splitter, minimum/expanded-window, and increased-text checks. User inspection confirms the normal
-expanded layout. Task 9 now awaits only interactive VoiceOver, Full Keyboard Access, and display-option
-observations before acceptance. The first Full Keyboard Access attempt exposed that Tab skipped the
-borderless participant buttons inside the List; an explicit activation-focus correction now awaits
-native traversal and Space-activation verification. It compiles and passes focused tests, but the host's
-Full Keyboard Access setting was off during automated verification. Task 10's preparatory truth audit
+expanded layout. The first Full Keyboard Access attempt exposed that Tab skipped the borderless
+participant buttons inside the List; an explicit activation-focus correction compiles, passes focused
+tests, and user testing now confirms the roster accepts keyboard focus and traversal. Task 9 awaits only
+spoken VoiceOver/announcement and display-option observations. Task 10's preparatory truth audit
 corrected the remaining wording; its final gate depends on Task 9.
 
 ## Artifacts
@@ -59,8 +58,7 @@ corrected the remaining wording; its final gate depends on Task 9.
 
 ## Next Action
 
-- Enable macOS Full Keyboard Access, then use the open corrected
-  [Task 9](plan.md#task-9-make-core-controls-accessible-and-large-rosters-reachable) harness to prove
-  real Tab/Shift-Tab traversal and Space activation in the 20-person List. Finish VoiceOver,
-  announcement, Increase Contrast, and Differentiate Without Color checks, then run Task 10's final
-  full-suite/documentation gate. Older macOS coverage is not required.
+- Finish [Task 9](plan.md#task-9-make-core-controls-accessible-and-large-rosters-reachable) spoken
+  VoiceOver/announcement, Increase Contrast, and Differentiate Without Color checks. In parallel, run
+  Task 10's final full Xcode 26.6 suite and reconcile the remaining explicit manual results. Older macOS
+  coverage is not required.

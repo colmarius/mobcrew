@@ -195,8 +195,16 @@ children remained in bounds; visible long-name ellipsis at its intentional 180-p
 for non-blocking Task 11 rather than expanding release-critical scope. AXPress on Skip emitted one
 contextual handoff announcement. User inspection of the expanded normal-text app confirmed both panes
 and the List filled available space with readable long names and no visible overlap. Spoken VoiceOver,
-Full Keyboard Access, Increase Contrast, Differentiate Without Color, and break-complete announcement
-checks remain interactive gates; current-host evidence is sufficient and older-macOS repetition is not required.
+Increase Contrast, Differentiate Without Color, and break-complete announcement checks remain interactive
+gates; current-host evidence is sufficient and older-macOS repetition is not required.
+
+The first Full Keyboard Access attempt found that Tab skipped the borderless participant buttons inside
+the native List. Explicit `.focusable(..., interactions: .activate)` enrollment preserves button style,
+pointer behavior, VoiceOver actions, and excludes unavailable boundary moves. It compiled under Xcode
+26.6 and passed all 85 focused AppState/Roster tests. After the owner enabled Full Keyboard Access, an
+unlocked-session screenshot showed the native focus ring inside the roster and keyboard selection on an
+Active row; the owner reported keyboard behavior working. The isolated app/worktree/defaults were then
+removed and all Task 9 verification threads archived.
 
 ## Explicit deferrals
 

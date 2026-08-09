@@ -11,8 +11,8 @@ Updated: 2026-08-09
   AX inspection pass. User inspection found the main panes did not consume expanded window space; the
   pushed responsive correction now passes native geometry, splitter, AX, and increased-text checks.
   Interactive testing then found Full Keyboard Access Tab traversal skipped the List's borderless
-  participant controls. Explicit activation focus is implemented and awaits native verification;
-  VoiceOver and display-option checks also remain.
+  participant controls. Explicit activation focus now compiles, passes focused tests, and passes user
+  keyboard-focus/traversal inspection. VoiceOver and display-option checks remain.
 - Task 10's final documentation-truth audit is implemented, but its phase gate remains open until Task 9
   completes and the latest exact branch passes the full native suite/manual result reconciliation.
 
@@ -247,10 +247,18 @@ Updated: 2026-08-09
   Swift 6.3.3 and passed 85/85 focused `RosterTests` plus `AppStateTests`. The isolated host reported
   Full Keyboard Access off (`FullKeyboardAccessEnabled=0`) and ordinary Keyboard Navigation off
   (`AppleKeyboardUIMode=0`), so no synthetic Tab/Shift-Tab/Space events were sent and behavioral focus
-  remains unverified rather than failed.
-- The prior harness was safely retired. A corrected, isolated one-minute 12-active/8-benched app remains
-  open from exact commit `722479b`; production preferences/data and the user's primary checkout were
+  remained unverified rather than failed in that runner pass.
+- The prior harness was safely retired and a corrected, isolated one-minute 12-active/8-benched app was
+  launched from exact commit `722479b`; production preferences/data and the user's primary checkout were
   unchanged, and no temporary branch or remote ref was created.
+- After enabling Full Keyboard Access, the user's unlocked Aqua session visibly showed the native blue
+  focus ring inside the roster and keyboard selection on an Active row; the user reported the corrected
+  behavior working. This supplies the interactive focus evidence that the runner's secure `loginwindow`
+  session could not obtain. The runner did not inject keys while it lacked a safe frontmost recipient.
+- User-authorized cleanup then removed the guarded Task 9 process, detached worktree, isolated defaults,
+  data, saved state, and all `/tmp/mobcrew-task9-fka-*` artifacts. The primary checkout remained clean
+  and unchanged; remote heads remained only `main` and the audit branch. Task 9's manual, responsive,
+  and FKA verification threads are archived.
 
 ## Verification Status
 
