@@ -327,7 +327,8 @@ struct PersistenceServiceTests {
         }
     }
 
-    @Test("roster receipt round-trips and remains optional for old data") throws {
+    @Test("roster receipt round-trips and remains optional for old data")
+    func rosterReceiptRoundTripsAndRemainsOptional() throws {
         let defaults = makeTestUserDefaults()
         let service = PersistenceService(userDefaults: defaults)
         let cycleID = UUID()
@@ -354,7 +355,8 @@ struct PersistenceServiceTests {
         #expect(service.loadRoster().lastRegularCycleResolution == nil)
     }
 
-    @Test("malformed optional receipt does not erase a valid roster") throws {
+    @Test("malformed optional receipt does not erase a valid roster")
+    func malformedOptionalReceiptDoesNotEraseValidRoster() throws {
         let defaults = makeTestUserDefaults()
         let service = PersistenceService(userDefaults: defaults)
         let roster = Roster(activeMobsters: [Mobster(name: "Alice")])
