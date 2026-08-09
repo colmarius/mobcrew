@@ -97,7 +97,7 @@ an unnecessary frontend application stack.
   - Notes: This no-macOS slice should improve the current assets without presenting them as stronger
     evidence than they are.
 
-- [ ] (manual-verify) **Task 2.5: Recapture stronger real-app evidence on macOS**
+- [ ] (deferred optional follow-up) **Task 2.5: Recapture stronger real-app evidence on macOS**
   - Scope: `docs/assets/images/`, `docs/SCREENSHOTS.md`, `docs/index.html`
   - Depends on: Task 2.4; current macOS app build
   - Acceptance:
@@ -110,12 +110,13 @@ an unnecessary frontend application stack.
       sizes before replacing existing assets.
   - Notes: Requires macOS. Keep this queued rather than substituting invented mockups or blocking the
     rest of Phase 2.
-  - Execution state (2026-08-08): **unverified**. Existing captures were optimized and visually
+  - Final disposition (2026-08-09): **deferred and unverified**. Existing captures were optimized and visually
     reviewed, but no replacement was represented as a new real-app capture. The available macOS
     account is not disposable: launching the real bundle identity would consult or alter its TCC
     state and the app uses standard user preferences/Application Support. No repository-supported
-    isolated app identity exists, so recapture was not attempted. The staged procedure remains in
-    `docs/SCREENSHOTS.md`.
+    isolated app identity exists, so recapture was not attempted. The current truthful images remain
+    supported; the optional recapture procedure is retained in `docs/SCREENSHOTS.md`, and the
+    unchecked box records that no new evidence was captured.
 
 - [x] **Task 2.6: Optimize image loading and record performance change**
   - Scope: `docs/assets/images/`, `docs/index.html`

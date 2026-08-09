@@ -99,6 +99,7 @@ Download qualification DMGs in a browser so macOS applies quarantine, then recor
 `xattr -l MobCrew-<version>.dmg` before opening it. A CLI download is not assumed to preserve this
 property. Record every matrix item as exactly **tested**, **unverified**, or
 **unsupported-by-explicit-decision**. In particular, unavailable hardware/OS coverage is unverified,
-and Developer ID signing/notarization plus quarantined clean-Mac behavior remain unverified until
-observed. The release-critical integrity, Gatekeeper first launch, core regression, permissions,
-upgrade, release notes, and publication approval rows must be tested before publication.
+Developer ID signing/notarization is deferred by owner decision, and quarantined clean-Mac behavior
+remains unverified until observed. The release-critical integrity, Gatekeeper first launch, core
+regression, permissions, upgrade, release notes, and publication approval rows must be tested before
+publication.

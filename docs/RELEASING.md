@@ -66,8 +66,10 @@ preserved. Confirm it before launch with `xattr -l MobCrew-1.2.3.dmg` (record th
 carry quarantine. Select a finite matrix from recorded artifact architectures plus owner-selected
 minimum/current macOS samples. Use only `tested`, `unverified`, or
 `unsupported-by-explicit-decision`; unavailable hardware is **unverified**, never implicitly
-unsupported. Task 3.4 remains manually unverified until this real quarantined-Mac run; Developer ID
-signing/notarization remain blocked decisions.
+unsupported. Quarantined first-launch behavior remains unverified until this real qualification run.
+Developer ID signing and notarization were explicitly deferred on 2026-08-09; the supported release
+path currently remains non-Developer-ID. Reconsider signing only as separately authorized future
+work with an approved credential owner and execution environment.
 
 For historical comparison, read-only inspection of the public `v0.2.0` browser download on
 2026-08-08 recorded SHA-256 `1d7f8daff797dd20876b4a9ab011a98e20d23bf931e98118a131e7ba9c4b99d4`,

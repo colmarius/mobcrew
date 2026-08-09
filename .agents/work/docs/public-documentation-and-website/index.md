@@ -1,8 +1,8 @@
 # Public documentation and website improvements
 
-Status: blocked
+Status: completed
 Category: docs
-Updated: 2026-08-08
+Updated: 2026-08-09
 
 ## Why
 
@@ -13,38 +13,35 @@ current release-trust limitations.
 
 ## Summary
 
-All feasible local/static work across Phases 1-3 is complete. Public facts and install guidance are
-corrected; the static site is dependency-free, accessible, responsive, image-optimized,
-metadata-rich, and covered by deterministic Pages validation. Release tooling now has strict
-target/artifact/remote/qualification evidence, non-destructive resumable draft operations, a final
-live publication gate, locked packaging dependencies, Linux/macOS state-machine tests, and a passing
-pinned macOS build/package/verification run. Independent review found and corrected a draft-discovery
-blocker: drafts are now found through the paginated releases API, while creation uses REST with the
-exact target SHA and captures the numeric release ID. The corrected implementation passes the pinned
-Xcode 26.6 CI release-hardening, build/package/verification, and full-test path. Read-only inspection
-has also established the public `v0.2.0` artifact's identity, architecture, and app/DMG trust states
-from a browser-quarantined download. Clean-account first launch, real-app screenshot recapture, and
-the conditional Developer ID owner decision remain blocked gates. The scope excludes unrelated app
-features and does not authorize publishing, deleting, merging, or deploying releases.
+All scoped implementation and verification across Phases 1-3 is complete. Public facts and install
+guidance are corrected; the static site is dependency-free, accessible, responsive, image-optimized,
+metadata-rich, and covered by deterministic validation. Release tooling has strict target/artifact/
+remote/qualification evidence, non-destructive resumable draft operations bound to numeric release
+IDs, a final live publication gate, locked packaging dependencies, Linux/macOS state-machine tests,
+and passing pinned Xcode 26.6 build/package/verification and full-test evidence. Read-only inspection
+also established the public `v0.2.0` artifact's identity, architecture, and app/DMG trust states from
+a browser-quarantined download.
+
+The owner explicitly deferred Developer ID signing/notarization, so the documented non-Developer-ID
+path is the current supported release process. Clean-account launch qualification remains a required
+future release-operation gate, and stronger screenshot recapture remains an optional future content
+task; both procedures and their unverified state are preserved in canonical documentation rather
+than retained as active work-item blockers. This completion does not publish, merge, or deploy.
 
 ## Artifacts
 
 - Research: [Audit findings](research.md)
 - PRD: none
-- Plan: [Ordered plan index](plans/index.md) — feasible implementation complete; gates remain
+- Plan: [Ordered plan index](plans/index.md) — implementation complete; deferred operations retained
 - Progress: [Execution evidence](progress.md)
 - Decisions: none
 - Handoffs: none
 
 ## Next Action
 
-- After this branch is reviewed and landed, obtain separate owner authorization before creating a
-  draft. Then run `check`/`prepare` from clean canonical `main`, create the target-bound draft,
-  verify its uploaded bytes, and finish Tasks 1.7/3.4 on a disposable clean account/Mac using its
-  browser-downloaded quarantined DMG. Task 2.5 also remains a separate disposable-account screenshot
-  recapture. Do not infer first-launch results from read-only artifact probes or synthetic CI output.
+- None.
 
 ## Open Questions
 
-- [ ] Is Apple Developer Program access available and intended for MobCrew? This affects only Phase
-      3's conditional signing/notarization extension; all other planned work can proceed.
+- [x] Developer ID signing/notarization is deferred. No Apple credentials or signing environment are
+      required for the current non-Developer-ID release path.

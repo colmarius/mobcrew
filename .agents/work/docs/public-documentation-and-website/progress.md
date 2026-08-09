@@ -2,9 +2,10 @@
 
 ## Current slice
 
-All feasible local/static implementation and read-only public-artifact inspection across Phases 1-3
-is complete. Remaining work requires a disposable clean account/Mac for launch-sensitive evidence,
-separate release-operation authority, or an owner decision and credentials.
+All scoped implementation, static verification, and read-only public-artifact inspection across
+Phases 1-3 is complete. The owner deferred Developer ID signing/notarization. Launch-sensitive
+qualification remains a mandatory future release operation, and stronger screenshot recapture is an
+optional future content task; both are retained in canonical procedures instead of this work item.
 
 ## Observed evidence
 
@@ -118,21 +119,24 @@ separate release-operation authority, or an owner decision and credentials.
   status or the exact Gatekeeper result on launch.
 - The app was not launched, copied to Applications, or installed. No TCC, login-item, MobCrew data,
   or preferences were changed. A clean-account first launch was not safe on this user's existing
-  account, so Tasks 1.7/3.4 remain unchecked.
+  account. Task 1.7 therefore remains explicitly unverified; Task 3.4 completes the documented
+  non-Developer-ID path while preserving first launch as a publication gate.
 - Supplemental local checks passed with Xcode 26.2 on this host: all 100 app tests used isolated
   DerivedData. After integrating the corrected draft-discovery implementation, the expanded offline
   release-hardening state-machine suite also passed under macOS/BSD tools. This is additional
   compatibility evidence, not a replacement for final implementation CI run 31280785168 under
   pinned Xcode 26.6 / Swift 6.3.
 
-## Unverified manual gates
+## Deferred future operations
 
 - Quarantined first launch, exact Privacy & Security recovery wording, permission/TCC behavior,
-  clean-Mac qualification, and upgrade behavior require a compatible interactive Mac.
+  clean-Mac qualification, and upgrade behavior require a compatible interactive Mac before a
+  future publication. `TESTING.md` and `docs/RELEASING.md` own that gate.
 - Stronger real-app screenshot recapture requires a disposable account or an isolated app identity.
   The current app launches under the real bundle identity, consults TCC state, and uses standard
-  preferences/Application Support; existing images have not been represented as new evidence.
-- Developer ID signing/notarization remains conditional on an explicit owner decision and credentials;
-  it is not authorized by this execution.
+  preferences/Application Support; existing images have not been represented as new evidence. The
+  optional procedure remains in `docs/SCREENSHOTS.md`.
+- Developer ID signing/notarization is deferred by owner decision. No credentials or signing work
+  were attempted; reconsideration requires separately scoped and authorized future work.
 - No real draft, upload, qualification run, tag, or publication was created. Those remain separately
-  authorized operations; the mocked state-machine result is not remote-release evidence.
+  authorized release operations; the mocked state-machine result is not remote-release evidence.

@@ -5,15 +5,17 @@ distribution changes. Treat the numbering as priority order. After Phase 1 stabi
 Phase 2's static-site work and Phase 3's non-credential release hardening can proceed independently;
 conditional/manual slices remain explicit gates.
 
-All feasible local/static work across Phases 1-3 is complete. Public `v0.2.0` artifact inspection is
-now recorded, while clean-account first launch in Task 1.7, screenshot recapture in Task 2.5, Phase
-3 quarantined trust qualification, and the conditional Developer ID decision remain explicit gates.
+All scoped implementation across Phases 1-3 is complete. Public `v0.2.0` artifact inspection is
+recorded. The owner deferred Developer ID signing/notarization. Clean-account first launch remains a
+future release-operation gate, and stronger screenshot recapture is deferred as optional future
+content work; their procedures remain in `TESTING.md`, `docs/RELEASING.md`, and
+`docs/SCREENSHOTS.md`.
 
-| Order | Plan                                                                                 | State                                                     | Dependencies                                                                       |
-| ----- | ------------------------------------------------------------------------------------ | --------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| 1     | [Public truth and installation](01-public-truth-and-installation.md)                 | Feasible work complete; Task 1.7 partially verified       | None                                                                               |
-| 2     | [Landing-page presentation and quality](02-landing-page-presentation-and-quality.md) | Feasible work complete; Task 2.5 unverified               | Phase 1 message and install facts                                                  |
-| 3     | [Release and distribution hardening](03-release-and-distribution-hardening.md)       | Local hardening complete; manual trust/owner gates remain | Phase 1 release facts; Apple credentials only for the conditional signed extension |
+| Order | Plan                                                                                 | State                                                         | Dependencies                      |
+| ----- | ------------------------------------------------------------------------------------ | ------------------------------------------------------------- | --------------------------------- |
+| 1     | [Public truth and installation](01-public-truth-and-installation.md)                 | Complete; launch qualification deferred to release operations | None                              |
+| 2     | [Landing-page presentation and quality](02-landing-page-presentation-and-quality.md) | Complete; optional screenshot recapture deferred              | Phase 1 message and install facts |
+| 3     | [Release and distribution hardening](03-release-and-distribution-hardening.md)       | Complete; Developer ID extension not selected                 | Phase 1 release facts             |
 
 ## Sequencing rationale
 

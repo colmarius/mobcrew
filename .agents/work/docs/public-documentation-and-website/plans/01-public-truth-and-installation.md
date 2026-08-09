@@ -112,7 +112,7 @@ downloaded artifact is inspected on macOS.
   - Notes: Phase 3 owns script/CI changes; this task documents the safest accurate process available
     before that automation exists.
 
-- [ ] (manual-verify) **Task 1.7: Inspect the distributed artifact and first-launch behavior on macOS**
+- [ ] (deferred release gate) **Task 1.7: Inspect the distributed artifact and first-launch behavior on macOS**
   - Scope: downloaded `v0.2.0` DMG, `research.md`, affected trust/install wording in `README.md`,
     `docs/index.html`, and `docs/RELEASING.md`
   - Depends on: Task 1.3, Task 1.4, Task 1.6
@@ -126,12 +126,14 @@ downloaded artifact is inspected on macOS.
     - Public wording is made exact when evidence exists; if macOS access remains unavailable, docs
       retain qualified language and `research.md` explicitly records what remains unverified.
   - Notes: Lack of access is not evidence of unsupported hardware or OS behavior.
-  - Execution state (2026-08-08): **partially verified** on macOS. A real browser download retained
+  - Final disposition (2026-08-09): **partially verified and deferred to a future release
+    operation**. A real browser download retained
     quarantine and read-only inspection established the exact digest/size, DMG integrity, bundle
     identity/version/build/executable, `arm64` architecture, ad-hoc app signature, absent Developer
     ID/team/hardened runtime, unsigned outer DMG, absent stapled tickets, and non-accepted `spctl`
     probes. The app was not launched or installed. Exact Gatekeeper wording/recovery, TCC behavior,
-    and clean-Mac first launch remain unverified, so this task stays unchecked.
+    and clean-Mac first launch remain unverified. The required procedure is retained in `TESTING.md`
+    and `docs/RELEASING.md`; the unchecked box records missing evidence rather than active work.
 
 ## Implementation Notes
 

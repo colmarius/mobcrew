@@ -27,8 +27,9 @@ conditional extension after an owner decision and approved credential model.
 - Production scripts remain compatible with macOS Bash 3.2 and BSD tools. Linux-safe tests use a
   local temporary git remote plus mocked `gh`, Node, Xcode, and Swift boundaries; they must never
   contact GitHub or mutate a real release.
-- Tasks 3.5 and 3.6 remain blocked on an explicit owner decision and credentials. Task 3.4 can gain
-  tooling/documentation but stays unchecked until real macOS trust/Gatekeeper evidence exists.
+- The owner deferred Developer ID signing/notarization on 2026-08-09. The non-Developer-ID path is
+  the selected release process; no credentials or signed extension are part of this work. Exact
+  quarantined first-launch evidence remains a future release-operation gate.
 
 ## Goals
 
@@ -103,7 +104,7 @@ conditional extension after an owner decision and approved credential model.
     `target_commitish`, retains the numeric release ID, and binds asset upload to that ID. The
     corrected offline suite passes on macOS/BSD tools, including duplicate and retry regressions.
 
-- [ ] (manual-verify) **Task 3.4: Harden and document the default non-Developer-ID path**
+- [x] (documented default) **Task 3.4: Harden and document the default non-Developer-ID path**
   - Scope: release scripts/checks, `docs/RELEASING.md`, `TESTING.md`, public trust/install wording
   - Depends on: Task 3.2; Phase 1 Task 1.7 findings or its explicitly recorded unverified state
   - Acceptance:
@@ -114,13 +115,13 @@ conditional extension after an owner decision and approved credential model.
       and keeps unobserved behavior marked unverified.
     - This path requires no Apple signing credentials and remains usable if Developer ID work is not
       approved.
-  - Notes: This is the default plan path, not a degraded fallback. The inspection tooling and
-    qualified documentation are implemented. Read-only macOS inspection now records the actual
-    public `v0.2.0` app/DMG states and a browser-applied quarantine attribute, but quarantined
-    Gatekeeper first launch and clean-account behavior remain unverified, so this task stays
-    unchecked.
+  - Notes: This is the selected default path, not a degraded fallback. Inspection tooling and
+    qualified documentation are implemented, and read-only macOS inspection records the actual
+    public `v0.2.0` app/DMG states and a browser-applied quarantine attribute. Quarantined Gatekeeper
+    first launch and clean-account behavior remain explicitly unverified and mandatory before a
+    future publication; the procedure is retained in `TESTING.md` and `docs/RELEASING.md`.
 
-- [ ] (blocked) **Task 3.5: Decide whether and where to pursue Developer ID distribution**
+- [x] (owner decision: deferred) **Task 3.5: Decide whether and where to pursue Developer ID distribution**
   - Scope: owner decision recorded in this work item or a durable decision file
   - Depends on: Task 3.4
   - Acceptance:
@@ -129,9 +130,11 @@ conditional extension after an owner decision and approved credential model.
       store/secret owner; CI signing is not assumed.
     - If deferred, Phase 3 can complete the non-Developer-ID hardening path without inventing
       credentials or weakening documentation.
-  - Notes: Blocked on owner/credential context; it does not block Tasks 3.1-3.4 or Task 3.7.
+  - Notes: On 2026-08-09 the owner deferred Developer ID signing/notarization. No signing
+    environment, credentials, or secret store are required for the selected non-Developer-ID path.
+    Reconsider only as separate future work with an approved credential owner and environment.
 
-- [ ] (blocked) **Task 3.6: Implement the approved signed/notarized extension**
+- [x] (not selected) **Task 3.6: Implement the approved signed/notarized extension**
   - Scope: Xcode Release settings/entitlements, release scripts, approved signing environment,
     `docs/RELEASING.md`, public install documentation
   - Depends on: Task 3.5 approved with credentials available
@@ -144,8 +147,10 @@ conditional extension after an owner decision and approved credential model.
       logs, repository files, or artifacts.
     - Accessibility/TCC, Notifications, launch at login, and sandbox behavior are revalidated after
       signing-identity changes.
-  - Notes: Local keychain and CI signing are different operating models; implement only the approved
-    one.
+  - Notes: No extension was implemented because Task 3.5 deferred it. This checkbox records the
+    conditional task's explicit non-selection, not signing, hardened-runtime, notarization, or
+    credential evidence. Local keychain and CI signing remain distinct operating models if future
+    work revisits the decision.
 
 - [x] **Task 3.7: Create the clean-Mac qualification and release-evidence contract**
   - Scope: `TESTING.md`, `docs/RELEASING.md`, work-item evidence template only if repeated use
@@ -174,9 +179,10 @@ conditional extension after an owner decision and approved credential model.
 
 ## Constraints / Decisions
 
-- A signed/notarized path requires Apple Developer Program access and approved secure secrets.
-- Non-Developer-ID distribution remains an explicit supported process only when actual app/DMG trust
-  state and observed Gatekeeper behavior are documented accurately.
+- Developer ID signing/notarization is deferred; a future signed path would require Apple Developer
+  Program access, an approved execution environment, and approved secure secrets.
+- Non-Developer-ID distribution is the selected supported process. Actual app/DMG trust state must
+  be recorded, and unobserved Gatekeeper behavior must remain qualified until release qualification.
 - Release publication and destructive GitHub operations require explicit approval.
 - Architecture support must be derived from the built artifact and qualification evidence, not from
   marketing language or host assumptions.
@@ -216,8 +222,8 @@ conditional extension after an owner decision and approved credential model.
   publication on release-critical failures.
 - **Gate C — Publish:** after separate approval, publish the already qualified draft, verify release
   notes/latest links/tag target, and retain the evidence before work-item closeout.
-- Task 3.5/3.6 are a conditional signing decision and extension. Without Apple credentials, finish
-  and qualify the non-Developer-ID path rather than inventing or weakening secret handling.
+- Tasks 3.5/3.6 are resolved as deferred/not selected. Qualify the non-Developer-ID artifact rather
+  than inventing or weakening secret handling.
 - Draft creation/publication, tag changes, release deletion, secret configuration, and workflow
   infrastructure changes remain shared-state actions requiring separate approval.
 - If a published release is defective, preserve evidence and prefer a visible warning/superseding
