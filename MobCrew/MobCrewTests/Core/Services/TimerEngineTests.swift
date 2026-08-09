@@ -345,12 +345,12 @@ struct TimerEngineTests {
     @Test("fractional restored remainder uses ceil display")
     func fractionalRestoreRounding() {
         let fixture = makeFixture(duration: 7)
-        let wallDeadline = fixture.wallClock.current.addingTimeInterval(1.2)
+        let wallDeadline = fixture.wallClock.current.addingTimeInterval(1.25)
 
         #expect(fixture.engine.restoreRunning(totalSeconds: 5, wallDeadline: wallDeadline) == .restored)
         #expect(fixture.engine.secondsRemaining == 2)
 
-        fixture.monotonicClock.advance(by: 0.2)
+        fixture.monotonicClock.advance(by: 0.25)
         fixture.engine.refresh()
         #expect(fixture.engine.secondsRemaining == 1)
 
