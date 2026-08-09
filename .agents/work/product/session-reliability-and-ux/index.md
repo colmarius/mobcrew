@@ -30,8 +30,8 @@ with deadline-based elapsed time, and Task 5 made explicit break prompts disable
 cadence. Tasks 1-5 passed focused and full native tests on the available Mac runner. Task 6 versioned
 session recovery now also passed focused and full native tests there. Task 7's logged-in Mac permission
 gate proved Carbon registration and delivery do not require Accessibility on the available host; the
-resulting AX-removal and registration-status implementation awaits native acceptance. Exact Xcode 26.6+
-qualification remains outstanding because the runner currently has 26.2.
+resulting AX-removal and registration-status implementation passed focused, full-suite, and signed-app
+validation using Xcode 26.6 / Swift 6.3. Task 8 system-status truthfulness is now active.
 
 ## Artifacts
 
@@ -44,7 +44,7 @@ qualification remains outstanding because the runner currently has 26.2.
 
 ## Next Action
 
-- Compile and test [Task 7](plan.md#task-7-verify-and-correct-global-hotkey-permission-setup), then launch the ad-hoc-signed app with Accessibility denied to verify no prompt, Active Settings status, and actual ⌘⇧L delivery before checking it complete.
+- Begin [Task 8](plan.md#task-8-represent-notification-and-launch-at-login-status-honestly) by rechecking current `UNAuthorizationStatus` and `SMAppService.Status` APIs against the branch, then add service-state tests before changing Settings behavior.
 
 ## Open Questions
 

@@ -153,7 +153,7 @@ validation; it must not recreate the website or treat unchecked manual steps as 
 
 ### Task 7: Verify and correct global-hotkey permission setup
 
-- [ ] (manual-verify) **Task 7: Verify and correct global-hotkey permission setup**
+- [x] (manual-verify) **Task 7: Verify and correct global-hotkey permission setup**
   - Scope: `MobCrew/MobCrew/App/AppDelegate.swift`,
     `MobCrew/MobCrew/Core/Services/GlobalHotkeyService.swift`, Settings shortcut UI, README/landing page,
     service tests and signed-app Mac validation

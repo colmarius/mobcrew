@@ -153,6 +153,13 @@ No physical keypress was observed, and older supported macOS versions remain unv
 Mac evidence nevertheless selects Task 7's permission-unnecessary branch: remove the AX launch prompt,
 dependency, and polling; surface Carbon registration state and retry instead.
 
+The implemented branch was then qualified with `/Applications/Xcode.app` at Xcode 26.6 / Swift 6.3.
+The ad-hoc-signed Debug app launched without an Accessibility dialog, Settings rendered ⌘⇧L,
+“Toggle floating timer,” and live status “Active,” and two preflight-authorized synthetic deliveries
+made the real floating panel transition onscreen → hidden → onscreen. App-specific AX denial and a
+physical keypress were not independently observed; the denied-receiver experiment above establishes
+the permission result without changing TCC state.
+
 ## Explicit deferrals
 
 - Do not implement a forced full-screen break solely to satisfy stale marketing copy.

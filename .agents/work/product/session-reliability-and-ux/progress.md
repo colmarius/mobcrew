@@ -4,10 +4,9 @@ Updated: 2026-08-09
 
 ## Current Slice
 
-- Tasks 1-6 are implemented, natively tested, checked off in the active plan, and pushed.
-- Task 7's logged-in Mac gate established that the Carbon hotkey registers and receives delivery while
-  the receiver is not Accessibility-trusted. The permission-unnecessary implementation is authored
-  locally and awaits native compile/tests plus signed-app validation before Task 7 can be checked off.
+- Tasks 1-7 are implemented, natively tested, checked off in the active plan, and pushed.
+- Task 8 is next: model Notification authorization and `SMAppService` registration truthfully, expose
+  recovery paths, and verify available platform states without conflating preference with system status.
 
 ## Observed Evidence
 
@@ -119,6 +118,18 @@ Updated: 2026-08-09
 - The Task 7 empirical probe changed no TCC or user setting, removed all temporary artifacts, preserved
   the user's primary checkout and bundles, and created no local or remote branch. A physical keypress
   and older supported macOS versions remain unverified.
+- Task 7 native verification used Xcode 26.6 (17F113), Swift 6.3, and an ad-hoc-signed Debug app from
+  exact commit `3575cdf6916d93c0e6efe224304ce2c6a04f19f5`. The initial focused compile found that Carbon's
+  `eventHotKeyExistsErr` imported as `Int`; test-only commit
+  `d5e5ba34b872ed21cb3754cfc2f2f3c8d36fcc38` added the explicit `OSStatus` conversion.
+- Focused `GlobalHotkeyServiceTests` passed 2/2, and the full Xcode 26.6 suite passed 156/156 with no
+  failures or skips. Static docs validation and `git diff --check` also passed.
+- Live AX inspection found no Accessibility dialog; Shortcuts settings showed ⌘⇧L, Toggle floating
+  timer, and Active. An already-authorized sender posted the exact chord twice, and the real floating
+  panel changed onscreen → hidden → onscreen. App-specific TCC denial, a physical keypress, safely
+  induced registration-failure UI, and older macOS versions remain unverified.
+- The Task 7 disposable worktree, app, DerivedData, helpers, logs, and processes were removed. The
+  user's primary checkout and bundles remained unchanged, and no temporary branch was created.
 
 ## Verification Status
 
@@ -131,5 +142,5 @@ Updated: 2026-08-09
 - Task 6 passed 134 focused and all 155 project tests on the same Xcode 26.2 runner, including Swift 6
   compilation of versioned Codable snapshots, actor-isolated roster persistence, recovery ordering,
   restored Combine publisher arming, and deterministic failure reconciliation.
-- The project specifies Xcode 26.6+ / Swift 6.3, so the exact-toolchain rerun remains unverified and
-  must be repeated before final qualification. No manual UI or accessibility behavior was claimed.
+- Task 7 passed 2 focused and all 156 project tests using the required Xcode 26.6 / Swift 6.3 toolchain,
+  providing cumulative exact-toolchain compilation and regression coverage for Tasks 1-7.
