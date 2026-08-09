@@ -146,7 +146,7 @@ Sources:
 
 ## Mac-only validation
 
-1. Carbon hotkey registration with Accessibility denied on each supported macOS release.
+1. Carbon hotkey registration with Accessibility denied on the current available macOS host.
 2. Timer behavior across sleep, lock/unlock, App Nap, modal UI, and main-thread blockage.
 3. Foreground/background notification presentation and sound for allowed and denied states.
 4. `SMAppService` enabled, requires-approval, failed, and managed-account behavior.
@@ -168,9 +168,10 @@ No TCC state, System Settings value, global shortcut, or user default was change
 Duplicate registration inside one process returned `-9878` (`eventHotKeyExistsErr`), establishing a
 registration failure distinct from TCC denial. On this OS, a separate process could register the same
 chord concurrently, so cross-process exclusivity must not be inferred from Carbon registration alone.
-No physical keypress was observed, and older supported macOS versions remain unverified. The available
-Mac evidence nevertheless selects Task 7's permission-unnecessary branch: remove the AX launch prompt,
-dependency, and polling; surface Carbon registration state and retry instead.
+No physical keypress was observed. The available Mac evidence selects Task 7's permission-unnecessary
+branch: remove the AX launch prompt, dependency, and polling; surface Carbon registration state and
+retry instead. On 2026-08-09 the owner accepted current-host coverage and removed older-macOS
+repetition as a release/work-item gate.
 
 The implemented branch was then qualified with `/Applications/Xcode.app` at Xcode 26.6 / Swift 6.3.
 The ad-hoc-signed Debug app launched without an Accessibility dialog, Settings rendered ⌘⇧L,

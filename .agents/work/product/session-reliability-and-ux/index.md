@@ -36,8 +36,9 @@ tests for truthful Notification and Launch at Login status; Xcode 26.6 focused/f
 Settings inspection passed. Task 9 accessibility and large-roster reachability is now active.
 The implementation now has single-List roster reachability, identity-preserving Move Up/Down paths,
 contextual semantics across core surfaces, and injected one-shot transition announcements; exact
-Xcode 26.6 focused/full tests pass. Logged-in accessibility validation remains before acceptance;
-the live Mac runner disconnected after its isolated harness attempt was safely abandoned.
+Xcode 26.6 focused/full tests pass. An isolated 20-person harness verified initial AX semantics and
+announcement delivery, but interactive VoiceOver, keyboard, scrolling, and display-variant checks
+remain before acceptance because the runner lost window descendants after its first AX inspection.
 
 ## Artifacts
 
@@ -50,11 +51,7 @@ the live Mac runner disconnected after its isolated harness attempt was safely a
 
 ## Next Action
 
-- Reconnect the live Mac runner, then finish [Task 9](plan.md#task-9-make-core-controls-accessible-and-large-rosters-reachable)
-  with a temporary uncommitted isolated `MobCrewApp` launch-argument harness: inspect 12 active plus
-  8 benched rows at 600×450 and record VoiceOver, Full Keyboard Access, contrast/color, and text results.
-
-## Open Questions
-
-- [ ] Repeat the Accessibility-denied Carbon check on older supported macOS versions when those hosts
-  become available; macOS 26.5.2 is the only currently observed version.
+- Complete [Task 9](plan.md#task-9-make-core-controls-accessible-and-large-rosters-reachable) with
+  user-assisted checks on the current macOS host: activate Move Up/Down with VoiceOver and Full
+  Keyboard Access, scroll the 20-person roster end-to-end, complete a break, and inspect contrast,
+  Differentiate Without Color, and increased text. Older macOS coverage is not required.

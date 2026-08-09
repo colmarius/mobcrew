@@ -160,7 +160,7 @@ validation; it must not recreate the website or treat unchecked manual steps as 
   - Depends on: none
   - Acceptance:
     - A logged-in Mac check records whether Carbon registration works with Accessibility denied on
-      available supported macOS versions and whether failure is caused by permission or shortcut conflict.
+      the current available macOS host and whether failure is caused by permission or shortcut conflict.
     - If permission is unnecessary, the launch prompt, AX dependency, and permission polling are removed.
     - If permission is necessary, the request is contextual, dismissal is remembered, polling is bounded,
       and Settings exposes status and retry.
@@ -168,7 +168,8 @@ validation; it must not recreate the website or treat unchecked manual steps as 
     - One app constant defines registered key/modifiers/action; a release check verifies static Settings,
       README, and landing-page text matches it.
   - Notes: Do not generate static documentation from Swift and do not change the action to rotate/start
-    merely to match stale copy. The Mac result selects one implementation branch before coding it.
+    merely to match stale copy. The Mac result selects one implementation branch before coding it;
+    the owner accepted current-host coverage without an older-macOS follow-up on 2026-08-09.
 
 ### Task 8: Represent Notification and Launch at Login status honestly
 

@@ -7,8 +7,8 @@ Updated: 2026-08-09
 - Tasks 1-8 are implemented, natively tested, checked off in the active plan, and pushed.
 - Task 9 implementation is ready for native verification: core surfaces have contextual semantics,
   roster reordering has keyboard/VoiceOver actions, one native List owns active and benched scrolling,
-  and injected announcements cover only meaningful session transitions. Xcode tests pass, but the
-  logged-in UI/accessibility matrix is blocked on a reconnected Mac runner.
+  and injected announcements cover only meaningful session transitions. Xcode tests and initial native
+  AX inspection pass; final interactive accessibility/display checks require user assistance.
 
 ## Observed Evidence
 
@@ -119,7 +119,7 @@ Updated: 2026-08-09
   release guidance, and landing-page claims now match; the static docs check enforces that agreement.
 - The Task 7 empirical probe changed no TCC or user setting, removed all temporary artifacts, preserved
   the user's primary checkout and bundles, and created no local or remote branch. A physical keypress
-  and older supported macOS versions remain unverified.
+  remains unverified; the owner accepted current macOS coverage without an older-version follow-up.
 - Task 7 native verification used Xcode 26.6 (17F113), Swift 6.3, and an ad-hoc-signed Debug app from
   exact commit `3575cdf6916d93c0e6efe224304ce2c6a04f19f5`. The initial focused compile found that Carbon's
   `eventHotKeyExistsErr` imported as `Int`; test-only commit
@@ -128,8 +128,8 @@ Updated: 2026-08-09
   failures or skips. Static docs validation and `git diff --check` also passed.
 - Live AX inspection found no Accessibility dialog; Shortcuts settings showed ⌘⇧L, Toggle floating
   timer, and Active. An already-authorized sender posted the exact chord twice, and the real floating
-  panel changed onscreen → hidden → onscreen. App-specific TCC denial, a physical keypress, safely
-  induced registration-failure UI, and older macOS versions remain unverified.
+  panel changed onscreen → hidden → onscreen. App-specific TCC denial, a physical keypress, and safely
+  induced registration-failure UI remain unverified; older-version repetition is not required.
 - The Task 7 disposable worktree, app, DerivedData, helpers, logs, and processes were removed. The
   user's primary checkout and bundles remained unchanged, and no temporary branch was created.
 - Task 8 source reinspection confirmed that the prior notification service inferred permission from
@@ -185,11 +185,25 @@ Updated: 2026-08-09
   The agent stopped rather than retrying against real MobCrew data. The detached worktree stayed clean,
   was removed with all logs/DerivedData, and no preferences, roster/session data, active-roster file,
   accessibility setting, temporary branch, or remote ref changed.
-- The viable remaining gate is a disposable, uncommitted `MobCrewApp` launch-argument path that injects
-  a unique UserDefaults suite and `/tmp` active-roster file, seeds 12 active plus 8 benched people, and
-  leaves production construction unchanged. It must verify the 600×450 AX tree, scrolling, Move actions,
-  native Stepper, VoiceOver announcement behavior, Full Keyboard Access, contrast/color differentiation,
-  and increased text. The live Mac runner was no longer connected when immediately rechecked.
+- A second native pass successfully built a disposable uncommitted `MobCrewApp` launch-argument harness
+  at exact commit `d612b5283669492a195d5e0b87226b794bee67c2`. It injected a unique UserDefaults
+  suite and temporary active-roster path, seeded 12 active plus 8 benched long-name participants, and
+  left production construction unchanged. The real defaults checksum and active-roster state matched
+  before/after; the harness, suite, files, app, DerivedData, logs, and worktree were removed.
+- The isolated app rendered a 600×450 content area (600×482 outer window). One AX outline contained the
+  first through twelfth active participants and first through eighth benched participants. AX exposed
+  Driver/Navigator and active/benched context, person-specific Move/Bench/Activate/Remove controls,
+  conditional named Move actions, disabled first-row Move Up, enabled Move Down, contextual timer/control
+  hints, and a native duration Stepper with `AXIncrement` and `AXDecrement`.
+- Harness stdout observed exactly one manual-skip handoff and one break-due announcement, with no tick
+  announcements. After the initial successful inspection, the runner's MobCrew AX windows exposed no
+  descendants and screen capture failed, so it did not claim end-to-end scrolling, native Move activation,
+  break-complete output, spoken VoiceOver behavior, Full Keyboard Access, colors, contrast/differentiation,
+  or increased-text layout. Global accessibility settings remained unchanged.
+- Remaining Task 9 acceptance is interactive user-assisted validation on the current Mac: scroll the
+  20-person list end-to-end; activate Move Down/Up using VoiceOver and Full Keyboard Access; complete the
+  short break; and inspect Increase Contrast, Differentiate Without Color, and increased text. Current
+  macOS 26.5.2 coverage is sufficient; no older-version repetition remains.
 
 ## Verification Status
 
@@ -207,4 +221,4 @@ Updated: 2026-08-09
 - Task 8 passed 54 focused and all 169 executed project test cases using Xcode 26.6 / Swift 6.3.3;
   live Settings inspection also confirmed independent actual/preference status and unclipped recovery UI.
 - Task 9 passed 85 focused and all 177 executed project test cases using Xcode 26.6 / Swift 6.3.3.
-  Logged-in UI/assistive-technology acceptance remains explicitly unverified pending runner access.
+  Initial logged-in AX semantics passed; interactive assistive/display acceptance awaits user assistance.
