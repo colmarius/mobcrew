@@ -29,6 +29,13 @@ chmod +x "$WORK/scripts/verify-release-artifact.sh"
 printf '24.19.0\n' >"$WORK/.nvmrc"
 printf '{}\n' >"$WORK/package-lock.json"
 printf 'build/\n' >"$WORK/.gitignore"
+cat >"$WORK/CHANGELOG.md" <<'EOF'
+# Changelog
+
+## [1.2.3] - 2026-08-09
+
+Release v1.2.3
+EOF
 git -C "$WORK" add .
 git -C "$WORK" -c user.name=test -c user.email=test@example.invalid \
   -c commit.gpgsign=false commit -qm initial

@@ -6,6 +6,7 @@ interrupting the session.
 
 [Website](https://mobcrew.team/) ·
 [View the latest release](https://github.com/colmarius/mobcrew/releases/latest) ·
+[Changelog](CHANGELOG.md) ·
 [Report an issue](https://github.com/colmarius/mobcrew/issues)
 
 ## Features
@@ -123,15 +124,16 @@ See [TESTING.md](TESTING.md) for the full checklist.
 
 Prerequisites: `gh`, exact Xcode 26.6 / Swift 6.3, and Node 24.19.0 from `.nvmrc`. Run `npm ci` from
 the repository root; this installs only locked release packaging tooling (`create-dmg` 8.1.0), not a
-frontend stack.
+frontend stack. Finalize the matching version section in [CHANGELOG.md](CHANGELOG.md) first; the
+release tooling uses that entry as the GitHub release notes.
 
 ```bash
-./scripts/release.sh check 1.2.3
-./scripts/release.sh prepare 1.2.3
+./scripts/release.sh check 0.3.0
+./scripts/release.sh prepare 0.3.0
 # Separately authorized gates:
-./scripts/release.sh create-draft 1.2.3
-./scripts/release.sh verify-draft 1.2.3
-./scripts/release.sh publish 1.2.3 qualification.txt
+./scripts/release.sh create-draft 0.3.0
+./scripts/release.sh verify-draft 0.3.0
+./scripts/release.sh publish 0.3.0 qualification.txt
 ```
 
 Only `create-draft` and `publish` change GitHub release state, and each requires explicit authority.

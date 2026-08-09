@@ -16,6 +16,7 @@
 ```text
 project/
 ├── AGENTS.md                    # This file - project instructions
+├── CHANGELOG.md                 # Versioned user-facing release notes
 ├── README.md                    # Project overview
 ├── docs/                        # GitHub Pages landing page + RELEASING.md
 ├── scripts/                     # Build and release scripts

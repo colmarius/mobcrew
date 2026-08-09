@@ -16,17 +16,21 @@ freshly fetched HEAD equal to both `origin/main` and the canonical GitHub API's 
 operator needs authenticated canonical-repository push permission even though `check` itself is
 non-mutating.
 
+Before the preflight, finalize the dated `## [X.Y.Z] - YYYY-MM-DD` section in `CHANGELOG.md`.
+`check`, `prepare`, and the draft/publish verification gates reject a missing or empty version entry;
+the entry content becomes the GitHub release body so the changelog and published notes stay aligned.
+
 ```bash
-./scripts/release.sh check 1.2.3
-./scripts/release.sh prepare 1.2.3
+./scripts/release.sh check 0.3.0
+./scripts/release.sh prepare 0.3.0
 ```
 
 `prepare` tests before building. It writes fixed local outputs under `build/`:
 
 - `Release/MobCrew.app`
-- `MobCrew-1.2.3.dmg`, `.dmg.sha256`, and `.dmg.size`
-- `MobCrew-1.2.3.dmg.verification.evidence` and `.verification.log`
-- `MobCrew-1.2.3.manifest`
+- `MobCrew-0.3.0.dmg`, `.dmg.sha256`, and `.dmg.size`
+- `MobCrew-0.3.0.dmg.verification.evidence` and `.verification.log`
+- `MobCrew-0.3.0.manifest`
 
 The strict, never-sourced manifest binds the canonical repository, full target SHA, artifact
 identity/size/hash, bundle version/build/architectures, exact tools, lockfile, and inspection
@@ -44,9 +48,9 @@ recorded, not enforced.
 After authority to change GitHub state is explicit:
 
 ```bash
-./scripts/release.sh create-draft 1.2.3
-./scripts/release.sh status 1.2.3       # always read-only
-./scripts/release.sh verify-draft 1.2.3
+./scripts/release.sh create-draft 0.3.0
+./scripts/release.sh status 0.3.0       # always read-only
+./scripts/release.sh verify-draft 0.3.0
 ```
 
 Draft creation first revalidates main, local evidence, artifact contents, and remote tag absence. It
@@ -56,12 +60,12 @@ release ID, reads that exact release back, and uploads through that release ID's
 matching asset is untouched; duplicate drafts, conflicting metadata, wrong state, wrong asset, extra
 assets, and generic network failures stop. `verify-draft` binds the numeric release/asset IDs,
 title/body, target, API digest when supplied, and a freshly downloaded size/SHA in
-`build/MobCrew-1.2.3.remote-evidence`.
+`build/MobCrew-0.3.0.remote-evidence`.
 
 ## Qualification contract
 
 Download the draft through a browser onto a clean supported macOS account/Mac so quarantine is
-preserved. Confirm it before launch with `xattr -l MobCrew-1.2.3.dmg` (record the
+preserved. Confirm it before launch with `xattr -l MobCrew-0.3.0.dmg` (record the
 `com.apple.quarantine` value). A `gh` download is useful for byte verification but is not assumed to
 carry quarantine. Select a finite matrix from recorded artifact architectures plus owner-selected
 minimum/current macOS samples. Use only `tested`, `unverified`, or
@@ -101,10 +105,10 @@ publication_approved=tested
 ## Separately authorized publish gate
 
 ```bash
-./scripts/release.sh publish 1.2.3 /absolute/path/to/qualification.txt
+./scripts/release.sh publish 0.3.0 /absolute/path/to/qualification.txt
 ```
 
-Publication requires a real `/dev/tty` and exact `v1.2.3` confirmation first. It then performs one
+Publication requires a real `/dev/tty` and exact `v0.3.0` confirmation first. It then performs one
 fresh, uninterrupted final gate: it reads the recorded numeric release, checks all metadata and
 exactly one asset, downloads/hashes it again, and makes canonical API tag absence its last read
 before PATCH. It PATCHes only `draft=false` on that numeric release ID and

@@ -2,10 +2,27 @@
 set -euo pipefail
 export LC_ALL=C LANG=C
 ROOT=$(cd "$(dirname "$0")/.." && pwd); REPO=colmarius/mobcrew; REMOTE=https://github.com/colmarius/mobcrew.git
-OP=${1:-}; VERSION=${2:-}; TAG=v$VERSION; TITLE="MobCrew $VERSION"; BODY="Release $TAG"
+OP=${1:-}; VERSION=${2:-}; TAG=v$VERSION; TITLE="MobCrew $VERSION"; BODY=
 DIR="$ROOT/build"; DMG="$DIR/MobCrew-$VERSION.dmg"; MANIFEST="$DIR/MobCrew-$VERSION.manifest"; REMOTE_EVIDENCE="$DIR/MobCrew-$VERSION.remote-evidence"
 die() { echo "release: $*" >&2; exit 1; }
 semver() { echo "$VERSION" | grep -Eq '^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$' || die "VERSION must be strict MAJOR.MINOR.PATCH"; }
+load_release_notes() {
+  test -f "$ROOT/CHANGELOG.md" || die "missing CHANGELOG.md"
+  BODY=$(awk -v heading="## [$VERSION] - " '
+    index($0, heading) == 1 { found = 1; capture = 1; next }
+    capture && /^## \[/ { exit }
+    capture { lines[++count] = $0 }
+    END {
+      if (!found) exit 1
+      first = 1
+      while (first <= count && lines[first] == "") first++
+      last = count
+      while (last >= first && lines[last] == "") last--
+      if (last < first) exit 1
+      for (line = first; line <= last; line++) print lines[line]
+    }
+  ' "$ROOT/CHANGELOG.md") || die "missing or empty CHANGELOG.md entry for $VERSION"
+}
 sha() { shasum -a 256 "$1" | awk '{print $1}'; }
 size() { wc -c <"$1" | tr -d ' '; }
 kv() { sed -n "s/^$2=//p" "$1"; }
@@ -89,7 +106,7 @@ remote_tag_absent() { api_absent "repos/$REPO/git/ref/tags/$TAG" && return 0; RC
 context() { MUT=${1:-false}; test "$(git -C "$ROOT" config --get remote.origin.url)" = "$REMOTE" || die "stored origin URL must be $REMOTE"; gh auth status >/dev/null 2>&1 || die "gh authentication failed"; test "$(gh repo view "$REPO" --json nameWithOwner --jq .nameWithOwner)" = "$REPO" || die "gh repository mismatch"; test "$MUT" != true || test "$(gh api "repos/$REPO" --jq .permissions.push)" = true || die "GitHub push permission required"; }
 preflight() {
   ALLOW_DRAFT=${1:-false}
-  semver; command -v gh >/dev/null; command -v node >/dev/null; command -v xcodebuild >/dev/null; command -v xcrun >/dev/null
+  semver; load_release_notes; command -v gh >/dev/null; command -v node >/dev/null; command -v xcodebuild >/dev/null; command -v xcrun >/dev/null
   context true
   test "$(git -C "$ROOT" branch --show-current)" = main || die "branch must be main"
   test "$(git -C "$ROOT" rev-parse --abbrev-ref '@{upstream}')" = origin/main || die "upstream must be origin/main"
@@ -160,11 +177,11 @@ $(live_id_fields "$RID")
 EOF
     test "$POST_ID|$POST_DRAFT|$POST_TAG|$POST_TARGET|$POST_TITLE|$POST_PRE|$POST_COUNT|$POST_AID|$POST_NAME|$POST_SIZE" = "$RID|true|$TAG|$(kv "$MANIFEST" target_sha)|$TITLE|false|1|$UPLOADED_AID|$(basename "$DMG")|$(size "$DMG")" || die "draft state changed during upload"; test "$(printf '%s\n' "$POST_BODY" | shasum -a 256 | awk '{print $1}')" = "$(printf '%s\n' "$BODY" | shasum -a 256 | awk '{print $1}')" || die "draft body changed during upload"; test -z "$POST_DIGEST" || test "$POST_DIGEST" = "sha256:$(sha "$DMG")" || die "uploaded API digest mismatch"; echo "draft upload matches; run verify-draft";; 1) positive "$AID" || die "invalid asset ID"; test "$ANAME" = "$(basename "$DMG")" && test "$ASIZE" = "$(size "$DMG")" || die "conflicting asset"; test -z "$DIGEST" || test "$DIGEST" = "sha256:$(sha "$DMG")" || die "conflicting asset digest"; echo "matching asset exists; run verify-draft";; *) die "extra assets present";; esac;;
  status) semver; context false; if RID=$(matching_draft_id); then gh api "repos/$REPO/releases/$RID" --jq '{id,draft,tag_name,target_commitish,name,prerelease,assets:[.assets[]|{id,name,size,digest}]}'; else RC=$?; test "$RC" = 4 || die "draft lookup failed"; gh api "repos/$REPO/releases/tags/$TAG" --jq '{id,draft,tag_name,target_commitish,name,prerelease,assets:[.assets[]|{id,name,size,digest}]}'; fi;;
- verify-draft) semver; context false; validate_manifest; RID=$(matching_draft_id) || { RC=$?; test "$RC" = 4 && die "draft does not exist: $TAG"; die "draft lookup failed"; }; IFS="$(printf '\t')" read -r LIVE_ID DRAFT RTAG TARGET RTITLE RBODY PRE COUNT AID ANAME ASIZE DIGEST <<EOF
+ verify-draft) semver; load_release_notes; context false; validate_manifest; RID=$(matching_draft_id) || { RC=$?; test "$RC" = 4 && die "draft does not exist: $TAG"; die "draft lookup failed"; }; IFS="$(printf '\t')" read -r LIVE_ID DRAFT RTAG TARGET RTITLE RBODY PRE COUNT AID ANAME ASIZE DIGEST <<EOF
 $(live_id_fields "$RID")
 EOF
   test "$LIVE_ID" = "$RID" || die "draft numeric identity changed"; test "$DRAFT|$RTAG|$TARGET|$RTITLE|$PRE|$COUNT|$ANAME|$ASIZE" = "true|$TAG|$(kv "$MANIFEST" target_sha)|$TITLE|false|1|$(basename "$DMG")|$(size "$DMG")" || die "draft does not match"; positive "$AID"; T=$(mktemp -d); trap 'rm -rf "$T"' EXIT; gh release download "$TAG" --repo "$REPO" --pattern "$(basename "$DMG")" --dir "$T"; DOWN=$(sha "$T/$(basename "$DMG")"); test "$DOWN" = "$(sha "$DMG")" || die "download digest mismatch"; test -z "$DIGEST" || test "$DIGEST" = "sha256:$DOWN" || die "API digest mismatch"; TMP="$REMOTE_EVIDENCE.tmp.$$"; printf 'schema=mobcrew-remote-v1\nrepository=%s\nmanifest_sha256=%s\nrelease_id=%s\nasset_id=%s\ntag=%s\ntarget_sha=%s\ntitle=%s\nbody_sha256=%s\nasset_name=%s\nasset_size=%s\napi_digest=%s\ndownloaded_sha256=%s\n' "$REPO" "$(sha "$MANIFEST")" "$RID" "$AID" "$TAG" "$TARGET" "$TITLE" "$(printf '%s\n' "$RBODY" | shasum -a 256 | awk '{print $1}')" "$ANAME" "$ASIZE" "${DIGEST:-unavailable}" "$DOWN" >"$TMP"; validate_remote_evidence "$TMP"; mv "$TMP" "$REMOTE_EVIDENCE"; echo "$REMOTE_EVIDENCE";;
- publish) test "$#" = 3 || die "usage: $0 publish VERSION QUALIFICATION_FILE"; Q=$3; semver; context true; validate_manifest; validate_remote_evidence; strict "$Q" "$QUAL_KEYS"; test "$(kv "$Q" schema)" = mobcrew-qualification-v1 || die "invalid qualification schema"; test "$(kv "$Q" manifest_sha256)" = "$(sha "$MANIFEST")" || die "qualification manifest mismatch"; test "$(kv "$Q" remote_evidence_sha256)" = "$(sha "$REMOTE_EVIDENCE")" || die "qualification remote evidence mismatch"; for K in manifest_sha256 remote_evidence_sha256; do hex64 "$(kv "$Q" "$K")" || die "invalid qualification hash"; done; for K in artifact_integrity gatekeeper_first_launch core_regression permissions upgrade release_notes publication_approved; do test "$(kv "$Q" "$K")" = tested || die "$K must be tested/approved"; done; test -r /dev/tty && test -w /dev/tty || die "real TTY required"; printf 'Type %s to publish: ' "$TAG" >/dev/tty; IFS= read -r ANSWER </dev/tty; test "$ANSWER" = "$TAG" || die "confirmation mismatch"; RID=$(kv "$REMOTE_EVIDENCE" release_id); IFS="$(printf '\t')" read -r LIVE_ID DRAFT RTAG TARGET RTITLE RBODY PRE COUNT AID ANAME ASIZE DIGEST <<EOF
+ publish) test "$#" = 3 || die "usage: $0 publish VERSION QUALIFICATION_FILE"; Q=$3; semver; load_release_notes; context true; validate_manifest; validate_remote_evidence; strict "$Q" "$QUAL_KEYS"; test "$(kv "$Q" schema)" = mobcrew-qualification-v1 || die "invalid qualification schema"; test "$(kv "$Q" manifest_sha256)" = "$(sha "$MANIFEST")" || die "qualification manifest mismatch"; test "$(kv "$Q" remote_evidence_sha256)" = "$(sha "$REMOTE_EVIDENCE")" || die "qualification remote evidence mismatch"; for K in manifest_sha256 remote_evidence_sha256; do hex64 "$(kv "$Q" "$K")" || die "invalid qualification hash"; done; for K in artifact_integrity gatekeeper_first_launch core_regression permissions upgrade release_notes publication_approved; do test "$(kv "$Q" "$K")" = tested || die "$K must be tested/approved"; done; test -r /dev/tty && test -w /dev/tty || die "real TTY required"; printf 'Type %s to publish: ' "$TAG" >/dev/tty; IFS= read -r ANSWER </dev/tty; test "$ANSWER" = "$TAG" || die "confirmation mismatch"; RID=$(kv "$REMOTE_EVIDENCE" release_id); IFS="$(printf '\t')" read -r LIVE_ID DRAFT RTAG TARGET RTITLE RBODY PRE COUNT AID ANAME ASIZE DIGEST <<EOF
 $(live_id_fields "$RID")
 EOF
   test "$LIVE_ID" = "$RID" && test "$AID" = "$(kv "$REMOTE_EVIDENCE" asset_id)" || die "live numeric identity changed"; test "$DRAFT|$RTAG|$TARGET|$RTITLE|$PRE|$COUNT|$ANAME|$ASIZE" = "true|$(kv "$REMOTE_EVIDENCE" tag)|$(kv "$REMOTE_EVIDENCE" target_sha)|$(kv "$REMOTE_EVIDENCE" title)|false|1|$(kv "$REMOTE_EVIDENCE" asset_name)|$(kv "$REMOTE_EVIDENCE" asset_size)" || die "live release state changed"; test "$(printf '%s\n' "$RBODY" | shasum -a 256 | awk '{print $1}')" = "$(kv "$REMOTE_EVIDENCE" body_sha256)" || die "live body changed"; test "$(kv "$REMOTE_EVIDENCE" api_digest)" = unavailable || test "$DIGEST" = "$(kv "$REMOTE_EVIDENCE" api_digest)" || die "live API digest changed"; T=$(mktemp -d); trap 'rm -rf "$T"' EXIT; gh release download "$TAG" --repo "$REPO" --pattern "$ANAME" --dir "$T"; test "$(sha "$T/$ANAME")" = "$(kv "$MANIFEST" artifact_sha256)" || die "live asset changed"; remote_tag_absent; gh api --method PATCH "repos/$REPO/releases/$RID" -f draft=false >/dev/null; IFS="$(printf '\t')" read -r POST_ID POST_DRAFT POST_TAG POST_TARGET POST_TITLE POST_BODY POST_PRE POST_COUNT POST_AID POST_NAME POST_SIZE POST_DIGEST <<EOF
