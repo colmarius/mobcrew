@@ -284,6 +284,9 @@ run_fail() {
 
 # Preflight success and failure matrix. All GitHub calls use the mock.
 run_check_ok
+reset_state; clear_log
+(cd "$T" && MOCK_SWIFT=6.3.3 "$WORK/scripts/release.sh" check 1.2.3) >/dev/null
+assert_no_mutation
 if (cd "$T" && "$WORK/scripts/release.sh" check 01.2.3) >/dev/null 2>&1; then
   echo 'accepted malformed SemVer' >&2
   exit 1
@@ -294,6 +297,7 @@ echo dirty >>"$WORK/.nvmrc"; run_check_fail dirty; git -C "$WORK" checkout -q --
 run_check_fail wrong-node MOCK_NODE=24.18.0
 run_check_fail wrong-xcode MOCK_XCODE=26.5
 run_check_fail wrong-swift MOCK_SWIFT=6.2
+run_check_fail wrong-swift-series MOCK_SWIFT=6.30
 run_check_fail auth MOCK_AUTH=bad
 run_check_fail repo MOCK_REPO=bad
 run_check_fail push MOCK_PUSH=false
@@ -395,7 +399,7 @@ bundle_version=1.2.3
 bundle_build=42
 architectures=arm64 x86_64
 xcode_version=Xcode 26.6 Build version TEST
-swift_version=Apple Swift version 6.3 (mock)
+swift_version=Apple Swift version 6.3.3 (mock)
 node_version=v24.19.0
 package_lock_sha256=$LOCK_SHA
 verification_evidence_sha256=$EVIDENCE_SHA

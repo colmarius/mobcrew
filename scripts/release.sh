@@ -117,7 +117,7 @@ preflight() {
   CANONICAL_MAIN=$(gh api "repos/$REPO/commits/main" --jq .sha); hex40 "$CANONICAL_MAIN" || die "invalid canonical main SHA"; test "$HEAD" = "$CANONICAL_MAIN" || die "HEAD must equal canonical GitHub main"
   test "$(git -C "$ROOT" tag -l "$TAG")" = "" || die "local tag exists: $TAG"; remote_tag_absent
   test "$(xcodebuild -version | sed -n '1p')" = 'Xcode 26.6' || die "Xcode must be exactly 26.6"
-  xcrun swift --version | grep -q 'Swift version 6.3' || die "Swift must be exactly 6.3"
+  xcrun swift --version | grep -Eq '^(Apple )?Swift version 6\.3(\.[0-9]+)? \(' || die "Swift must be exactly 6.3"
   test "$(node --version)" = "v$(cat "$ROOT/.nvmrc")" || die "Node must match .nvmrc"
   if published_release_http >/dev/null; then die "published release already exists: $TAG"; else RC=$?; test "$RC" = 4 || die "published release lookup failed"; fi
   if RID=$(matching_draft_id); then test "$ALLOW_DRAFT" = true || die "draft release already exists: $TAG (ID $RID)"; else RC=$?; test "$RC" = 4 || die "draft lookup failed"; fi
@@ -146,7 +146,7 @@ validate_manifest() {
   nonnegative "$(kv "$M" artifact_size)" || die "invalid artifact size"; hex64 "$(kv "$M" artifact_sha256)" || die "invalid artifact digest"; positive "$(kv "$M" bundle_build)" || die "invalid bundle build"
   test "$(kv "$M" bundle_id)" = "$(kv "$E" bundle_id)" || die "bundle ID evidence mismatch"; test "$(kv "$M" bundle_version)" = "$(kv "$E" version)" || die "bundle version evidence mismatch"; test "$(kv "$M" bundle_build)" = "$(kv "$E" build)" || die "bundle build evidence mismatch"; test "$(kv "$M" architectures)" = "$(kv "$E" architectures)" || die "architecture evidence mismatch"; test "$(kv "$M" bundle_id)" = com.colmarius.MobCrew || die "bundle ID mismatch"; test "$(kv "$M" node_version)" = "v$(cat "$ROOT/.nvmrc")" || die "manifest Node mismatch"
   case "$(kv "$M" xcode_version)" in 'Xcode 26.6 Build version '*) :;; *) die "manifest Xcode mismatch";; esac
-  case "$(kv "$M" swift_version)" in 'Apple Swift version 6.3 '*|'Swift version 6.3 '*) :;; *) die "manifest Swift mismatch";; esac
+  printf '%s\n' "$(kv "$M" swift_version)" | grep -Eq '^(Apple )?Swift version 6\.3(\.[0-9]+)? \(' || die "manifest Swift mismatch"
   for K in package_lock_sha256 verification_evidence_sha256 verification_log_sha256; do hex64 "$(kv "$M" "$K")" || die "invalid $K"; done
   test "$(kv "$M" package_lock_sha256)" = "$(sha "$ROOT/package-lock.json")" || die "lockfile changed"
   test "$(kv "$M" verification_evidence_sha256)" = "$(sha "$E")" || die "evidence changed"
