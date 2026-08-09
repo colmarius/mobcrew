@@ -248,15 +248,24 @@ final class AppState {
     }
 
     func pauseTimer() {
+        let pausedPhase: SessionPhase
         switch sessionPhase {
         case .regularRunning:
-            sessionPhase = .regularPaused
+            pausedPhase = .regularPaused
         case .breakRunning:
-            sessionPhase = .breakPaused
+            pausedPhase = .breakPaused
         case .regularIdle, .regularPaused, .breakDue, .breakPaused:
             return
         }
-        timerEngine.stop()
+
+        switch timerEngine.pause() {
+        case .paused:
+            sessionPhase = pausedPhase
+        case .completed:
+            break
+        case .inactive:
+            assertionFailure("Running session phase has no active timer deadline")
+        }
     }
 
     func resumeTimer() {

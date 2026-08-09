@@ -34,6 +34,18 @@ private final class ActiveMobstersWriterSpy: ActiveMobstersFileServiceProtocol {
     }
 }
 
+private final class AppStateMonotonicClock: MonotonicClockProtocol {
+    var now: TimeInterval = 0
+
+    func advance(by duration: TimeInterval) {
+        now += duration
+    }
+}
+
+private final class AppStateWallClock: WallClockProtocol {
+    var now = Date(timeIntervalSinceReferenceDate: 1_000)
+}
+
 @MainActor
 @Suite("AppState Tests")
 struct AppStateTests {
@@ -42,6 +54,8 @@ struct AppStateTests {
         let timerEngine: TimerEngine
         let notifications: AppStateNotificationSpy
         let activeMobstersWriter: ActiveMobstersWriterSpy
+        let monotonicClock: AppStateMonotonicClock
+        let wallClock: AppStateWallClock
     }
 
     private enum Command: CaseIterable {
@@ -83,7 +97,12 @@ struct AppStateTests {
         if let timerDuration {
             persistenceService.saveTimerDuration(timerDuration)
         }
-        let timerEngine = TimerEngine()
+        let monotonicClock = AppStateMonotonicClock()
+        let wallClock = AppStateWallClock()
+        let timerEngine = TimerEngine(
+            monotonicClock: monotonicClock,
+            wallClock: wallClock
+        )
         let notifications = AppStateNotificationSpy()
         let activeMobstersWriter = ActiveMobstersWriterSpy()
         let appState = AppState(
@@ -98,8 +117,15 @@ struct AppStateTests {
             appState: appState,
             timerEngine: timerEngine,
             notifications: notifications,
-            activeMobstersWriter: activeMobstersWriter
+            activeMobstersWriter: activeMobstersWriter,
+            monotonicClock: monotonicClock,
+            wallClock: wallClock
         )
+    }
+
+    private func elapse(_ duration: TimeInterval, in fixture: Fixture) {
+        fixture.monotonicClock.advance(by: duration)
+        fixture.timerEngine.refresh()
     }
 
     private func setActiveRosterSize(_ count: Int, in appState: AppState) {
@@ -135,14 +161,14 @@ struct AppStateTests {
             fixture.appState.pauseTimer()
         case .breakDue:
             fixture.appState.startTimer()
-            fixture.timerEngine.processTick()
+            elapse(1, in: fixture)
         case .breakRunning:
             fixture.appState.startTimer()
-            fixture.timerEngine.processTick()
+            elapse(1, in: fixture)
             fixture.appState.takeBreak()
         case .breakPaused:
             fixture.appState.startTimer()
-            fixture.timerEngine.processTick()
+            elapse(1, in: fixture)
             fixture.appState.takeBreak()
             fixture.appState.pauseTimer()
         }
@@ -341,7 +367,7 @@ struct AppStateTests {
             setActiveRosterSize(rosterSize, in: fixture.appState)
             let driverBeforeCompletion = fixture.appState.roster.driver?.id
 
-            fixture.timerEngine.processTick()
+            elapse(1, in: fixture)
 
             #expect(fixture.appState.sessionPhase == .regularIdle)
             #expect(fixture.appState.turnsSinceBreak == 1)
@@ -363,7 +389,8 @@ struct AppStateTests {
         fixture.appState.startTimer()
         fixture.appState.pauseTimer()
 
-        fixture.timerEngine.processTick()
+        fixture.monotonicClock.advance(by: 1)
+        fixture.timerEngine.refresh()
 
         #expect(fixture.appState.sessionPhase == .regularPaused)
         #expect(fixture.appState.timerState.secondsRemaining == 1)
@@ -371,10 +398,26 @@ struct AppStateTests {
         #expect(fixture.appState.turnsSinceBreak == 0)
 
         fixture.appState.resumeTimer()
-        fixture.timerEngine.processTick()
-        fixture.timerEngine.processTick()
+        elapse(1, in: fixture)
+        fixture.timerEngine.refresh()
 
         #expect(fixture.appState.sessionPhase == .regularIdle)
+        #expect(fixture.appState.turnsSinceBreak == 1)
+    }
+
+    @Test("pausing at the deadline completes instead of stranding paused at zero")
+    func pauseAtDeadlineCompletesCurrentTurn() {
+        let fixture = makeFixture(timerDuration: 1, breakInterval: 10)
+        setActiveRosterSize(2, in: fixture.appState)
+        let driverBeforeCompletion = fixture.appState.roster.driver?.id
+        fixture.appState.startTimer()
+        fixture.monotonicClock.advance(by: 1)
+
+        fixture.appState.pauseTimer()
+
+        #expect(fixture.appState.sessionPhase == .regularIdle)
+        #expect(fixture.appState.timerState.secondsRemaining == fixture.appState.timerDuration)
+        #expect(fixture.appState.roster.driver?.id != driverBeforeCompletion)
         #expect(fixture.appState.turnsSinceBreak == 1)
     }
 
@@ -400,7 +443,7 @@ struct AppStateTests {
         let fixture = makeFixture(timerDuration: 300)
         setActiveRosterSize(1, in: fixture.appState)
         fixture.appState.startTimer()
-        fixture.timerEngine.processTick()
+        elapse(1, in: fixture)
 
         fixture.appState.setTimerDuration(minutes: 10)
 
@@ -416,7 +459,7 @@ struct AppStateTests {
         let fixture = makeFixture(timerDuration: 300)
         setActiveRosterSize(1, in: fixture.appState)
         fixture.appState.startTimer()
-        fixture.timerEngine.processTick()
+        elapse(1, in: fixture)
         fixture.appState.pauseTimer()
 
         fixture.appState.setTimerDuration(minutes: 10)
@@ -433,7 +476,7 @@ struct AppStateTests {
             let fixture = makeFixture(timerDuration: 300)
             setActiveRosterSize(1, in: fixture.appState)
             fixture.appState.startTimer()
-            fixture.timerEngine.processTick()
+            elapse(1, in: fixture)
             if shouldPause {
                 fixture.appState.pauseTimer()
             }
@@ -452,7 +495,7 @@ struct AppStateTests {
         let fixture = makeFixture(timerDuration: 300)
         setActiveRosterSize(2, in: fixture.appState)
         fixture.appState.startTimer()
-        fixture.timerEngine.processTick()
+        elapse(1, in: fixture)
         fixture.appState.setTimerDuration(minutes: 10)
 
         fixture.appState.skipTurn()

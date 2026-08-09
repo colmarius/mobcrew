@@ -40,7 +40,7 @@ qualification remains outstanding because the runner currently has 26.2.
 
 ## Next Action
 
-- Implement [Task 4: Make countdown deadline-based and deterministic](plan.md#task-4-make-countdown-deadline-based-and-deterministic), beginning with injected-clock tests and the synchronous refresh seam.
+- Run the native focused and full-suite gates for [Task 4: Make countdown deadline-based and deterministic](plan.md#task-4-make-countdown-deadline-based-and-deterministic), apply only bounded compile/test fixes, and record observed evidence before checking it complete.
 
 ## Open Questions
 

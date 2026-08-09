@@ -2,203 +2,370 @@ import Testing
 import Foundation
 @testable import MobCrew
 
+private final class TestMonotonicClock: MonotonicClockProtocol {
+    var now: TimeInterval = 0
+
+    func advance(by duration: TimeInterval) {
+        now += duration
+    }
+}
+
+private final class TestWallClock: WallClockProtocol {
+    var current: Date
+    private(set) var readCount = 0
+
+    init(now: Date = Date(timeIntervalSinceReferenceDate: 1_000)) {
+        self.current = now
+    }
+
+    var now: Date {
+        readCount += 1
+        return current
+    }
+}
+
 @MainActor
 @Suite("TimerEngine Tests")
 struct TimerEngineTests {
+    private struct Fixture {
+        let engine: TimerEngine
+        let monotonicClock: TestMonotonicClock
+        let wallClock: TestWallClock
+    }
 
-    // MARK: - Initial State
+    private func makeFixture(duration: Int = 0) -> Fixture {
+        let monotonicClock = TestMonotonicClock()
+        let wallClock = TestWallClock()
+        let engine = TimerEngine(
+            monotonicClock: monotonicClock,
+            wallClock: wallClock
+        )
+        if duration > 0 {
+            engine.reset(duration: duration)
+        }
+        return Fixture(
+            engine: engine,
+            monotonicClock: monotonicClock,
+            wallClock: wallClock
+        )
+    }
 
-    @Test("initial state has zero seconds and is not running")
+    @Test("initial state has zero seconds and is inactive")
     func initialStateIsZero() {
-        let engine = TimerEngine()
+        let fixture = makeFixture()
 
-        #expect(engine.secondsRemaining == 0)
-        #expect(engine.isRunning == false)
+        #expect(fixture.engine.secondsRemaining == 0)
+        #expect(fixture.engine.isRunning == false)
+        #expect(fixture.engine.runningWallDeadline == nil)
+        #expect(fixture.engine.frozenExactRemaining == 0)
     }
 
-    // MARK: - Reset
+    @Test("reset replaces duration and discards an active run")
+    func resetReplacesActiveRun() {
+        let fixture = makeFixture(duration: 60)
+        fixture.engine.start()
+        fixture.monotonicClock.advance(by: 10)
 
-    @Test("reset sets duration and stops timer")
-    func resetSetsDuration() {
-        let engine = TimerEngine()
+        fixture.engine.reset(duration: 120)
 
-        engine.reset(duration: 300)
-
-        #expect(engine.secondsRemaining == 300)
-        #expect(engine.state.totalSeconds == 300)
-        #expect(engine.isRunning == false)
+        #expect(fixture.engine.isRunning == false)
+        #expect(fixture.engine.secondsRemaining == 120)
+        #expect(fixture.engine.state.totalSeconds == 120)
+        #expect(fixture.engine.frozenExactRemaining == 120)
+        #expect(fixture.engine.refresh() == .inactive)
     }
 
-    @Test("reset stops a running timer")
-    func resetStopsRunningTimer() {
-        let engine = TimerEngine()
-        engine.reset(duration: 60)
-        engine.start()
+    @Test("start establishes monotonic and wall deadlines")
+    func startEstablishesDeadlines() {
+        let fixture = makeFixture(duration: 60)
+        let expectedWallDeadline = fixture.wallClock.current.addingTimeInterval(60)
 
-        #expect(engine.isRunning == true)
+        #expect(fixture.engine.start())
 
-        engine.reset(duration: 120)
-
-        #expect(engine.isRunning == false)
-        #expect(engine.secondsRemaining == 120)
+        #expect(fixture.engine.isRunning)
+        #expect(fixture.engine.runningWallDeadline == expectedWallDeadline)
+        #expect(fixture.engine.frozenExactRemaining == nil)
+        #expect(fixture.wallClock.readCount == 1)
+        #expect(fixture.engine.start() == false)
+        fixture.engine.reset(duration: 60)
     }
 
-    // MARK: - Start/Stop
+    @Test("start rejects an empty countdown")
+    func startRejectsZero() {
+        let fixture = makeFixture()
 
-    @Test("start sets isRunning to true")
-    func startSetsIsRunning() {
-        let engine = TimerEngine()
-        engine.reset(duration: 60)
-
-        engine.start()
-
-        #expect(engine.isRunning == true)
-
-        engine.stop()
+        #expect(fixture.engine.start() == false)
+        #expect(fixture.engine.isRunning == false)
+        #expect(fixture.wallClock.readCount == 0)
     }
 
-    @Test("start does nothing when already running")
-    func startDoesNothingWhenRunning() {
-        let engine = TimerEngine()
-        engine.reset(duration: 60)
-        engine.start()
+    @Test("one delayed refresh derives all elapsed time from the deadline")
+    func delayedRefresh() {
+        let fixture = makeFixture(duration: 10)
+        fixture.engine.start()
 
-        engine.start()
+        fixture.monotonicClock.advance(by: 3.4)
+        let result = fixture.engine.refresh()
 
-        #expect(engine.isRunning == true)
-
-        engine.stop()
+        #expect(result == .active)
+        #expect(fixture.engine.secondsRemaining == 7)
+        #expect(fixture.engine.state.totalSeconds == 10)
+        #expect(fixture.wallClock.readCount == 1)
+        fixture.engine.reset(duration: 10)
     }
 
-    @Test("start does nothing when seconds is zero")
-    func startDoesNothingWhenZeroSeconds() {
-        let engine = TimerEngine()
+    @Test("display rounding uses ceil until the exact deadline")
+    func ceilBoundaries() {
+        let fixture = makeFixture(duration: 2)
+        fixture.engine.start()
 
-        engine.start()
+        fixture.monotonicClock.advance(by: 0.9999)
+        fixture.engine.refresh()
+        #expect(fixture.engine.secondsRemaining == 2)
 
-        #expect(engine.isRunning == false)
+        fixture.monotonicClock.advance(by: 0.0001)
+        fixture.engine.refresh()
+        #expect(fixture.engine.secondsRemaining == 1)
+
+        fixture.monotonicClock.advance(by: 0.9999)
+        fixture.engine.refresh()
+        #expect(fixture.engine.secondsRemaining == 1)
+
+        fixture.monotonicClock.advance(by: 0.0001)
+        #expect(fixture.engine.refresh() == .completed)
+        #expect(fixture.engine.secondsRemaining == 0)
     }
 
-    @Test("stop sets isRunning to false")
-    func stopSetsIsNotRunning() {
-        let engine = TimerEngine()
-        engine.reset(duration: 60)
-        engine.start()
+    @Test("sleep-like jump completes exactly once")
+    func sleepLikeJumpCompletesOnce() {
+        let fixture = makeFixture(duration: 5)
+        var completionCount = 0
+        fixture.engine.configure {
+            completionCount += 1
+        }
+        fixture.engine.start()
 
-        engine.stop()
+        fixture.monotonicClock.advance(by: 30)
+        #expect(fixture.engine.refresh() == .completed)
+        #expect(fixture.engine.refresh() == .inactive)
 
-        #expect(engine.isRunning == false)
+        #expect(completionCount == 1)
+        #expect(fixture.engine.isRunning == false)
+        #expect(fixture.engine.secondsRemaining == 0)
     }
 
-    // MARK: - Toggle
+    @Test("pause and resume preserve exact fractional remaining time")
+    func pauseResumeDoesNotInflateTime() {
+        let fixture = makeFixture(duration: 1)
+        var completionCount = 0
+        fixture.engine.configure {
+            completionCount += 1
+        }
+        fixture.engine.start()
+        fixture.monotonicClock.advance(by: 0.4)
 
-    @Test("toggle starts when stopped")
-    func toggleStartsWhenStopped() {
-        let engine = TimerEngine()
-        engine.reset(duration: 60)
+        #expect(fixture.engine.pause() == .paused)
+        #expect(fixture.engine.secondsRemaining == 1)
+        #expect(abs((fixture.engine.frozenExactRemaining ?? 0) - 0.6) < 0.000_001)
 
-        engine.toggle()
+        for _ in 0..<3 {
+            #expect(fixture.engine.start())
+            #expect(fixture.engine.pause() == .paused)
+        }
 
-        #expect(engine.isRunning == true)
-
-        engine.stop()
+        #expect(abs((fixture.engine.frozenExactRemaining ?? 0) - 0.6) < 0.000_001)
+        fixture.engine.start()
+        fixture.monotonicClock.advance(by: 0.5999)
+        #expect(fixture.engine.refresh() == .active)
+        #expect(fixture.engine.secondsRemaining == 1)
+        fixture.monotonicClock.advance(by: 0.0001)
+        #expect(fixture.engine.refresh() == .completed)
+        #expect(completionCount == 1)
     }
 
-    @Test("toggle stops when running")
-    func toggleStopsWhenRunning() {
-        let engine = TimerEngine()
-        engine.reset(duration: 60)
-        engine.start()
+    @Test("pause at the deadline lets completion win")
+    func pauseAtDeadlineCompletes() {
+        let fixture = makeFixture(duration: 1)
+        var completionCount = 0
+        fixture.engine.configure {
+            completionCount += 1
+        }
+        fixture.engine.start()
+        fixture.monotonicClock.advance(by: 1)
 
-        engine.toggle()
+        #expect(fixture.engine.pause() == .completed)
 
-        #expect(engine.isRunning == false)
+        #expect(completionCount == 1)
+        #expect(fixture.engine.isRunning == false)
+        #expect(fixture.engine.secondsRemaining == 0)
     }
 
-    // MARK: - Pause/Resume
+    @Test("explicit reset discards an overdue cycle without completing it")
+    func resetDiscardsOverdueCycle() {
+        let fixture = makeFixture(duration: 1)
+        var completionCount = 0
+        fixture.engine.configure {
+            completionCount += 1
+        }
+        fixture.engine.start()
+        fixture.monotonicClock.advance(by: 5)
 
-    @Test("pause preserves remaining time")
-    func pausePreservesRemainingTime() {
-        let engine = TimerEngine()
-        engine.reset(duration: 60)
-        engine.start()
+        fixture.engine.reset(duration: 10)
 
-        engine.stop()
-
-        #expect(engine.secondsRemaining == 60)
-        #expect(engine.isRunning == false)
+        #expect(completionCount == 0)
+        #expect(fixture.engine.refresh() == .inactive)
+        #expect(fixture.engine.secondsRemaining == 10)
     }
 
-    @Test("resume continues from paused state")
-    func resumeContinuesFromPausedState() {
-        let engine = TimerEngine()
-        engine.reset(duration: 60)
-        engine.start()
-        engine.stop()
+    @Test("completion callback can install a replacement cycle")
+    func reentrantCompletionPreservesReplacementCycle() {
+        let fixture = makeFixture(duration: 1)
+        var completionCount = 0
+        fixture.engine.configure {
+            completionCount += 1
+            fixture.engine.reset(duration: 2)
+            fixture.engine.start()
+        }
+        fixture.engine.start()
+        fixture.monotonicClock.advance(by: 1)
 
-        let remainingBeforeResume = engine.secondsRemaining
-        engine.start()
+        #expect(fixture.engine.refresh() == .completed)
 
-        #expect(engine.isRunning == true)
-        #expect(engine.secondsRemaining == remainingBeforeResume)
-
-        engine.stop()
+        #expect(completionCount == 1)
+        #expect(fixture.engine.isRunning)
+        #expect(fixture.engine.secondsRemaining == 2)
+        #expect(fixture.engine.state.totalSeconds == 2)
+        fixture.engine.reset(duration: 2)
     }
 
-    // MARK: - Countdown (async tests)
+    @Test("normal refreshes never reconcile against wall time")
+    func wallClockIsIsolatedFromInProcessRefresh() {
+        let fixture = makeFixture(duration: 10)
+        fixture.engine.start()
+        #expect(fixture.wallClock.readCount == 1)
 
-    @Test("countdown decrements seconds")
-    func countdownDecrementsSeconds() async throws {
-        let engine = TimerEngine()
-        engine.reset(duration: 3)
+        fixture.monotonicClock.advance(by: 3)
+        fixture.engine.refresh()
+        fixture.wallClock.current = fixture.wallClock.current.addingTimeInterval(10_000)
+        fixture.monotonicClock.advance(by: 2)
+        fixture.engine.refresh()
 
-        engine.start()
+        #expect(fixture.engine.secondsRemaining == 5)
+        #expect(fixture.wallClock.readCount == 1)
 
-        try await Task.sleep(for: .milliseconds(1100))
-
-        #expect(engine.secondsRemaining < 3)
-
-        engine.stop()
+        #expect(fixture.engine.pause() == .paused)
+        #expect(fixture.wallClock.readCount == 1)
+        fixture.engine.start()
+        #expect(fixture.wallClock.readCount == 2)
+        fixture.engine.reset(duration: 10)
     }
 
-    // MARK: - Completion Callback
+    @Test("valid wall deadline restores once into a monotonic run before arming")
+    func validRestore() {
+        let fixture = makeFixture(duration: 7)
+        var completionCount = 0
+        fixture.engine.configure {
+            completionCount += 1
+        }
+        let wallDeadline = fixture.wallClock.current.addingTimeInterval(5)
 
-    @Test("completion callback fires when timer reaches zero")
-    func completionCallbackFires() async throws {
-        let engine = TimerEngine()
-        var callbackFired = false
+        let result = fixture.engine.restoreRunning(
+            totalSeconds: 10,
+            wallDeadline: wallDeadline
+        )
 
-        engine.configure(onComplete: {
-            callbackFired = true
-        })
+        #expect(result == .restored)
+        #expect(fixture.engine.isRunning)
+        #expect(fixture.engine.secondsRemaining == 5)
+        #expect(fixture.engine.state.totalSeconds == 10)
+        #expect(fixture.engine.runningWallDeadline == wallDeadline)
+        #expect(fixture.wallClock.readCount == 1)
+        #expect(fixture.engine.armRefreshPublisher())
+        #expect(fixture.engine.armRefreshPublisher() == false)
 
-        engine.reset(duration: 1)
-        engine.start()
-
-        try await Task.sleep(for: .milliseconds(1500))
-
-        #expect(callbackFired == true)
-        #expect(engine.isRunning == false)
-        #expect(engine.secondsRemaining == 0)
+        fixture.monotonicClock.advance(by: 5)
+        #expect(fixture.engine.refresh() == .completed)
+        #expect(completionCount == 1)
     }
 
-    @Test("completion callback does not fire when stopped early")
-    func completionCallbackDoesNotFireWhenStopped() async throws {
-        let engine = TimerEngine()
-        var callbackFired = false
+    @Test("restored run ignores later wall-clock jumps")
+    func restoredRunUsesOnlyMonotonicTime() {
+        let fixture = makeFixture(duration: 7)
+        let wallDeadline = fixture.wallClock.current.addingTimeInterval(5)
+        #expect(fixture.engine.restoreRunning(totalSeconds: 10, wallDeadline: wallDeadline) == .restored)
+        fixture.wallClock.current = fixture.wallClock.current.addingTimeInterval(1_000_000)
 
-        engine.configure(onComplete: {
-            callbackFired = true
-        })
+        fixture.monotonicClock.advance(by: 2)
+        #expect(fixture.engine.refresh() == .active)
 
-        engine.reset(duration: 5)
-        engine.start()
+        #expect(fixture.engine.secondsRemaining == 3)
+        #expect(fixture.wallClock.readCount == 1)
+        fixture.engine.reset(duration: 7)
+    }
 
-        try await Task.sleep(for: .milliseconds(100))
-        engine.stop()
+    @Test("expired and invalid restores do not mutate prepared state")
+    func rejectedRestoreDoesNotMutate() {
+        let baseDate = Date(timeIntervalSinceReferenceDate: 1_000)
+        let cases: [(Int, Date, RunningTimerRestoreResult)] = [
+            (10, baseDate, .expired),
+            (10, baseDate.addingTimeInterval(-1), .expired),
+            (10, baseDate.addingTimeInterval(11), .invalid),
+            (0, baseDate.addingTimeInterval(1), .invalid),
+            (10, Date(timeIntervalSinceReferenceDate: .infinity), .invalid)
+        ]
 
-        try await Task.sleep(for: .milliseconds(500))
+        for (totalSeconds, deadline, expectedResult) in cases {
+            let monotonicClock = TestMonotonicClock()
+            let wallClock = TestWallClock(now: baseDate)
+            let state = TimerState(secondsRemaining: 7, totalSeconds: 7)
+            let engine = TimerEngine(
+                state: state,
+                monotonicClock: monotonicClock,
+                wallClock: wallClock
+            )
+            var completionCount = 0
+            engine.configure {
+                completionCount += 1
+            }
 
-        #expect(callbackFired == false)
+            let result = engine.restoreRunning(
+                totalSeconds: totalSeconds,
+                wallDeadline: deadline
+            )
+
+            #expect(result == expectedResult)
+            #expect(engine.isRunning == false)
+            #expect(engine.state.totalSeconds == 7)
+            #expect(engine.secondsRemaining == 7)
+            #expect(engine.frozenExactRemaining == 7)
+            #expect(completionCount == 0)
+        }
+    }
+
+    @Test("fractional restored remainder uses ceil display")
+    func fractionalRestoreRounding() {
+        let fixture = makeFixture(duration: 7)
+        let wallDeadline = fixture.wallClock.current.addingTimeInterval(1.2)
+
+        #expect(fixture.engine.restoreRunning(totalSeconds: 5, wallDeadline: wallDeadline) == .restored)
+        #expect(fixture.engine.secondsRemaining == 2)
+
+        fixture.monotonicClock.advance(by: 0.2)
+        fixture.engine.refresh()
+        #expect(fixture.engine.secondsRemaining == 1)
+
+        fixture.monotonicClock.advance(by: 1)
+        #expect(fixture.engine.refresh() == .completed)
+    }
+
+    @Test("refresh after pause is inactive even if the old deadline passes")
+    func staleRefreshAfterPause() {
+        let fixture = makeFixture(duration: 5)
+        fixture.engine.start()
+        #expect(fixture.engine.pause() == .paused)
+        fixture.monotonicClock.advance(by: 10)
+
+        #expect(fixture.engine.refresh() == .inactive)
+        #expect(fixture.engine.secondsRemaining == 5)
     }
 }

@@ -5,8 +5,9 @@ Updated: 2026-08-09
 ## Current Slice
 
 - Tasks 1-3 are implemented, natively tested, checked off in the active plan, and pushed.
-- Task 4 is next: replace delivered-tick subtraction with monotonic deadlines, add a separate wall
-  clock for relaunch reconciliation, and keep deterministic synchronous refresh coverage.
+- Task 4 implementation is ready for its native gate: delivered-tick subtraction is replaced with
+  monotonic deadlines, wall time is isolated to deadline encoding/restoration, and deterministic
+  synchronous refresh tests cover elapsed-time and completion behavior.
 
 ## Observed Evidence
 
@@ -46,10 +47,19 @@ Updated: 2026-08-09
 - Focused Task 3 `xcodebuild test` passed 34/34 across `AppStateTests`, `TimerStateTests`, and
   `BreakLogicTests`. The full macOS suite passed 113/113 with 0 failures and 0 skips. No fix commit
   or temporary branch was needed.
+- Task 4 tests now inject monotonic and wall clocks and cover delayed refresh, sleep-like jumps,
+  sub-second `ceil` boundaries, exact fractional pause/resume, reset, restored wall deadlines, and
+  exactly-once completion without real sleeps. AppState/break regressions cover pause at the exact
+  regular or break deadline so completion cannot strand a paused `00:00` session.
+- The engine keeps exact remaining duration privately, exposes only rounded UI state, and converts a
+  validated restored wall-clock remainder once into a fresh monotonic deadline. Publisher arming is
+  separate from restore establishment for Task 6 recovery ordering.
 
 ## Verification Status
 
 - Tasks 1-2 passed their focused and full native test gates on macOS using Xcode 26.2 (build 17C52).
 - Task 3 passed focused and full-suite regression coverage on the same Xcode 26.2 runner.
+- Task 4 implementation has passed Linux source inspection and whitespace validation; native compile,
+  focused tests, and the full macOS suite are the current gate and have not yet been claimed.
 - The project specifies Xcode 26.6+ / Swift 6.3, so the exact-toolchain rerun remains unverified and
   must be repeated before final qualification. No manual UI or accessibility behavior was claimed.

@@ -34,6 +34,18 @@ private final class BreakActiveMobstersWriterSpy: ActiveMobstersFileServiceProto
     }
 }
 
+private final class BreakMonotonicClock: MonotonicClockProtocol {
+    var now: TimeInterval = 0
+
+    func advance(by duration: TimeInterval) {
+        now += duration
+    }
+}
+
+private final class BreakWallClock: WallClockProtocol {
+    var now = Date(timeIntervalSinceReferenceDate: 1_000)
+}
+
 @MainActor
 @Suite("Break Logic Tests")
 struct BreakLogicTests {
@@ -42,6 +54,7 @@ struct BreakLogicTests {
         let timerEngine: TimerEngine
         let notifications: BreakNotificationSpy
         let activeMobstersWriter: BreakActiveMobstersWriterSpy
+        let monotonicClock: BreakMonotonicClock
     }
 
     private func makeFixture(
@@ -52,7 +65,11 @@ struct BreakLogicTests {
         let defaults = UserDefaults(suiteName: suiteName)!
         let persistenceService = PersistenceService(userDefaults: defaults)
         persistenceService.saveTimerDuration(1)
-        let timerEngine = TimerEngine()
+        let monotonicClock = BreakMonotonicClock()
+        let timerEngine = TimerEngine(
+            monotonicClock: monotonicClock,
+            wallClock: BreakWallClock()
+        )
         let notifications = BreakNotificationSpy()
         let activeMobstersWriter = BreakActiveMobstersWriterSpy()
         let appState = AppState(
@@ -69,13 +86,19 @@ struct BreakLogicTests {
             appState: appState,
             timerEngine: timerEngine,
             notifications: notifications,
-            activeMobstersWriter: activeMobstersWriter
+            activeMobstersWriter: activeMobstersWriter,
+            monotonicClock: monotonicClock
         )
+    }
+
+    private func elapse(_ duration: TimeInterval, in fixture: Fixture) {
+        fixture.monotonicClock.advance(by: duration)
+        fixture.timerEngine.refresh()
     }
 
     private func completeRegularTurn(_ fixture: Fixture) {
         fixture.appState.startTimer()
-        fixture.timerEngine.processTick()
+        elapse(1, in: fixture)
     }
 
     @Test("reaching cadence offers a prepared break without starting it")
@@ -128,6 +151,20 @@ struct BreakLogicTests {
         #expect(fixture.timerEngine.isRunning)
         #expect(fixture.appState.timerState.secondsRemaining == pausedRemaining)
         fixture.appState.pauseTimer()
+    }
+
+    @Test("pausing a break at its deadline completes the break")
+    func pauseAtBreakDeadlineCompletes() {
+        let fixture = makeFixture(breakDuration: 1)
+        completeRegularTurn(fixture)
+        fixture.appState.takeBreak()
+        fixture.monotonicClock.advance(by: 1)
+
+        fixture.appState.pauseTimer()
+
+        #expect(fixture.appState.sessionPhase == .regularIdle)
+        #expect(fixture.appState.turnsSinceBreak == 0)
+        #expect(fixture.appState.timerState.secondsRemaining == fixture.appState.timerDuration)
     }
 
     @Test("skipping every break phase never advances the roster")
@@ -187,8 +224,8 @@ struct BreakLogicTests {
         let writesAfterRegularCompletion = fixture.activeMobstersWriter.writeCount
         fixture.appState.takeBreak()
 
-        fixture.timerEngine.processTick()
-        fixture.timerEngine.processTick()
+        elapse(1, in: fixture)
+        fixture.timerEngine.refresh()
 
         #expect(fixture.appState.sessionPhase == .regularIdle)
         #expect(fixture.appState.turnsSinceBreak == 0)
@@ -203,7 +240,7 @@ struct BreakLogicTests {
         let fixture = makeFixture(breakInterval: 2)
 
         completeRegularTurn(fixture)
-        fixture.timerEngine.processTick()
+        fixture.timerEngine.refresh()
 
         #expect(fixture.appState.sessionPhase == .regularIdle)
         #expect(fixture.appState.turnsSinceBreak == 1)

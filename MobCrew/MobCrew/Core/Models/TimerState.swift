@@ -48,9 +48,13 @@ final class TimerState {
         totalSeconds = duration
     }
 
-    func elapseOneSecond() {
-        guard secondsRemaining > 0 else { return }
-        secondsRemaining -= 1
+    func updateRemaining(_ seconds: Int) {
+        secondsRemaining = max(0, seconds)
+    }
+
+    func restore(totalSeconds: Int, secondsRemaining: Int) {
+        self.totalSeconds = totalSeconds
+        self.secondsRemaining = secondsRemaining
     }
 
     var displayTime: String {
