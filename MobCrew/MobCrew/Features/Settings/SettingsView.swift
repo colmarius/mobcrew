@@ -1,4 +1,6 @@
 import SwiftUI
+import ServiceManagement
+import UserNotifications
 
 struct SettingsView: View {
     @Bindable var appState: AppState
@@ -20,23 +22,40 @@ struct SettingsView: View {
                     Label("Shortcuts", systemImage: "keyboard")
                 }
         }
-        .frame(width: 450, height: 320)
+        .frame(width: 500, height: 390)
     }
 }
 
 private struct GeneralSettingsTab: View {
     @Bindable var appState: AppState
-    @State private var launchAtLogin = LaunchAtLoginService.shared.isEnabled
-    
+    @ObservedObject private var launchAtLogin = LaunchAtLoginService.shared
+    @ObservedObject private var notificationService = NotificationService.shared
+    @Environment(\.scenePhase) private var scenePhase
+
     var body: some View {
         Form {
             Section("App") {
-                Toggle("Launch at Login", isOn: $launchAtLogin)
-                    .onChange(of: launchAtLogin) { _, newValue in
-                        LaunchAtLoginService.shared.isEnabled = newValue
+                Toggle(
+                    "Launch at Login",
+                    isOn: Binding(
+                        get: { launchAtLogin.isRegistrationRequested },
+                        set: { launchAtLogin.setEnabled($0) }
+                    )
+                )
+                .disabled(launchAtLogin.status == .notFound)
+
+                HStack {
+                    Label(launchAtLoginStatusText, systemImage: launchAtLoginStatusIcon)
+                        .foregroundStyle(launchAtLoginStatusColor)
+                    Spacer()
+                    if shouldShowLoginItemsSettings {
+                        Button("Open Login Items") {
+                            launchAtLogin.openSystemSettings()
+                        }
                     }
+                }
             }
-            
+
             Section("Timer") {
                 Stepper(value: Binding(
                     get: { appState.timerDuration / 60 },
@@ -50,21 +69,167 @@ private struct GeneralSettingsTab: View {
                             .foregroundStyle(.secondary)
                     }
                 }
-                
-                Toggle("Notifications", isOn: Binding(
+                Toggle("Show notifications", isOn: Binding(
                     get: { appState.notificationsEnabled },
                     set: { appState.notificationsEnabled = $0 }
                 ))
-                
+
+                HStack {
+                    Label(notificationStatusText, systemImage: notificationStatusIcon)
+                        .foregroundStyle(notificationStatusColor)
+                    Spacer()
+                    if notificationService.authorizationStatus == .denied {
+                        Button("Open Settings") {
+                            notificationService.openSystemSettings()
+                        }
+                    }
+                }
+
                 Toggle("Show Tips", isOn: Binding(
                     get: { appState.showTips },
                     set: { appState.showTips = $0 }
                 ))
             }
-            
-
         }
         .formStyle(.grouped)
+        .onAppear {
+            refreshSystemStatuses()
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            if newPhase == .active {
+                refreshSystemStatuses()
+            }
+        }
+        .alert(
+            "Couldn’t Update Launch at Login",
+            isPresented: Binding(
+                get: { launchAtLogin.operationError != nil },
+                set: { if !$0 { launchAtLogin.dismissOperationError() } }
+            )
+        ) {
+            Button("OK", role: .cancel) {
+                launchAtLogin.dismissOperationError()
+            }
+        } message: {
+            Text(launchAtLogin.operationError ?? "Unknown error")
+        }
+        .alert(
+            "Couldn’t Request Notification Permission",
+            isPresented: Binding(
+                get: { notificationService.operationError != nil },
+                set: { if !$0 { notificationService.dismissOperationError() } }
+            )
+        ) {
+            Button("OK", role: .cancel) {
+                notificationService.dismissOperationError()
+            }
+        } message: {
+            Text(notificationService.operationError ?? "Unknown error")
+        }
+    }
+
+    private var launchAtLoginStatusText: String {
+        switch launchAtLogin.status {
+        case .notRegistered:
+            "Not registered"
+        case .enabled:
+            "Enabled"
+        case .requiresApproval:
+            "Requires approval in System Settings"
+        case .notFound:
+            "Unavailable for this app"
+        @unknown default:
+            "Unknown status"
+        }
+    }
+
+    private var launchAtLoginStatusIcon: String {
+        switch launchAtLogin.status {
+        case .enabled:
+            "checkmark.circle.fill"
+        case .requiresApproval:
+            "exclamationmark.triangle.fill"
+        case .notRegistered, .notFound:
+            "circle"
+        @unknown default:
+            "questionmark.circle"
+        }
+    }
+
+    private var launchAtLoginStatusColor: Color {
+        switch launchAtLogin.status {
+        case .enabled:
+            .green
+        case .requiresApproval:
+            .orange
+        case .notRegistered, .notFound:
+            .secondary
+        @unknown default:
+            .secondary
+        }
+    }
+
+    private var shouldShowLoginItemsSettings: Bool {
+        switch launchAtLogin.status {
+        case .requiresApproval, .notFound:
+            true
+        case .notRegistered, .enabled:
+            false
+        @unknown default:
+            true
+        }
+    }
+
+    private var notificationStatusText: String {
+        switch notificationService.authorizationStatus {
+        case nil:
+            "Checking notification permission…"
+        case .some(.notDetermined):
+            "Not requested"
+        case .some(.denied):
+            "Denied in System Settings"
+        case .some(.authorized):
+            "Authorized"
+        case .some(.provisional):
+            "Provisionally authorized"
+        case .some(.ephemeral):
+            "Temporarily authorized"
+        @unknown default:
+            "Unknown authorization status"
+        }
+    }
+
+    private var notificationStatusIcon: String {
+        switch notificationService.authorizationStatus {
+        case .some(.authorized), .some(.provisional), .some(.ephemeral):
+            "checkmark.circle.fill"
+        case .some(.denied):
+            "xmark.circle.fill"
+        case nil, .some(.notDetermined):
+            "circle"
+        @unknown default:
+            "questionmark.circle"
+        }
+    }
+
+    private var notificationStatusColor: Color {
+        switch notificationService.authorizationStatus {
+        case .some(.authorized), .some(.provisional), .some(.ephemeral):
+            .green
+        case .some(.denied):
+            .red
+        case nil, .some(.notDetermined):
+            .secondary
+        @unknown default:
+            .secondary
+        }
+    }
+
+    private func refreshSystemStatuses() {
+        launchAtLogin.refreshStatus()
+        Task {
+            await notificationService.refreshAuthorizationStatus()
+        }
     }
 }
 

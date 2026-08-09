@@ -67,6 +67,9 @@ disable Gatekeeper or strip quarantine attributes as part of app-level testing.
 - [ ] **Settings → Shortcuts** reports the global shortcut as Active. If registration fails, it shows
       the Carbon error and **Try Again** instead of claiming an Accessibility problem.
 - [ ] Deny Notifications when first starting the timer; timer and break behavior continue normally.
+- [ ] Before the first request, General settings reports Notifications as **Not requested**. After
+      deny/allow changes it reports the current macOS state; denied status offers **Open Settings**.
+- [ ] With Notifications disabled in MobCrew before starting a timer, no authorization prompt appears.
 - [ ] Grant Notifications in System Settings and enable them in MobCrew; turn-complete, break-due,
       and break-complete alerts are delivered once per transition.
 - [ ] Disable Notifications in MobCrew; no new turn or break alert is sent.
@@ -81,6 +84,10 @@ disable Gatekeeper or strip quarantine attributes as part of app-level testing.
       and Settings act on the same app state.
 - [ ] Enabling **Launch at Login** registers MobCrew; after logging out and back in, MobCrew starts.
 - [ ] Disabling **Launch at Login** unregisters it and the next login does not start MobCrew.
+- [ ] General settings reports Launch at Login as **Not registered**, **Enabled**, **Requires approval
+      in System Settings**, or **Unavailable for this app** according to the observed macOS status.
+      Approval/unavailable states offer **Open Login Items**; a failed change shows an error and the
+      toggle continues to reflect the refreshed status rather than the requested value.
 
 ## Persistence
 

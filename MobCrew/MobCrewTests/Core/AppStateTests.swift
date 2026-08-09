@@ -323,6 +323,20 @@ struct AppStateTests {
         #expect(second.appState.breaksEnabled == false)
     }
 
+    @Test("disabled notification preference never requests system authorization")
+    func disabledNotificationsDoNotRequestPermission() {
+        let fixture = makeFixture()
+        setActiveRosterSize(1, in: fixture.appState)
+        fixture.notifications.events.removeAll()
+        fixture.appState.notificationsEnabled = false
+
+        fixture.appState.startTimer()
+
+        #expect(fixture.appState.sessionPhase == .regularRunning)
+        #expect(fixture.notifications.events.isEmpty)
+        fixture.appState.pauseTimer()
+    }
+
     // MARK: - Transition Matrix
 
     @Test("every phase and roster size guards every session command")

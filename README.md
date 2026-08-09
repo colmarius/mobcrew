@@ -20,6 +20,8 @@ interrupting the session.
 - **Menu bar** - Quick access from the menu bar
 - **Auto-rotation** - Automatic driver/navigator swap when timer ends
 - **Session recovery** - Running, paused, and pending-break state survives relaunch
+- **Honest system status** - General settings reports Notification authorization and Launch at Login
+  registration separately from MobCrew preferences
 - **Programming tips** - Optional mob-programming quotations while the timer runs
 
 ## Requirements
@@ -49,7 +51,9 @@ Do not disable Gatekeeper or remove quarantine attributes to install the app.
 
 - **Notifications:** requested when the timer is first started and used for optional turn and break
   alerts. The timer continues to work if notifications are denied, and alerts can also be disabled
-  in MobCrew's General settings.
+  in MobCrew's General settings. General settings reports the current macOS authorization state and
+  links to System Settings when access was denied. If alerts are disabled in MobCrew before the first
+  timer starts, the app does not request authorization.
 
 ### Privacy, updates, and support
 

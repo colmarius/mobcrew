@@ -5,8 +5,9 @@ Updated: 2026-08-09
 ## Current Slice
 
 - Tasks 1-7 are implemented, natively tested, checked off in the active plan, and pushed.
-- Task 8 is next: model Notification authorization and `SMAppService` registration truthfully, expose
-  recovery paths, and verify available platform states without conflating preference with system status.
+- Task 8 implementation is ready for native verification: system-backed Notification and Launch at
+  Login status remain separate from preference/intent, failed operations refresh truth and surface
+  transient feedback, and Settings provides contextual recovery actions.
 
 ## Observed Evidence
 
@@ -130,6 +131,20 @@ Updated: 2026-08-09
   induced registration-failure UI, and older macOS versions remain unverified.
 - The Task 7 disposable worktree, app, DerivedData, helpers, logs, and processes were removed. The
   user's primary checkout and bundles remained unchanged, and no temporary branch was created.
+- Task 8 source reinspection confirmed that the prior notification service inferred permission from
+  an in-memory request flag and Launch at Login collapsed all `SMAppService.Status` values to a Boolean.
+  Apple framework documentation confirms `getNotificationSettings` and `SMAppService.status` are the
+  runtime sources of truth and lists five authorization and four launch-registration states.
+- Task 8 now refreshes actual notification status before deciding whether to request, so disabled AppState
+  preference never calls the authorization path and known denied/authorized/provisional/ephemeral states
+  are not requested again. Settings displays all five states and links denied recovery to System Settings.
+- Launch at Login now publishes the exact framework status through an injected system-service seam. Every
+  register/unregister attempt rereads status even after a throw; Settings therefore reverts or qualifies
+  the toggle from reality, shows transient errors, and links approval/unavailable recovery to Login Items.
+- Deterministic tests cover all framework statuses, notification preference separation, authorization
+  request gating and recovery, registration/unregistration status refresh, thrown operation feedback,
+  external status changes, and injected System Settings actions. Native compilation/tests and live UI
+  inspection remain unverified at this checkpoint.
 
 ## Verification Status
 

@@ -31,7 +31,9 @@ cadence. Tasks 1-5 passed focused and full native tests on the available Mac run
 session recovery now also passed focused and full native tests there. Task 7's logged-in Mac permission
 gate proved Carbon registration and delivery do not require Accessibility on the available host; the
 resulting AX-removal and registration-status implementation passed focused, full-suite, and signed-app
-validation using Xcode 26.6 / Swift 6.3. Task 8 system-status truthfulness is now active.
+validation using Xcode 26.6 / Swift 6.3. Task 8 now has a service-backed implementation and focused
+tests for truthful Notification and Launch at Login status; exact-toolchain native and UI verification
+remain before acceptance.
 
 ## Artifacts
 
@@ -44,7 +46,9 @@ validation using Xcode 26.6 / Swift 6.3. Task 8 system-status truthfulness is no
 
 ## Next Action
 
-- Begin [Task 8](plan.md#task-8-represent-notification-and-launch-at-login-status-honestly) by rechecking current `UNAuthorizationStatus` and `SMAppService.Status` APIs against the branch, then add service-state tests before changing Settings behavior.
+- Verify [Task 8](plan.md#task-8-represent-notification-and-launch-at-login-status-honestly) on the
+  live Mac runner with Xcode 26.6: run focused service/AppState tests, inspect the real Settings states
+  and recovery actions available without changing unrelated user configuration, then run the full suite.
 
 ## Open Questions
 
