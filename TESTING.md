@@ -136,16 +136,7 @@ gate, not evidence that the configuration is unsupported.
 
 ## Release qualification
 
-Downloaded-DMG integrity, bundle version, signatures, notarization, Gatekeeper, executable
-architectures, clean-Mac launch, and upgrade behavior are release-artifact checks. Follow the
-[release checklist](docs/RELEASING.md) against the exact draft artifact; do not infer those results
-from a local debug build.
-
-Download qualification DMGs in a browser so macOS applies quarantine, then record
-`xattr -l MobCrew-<version>.dmg` before opening it. A CLI download is not assumed to preserve this
-property. Record every matrix item as exactly **tested**, **unverified**, or
-**unsupported-by-explicit-decision**. In particular, unavailable hardware/OS coverage is unverified,
-Developer ID signing/notarization is deferred by owner decision, and quarantined clean-Mac behavior
-remains unverified until observed. The release-critical integrity, Gatekeeper first launch, core
-regression, permissions, upgrade, release notes, and publication approval rows must be tested before
-publication.
+Use this file for the app-level core regression, permission, persistence, and interactive journeys.
+Follow the canonical [release procedure](docs/RELEASING.md) for exact-draft integrity, quarantine,
+signing, architecture, clean-Mac launch, upgrade, evidence, and publication gates. Never infer
+release-artifact results from a local debug build.

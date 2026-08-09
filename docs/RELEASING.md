@@ -86,8 +86,9 @@ not establish notarization status or predict the exact Gatekeeper first-launch r
 For each machine record target/version/digests, macOS/hardware, trust outputs, install and first
 launch/Gatekeeper, the global hotkey with Accessibility denied, Notifications allow/deny/recovery,
 launch at login, timer, rotation, breaks, persistence, upgrade from the previous release, release
-notes/latest link, and problem-notice plan. Publication consumes an exact-schema data file (values
-must be `tested`):
+notes/latest link, and problem-notice plan. Use [`TESTING.md`](../TESTING.md) for the app-level core
+regression, permission, persistence, and interactive journeys. Publication consumes an exact-schema
+data file (values must be `tested`):
 
 ```text
 schema=mobcrew-qualification-v1

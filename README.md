@@ -76,45 +76,24 @@ Built with [Amp](https://ampcode.com) (~$60 in tokens) — see the
 [development thread](https://ampcode.com/threads/T-019c1ba0-b486-75bc-887b-14ddd6684695)
 for the original build history.
 
-```bash
-# Build
-xcodebuild -project MobCrew/MobCrew.xcodeproj -scheme MobCrew -destination 'platform=macOS' build
-
-# Run tests
-xcodebuild test -project MobCrew/MobCrew.xcodeproj -scheme MobCrew -destination 'platform=macOS'
-```
-
-Or open `MobCrew/MobCrew.xcodeproj` in Xcode and use ⌘B (build), ⌘R (run), ⌘U (test).
+Open `MobCrew/MobCrew.xcodeproj` in Xcode and use ⌘B (build), ⌘R (run), or ⌘U (test), or use the
+repository scripts:
 
 ```bash
-# Build and run
+# Build and run the app
 ./scripts/run.sh
 
-# Run tests
+# Run all tests or one test class
 ./scripts/test.sh
-
-# Run specific test class
 ./scripts/test.sh RosterTests
 
-# Serve docs locally
+# Serve and validate the website
 ./scripts/serve-docs.sh
-
-# Validate docs links, metadata, assets, and known stale claims
 python3 scripts/validate-docs.py
 ```
 
-### Amp orbs
-
-Fresh Linux orbs run [`.agents/setup`](.agents/setup), which validates the repository and starts
-the landing page declared in [`.amp/services.yaml`](.amp/services.yaml). Run
-`amp orb services ensure` to recreate the authenticated docs portal; [`.agents/resume`](.agents/resume)
-checks the service again whenever an orb wakes.
-
 MobCrew itself is a macOS-only Xcode target and uses AppKit, Carbon, and ServiceManagement. Linux
-orbs cannot install Xcode, launch the app, or run Apple simulators. Build, test, and interact with
-the app on a macOS Amp runner (or a local Mac) with Xcode 26.6+. The current project has no iOS target,
-so running it in an iOS simulator would first require a separate iOS target and platform-specific
-alternatives for the macOS APIs; the simulator would still need to run on macOS.
+environments can validate and serve the website but cannot build or run the app.
 
 ## Manual Testing
 
@@ -122,65 +101,9 @@ See [TESTING.md](TESTING.md) for the full checklist.
 
 ## Releasing
 
-Prerequisites: `gh`, exact Xcode 26.6 / Swift 6.3, and Node 24.19.0 from `.nvmrc`. Run `npm ci` from
-the repository root; this installs only locked release packaging tooling (`create-dmg` 8.1.0), not a
-frontend stack. Finalize the matching version section in [CHANGELOG.md](CHANGELOG.md) first; the
-release tooling uses that entry as the GitHub release notes.
-
-```bash
-./scripts/release.sh check 0.3.0
-./scripts/release.sh prepare 0.3.0
-# Separately authorized gates:
-./scripts/release.sh create-draft 0.3.0
-./scripts/release.sh verify-draft 0.3.0
-./scripts/release.sh publish 0.3.0 qualification.txt
-```
-
-Only `create-draft` and `publish` change GitHub release state, and each requires explicit authority.
-Follow [docs/RELEASING.md](docs/RELEASING.md) to qualify the exact quarantined draft download. Script
-interlocks do not prove owner authority or Developer ID/notarization status.
-
-## Project Evolution
-
-```mermaid
-flowchart TB
-    subgraph Phase1["Phase 1: Foundation & Research"]
-        A[Agent Setup] --> B[Research]
-        B --> C[PRDs & Planning]
-    end
-
-    subgraph Phase2["Phase 2: Project Scaffolding"]
-        D[Xcode Project] --> E[Folder Structure]
-        E --> F[Core Models]
-        F --> G[Initial Tests]
-    end
-
-    subgraph Phase3["Phase 3: Core Features"]
-        H[TimerEngine] --> I[FloatingTimer]
-        I --> J[MenuBar UI]
-        J --> K[Roster Management]
-        K --> L[Persistence]
-    end
-
-    subgraph Phase4["Phase 4: Polish & Distribution"]
-        M[Break System] --> N[Notifications]
-        N --> O[Global Hotkeys]
-        O --> P[Settings UI]
-        P --> Q[Release Automation]
-        Q --> R[Landing Page]
-    end
-
-    Phase1 --> Phase2
-    Phase2 --> Phase3
-    Phase3 --> Phase4
-```
-
-| Phase                | Description                                                                          |
-| -------------------- | ------------------------------------------------------------------------------------ |
-| **1. Foundation**    | Agent setup, research (Ghostty patterns, Elm→Swift porting), PRD creation            |
-| **2. Scaffolding**   | Xcode project, folder structure, core models (Mobster/Roster/TimerState), tests      |
-| **3. Core Features** | TimerEngine, FloatingTimer (NSPanel), MenuBar, RosterView, PersistenceService        |
-| **4. Polish**        | UI improvements, breaks, notifications, global hotkeys, settings, release automation |
+Finalize the matching version in [CHANGELOG.md](CHANGELOG.md), then follow the canonical
+[release procedure](docs/RELEASING.md). It defines the exact toolchain, preparation, draft,
+qualification, and separately authorized publication gates.
 
 ## License
 

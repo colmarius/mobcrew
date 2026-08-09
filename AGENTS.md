@@ -1,62 +1,31 @@
 # Project Instructions
 
-## Overview
+MobCrew is a native Swift 6 macOS 14+ app built with SwiftUI and AppKit. Read [README.md](README.md)
+for the product, requirements, and everyday development commands. Keep this file limited to
+agent-specific repository constraints rather than duplicating the README.
 
-**MobCrew** - Native macOS mob programming timer app, inspired by [dillonkearns/mobster](https://github.com/dillonkearns/mobster). Built with Swift/SwiftUI/AppKit.
+## Repository Map
 
-## Tech Stack
+- `MobCrew/MobCrew/`: production source. `Core/` owns models, services, and global state; `Features/`
+  owns feature UI; `App/` owns application lifecycle integration.
+- `MobCrew/MobCrewTests/`: unit tests mirroring the production structure.
+- `scripts/`: build, test, documentation, packaging, and release automation.
+- `docs/`: public website plus the canonical [release procedure](docs/RELEASING.md).
+- `.agents/work/`: durable active work; `.agents/research/`: reusable cross-work findings.
+- `.agents/plans/` and `.agents/prds/`: legacy records, not locations for new work.
 
-- **Language**: Swift 6 (Swift 6.3 compiler in Xcode 26.6)
-- **UI**: SwiftUI + AppKit (via `@NSApplicationDelegateAdaptor`)
-- **Target**: macOS 14.0+
-- **Architecture**: Feature-based folder structure
+Do not maintain an exhaustive file tree here; use the repository and local `AGENTS.md` files as the
+source of truth.
 
-## Project Structure
+## Platform and Commands
 
-```text
-project/
-├── AGENTS.md                    # This file - project instructions
-├── CHANGELOG.md                 # Versioned user-facing release notes
-├── README.md                    # Project overview
-├── docs/                        # GitHub Pages landing page + RELEASING.md
-├── scripts/                     # Build and release scripts
-├── .github/workflows/           # Xcode CI + GitHub Pages deployment
-├── .amp/
-│   └── services.yaml            # Supervised docs preview + orb portal
-├── .agents/
-│   ├── setup                    # Fresh-orb prerequisite checks
-│   ├── resume                   # Fast service repair after orb wake
-│   ├── work/                    # Durable work items when continuity has value
-│   ├── references/              # External repos (gitignored)
-│   │   ├── mobster/             # Original dillonkearns/mobster clone
-│   │   └── ghostty/             # Ghostty terminal app (Swift/SwiftUI patterns)
-│   ├── research/                # Reusable cross-work findings
-│   ├── plans/                   # Legacy implementation-plan archive
-│   ├── prds/                    # Legacy product-requirements archive
-│   ├── scripts/                 # dot-agents sync helpers
-│   └── skills/                  # Repeatable agent workflows
-└── MobCrew/                     # Xcode project
-    ├── MobCrew/
-    │   ├── App/                 # MobCrewApp.swift, AppDelegate.swift
-    │   ├── Core/
-    │   │   ├── Models/          # Mobster, Roster, TimerState
-    │   │   ├── Services/        # GlobalHotkeyService, persistence, etc.
-    │   │   └── AppState.swift   # Global app state
-    │   ├── Features/            # Feature-based UI modules
-    │   │   ├── Break/           # Break timer overlay
-    │   │   ├── FloatingTimer/   # Always-on-top timer window
-    │   │   ├── MenuBar/         # Menu bar extra UI
-    │   │   ├── Roster/          # Mobster list management
-    │   │   ├── Settings/        # Preferences window
-    │   │   └── Tips/            # Optional programming tips
-    │   ├── Helpers/
-    │   │   └── Extensions/      # Swift extensions
-    │   ├── Resources/           # Assets, strings
-    │   ├── ContentView.swift    # Main content view
-    │   └── MobCrew.entitlements # App entitlements
-    ├── MobCrew.xcodeproj/
-    └── MobCrewTests/            # Unit tests (mirrors main structure)
-```
+- App builds, tests, and UI checks require a macOS runner or local Mac. Linux orbs cannot run Xcode
+  or Apple simulators, and the project has no iOS target.
+- Use the commands in [README.md#development](README.md#development) for routine work and
+  [TESTING.md](TESTING.md) for interactive checks.
+- Releases require the exact toolchain and ordered gates in [docs/RELEASING.md](docs/RELEASING.md).
+  Do not copy release commands or qualification requirements into this file.
+- In an Amp orb, use `amp orb services ensure` for the supervised documentation preview.
 
 ## Agent Work
 
@@ -71,85 +40,16 @@ project/
   reuse or durable transition context justifies them.
 - On completion, promote reusable outcomes, commit the final completed work-item snapshot, then use
   `close-work.sh` to stage its removal. Git history is the archive.
-- Existing `.agents/plans/` and `.agents/prds/` files are legacy project records; do not use their old
-  lifecycle for new work.
 
-## Commands
+## Change and Documentation Rules
 
-MobCrew is a macOS-only Xcode target. Run app builds, tests, and UI checks on a macOS Amp runner
-or local Mac with Xcode 26.6+. Debian orbs cannot run Xcode or Apple simulators; the project does not
-currently define an iOS target.
-
-```bash
-# Build
-xcodebuild -project MobCrew/MobCrew.xcodeproj -scheme MobCrew -destination 'platform=macOS' build
-
-# Run tests (fast, no simulator for macOS)
-xcodebuild test -project MobCrew/MobCrew.xcodeproj -scheme MobCrew -destination 'platform=macOS'
-
-# Run specific test class
-xcodebuild test -project MobCrew/MobCrew.xcodeproj -scheme MobCrew -destination 'platform=macOS' -only-testing:MobCrewTests/RosterTests
-
-# In Xcode: ⌘B (build), ⌘R (run), ⌘U (test)
-
-# Build and run
-./scripts/run.sh
-
-# Run tests
-./scripts/test.sh
-
-# Run specific test class
-./scripts/test.sh RosterTests
-
-# Build release app (outputs to build/Release/MobCrew.app)
-./scripts/build-release.sh [version]
-
-# Create DMG package (outputs to build/MobCrew-<version>.dmg)
-./scripts/create-dmg.sh <version>
-
-# Release tooling install (packaging only)
-npm ci
-
-# Non-mutating preflight and local preparation
-./scripts/release.sh check <version>
-./scripts/release.sh prepare <version>
-
-# Separately authorized remote gates (see docs/RELEASING.md)
-./scripts/release.sh create-draft <version>
-./scripts/release.sh status <version>
-./scripts/release.sh verify-draft <version>
-./scripts/release.sh publish <version> <qualification-file>
-
-# Serve docs locally
-./scripts/serve-docs.sh
-
-# Validate docs links, metadata, assets, and known stale claims
-python3 scripts/validate-docs.py
-
-# In an Amp orb: start/reconcile the supervised docs preview and portal
-amp orb services ensure
-```
-
-## Git Workflow
-
-```bash
-git status
-git add -A
-git commit -m "Description of changes"
-git push
-```
-
-### Commit Guidelines
-
-- Write clear, descriptive commit messages
-- Reference the durable work-item slug when one exists
-- Commit after each logical step
-
-## Maintenance
-
-After making changes:
-
-1. **Update AGENTS.md** - Keep project structure and commands current
-2. **Update README.md** - Reflect user-facing changes
-3. **Update durable context when used** - Keep the work-item index, plan, and evidence aligned with
-   `.agents/work/AGENTS.md`
+- Commit each logical step with a descriptive message; reference the durable work-item slug when one
+  exists. Pushing and every GitHub release mutation require separate authority.
+- Update only the canonical document whose facts changed:
+  - `README.md`: product, installation, requirements, and routine development.
+  - `CHANGELOG.md`: user-facing version history and release notes.
+  - `TESTING.md`: manual and release-qualification checks.
+  - `docs/RELEASING.md`: release toolchain, gates, evidence, and publication procedure.
+  - `AGENTS.md`: agent workflow, ownership boundaries, and environment constraints.
+- Keep work-item status, plans, and evidence aligned with `.agents/work/AGENTS.md` when durable work is
+  used. Do not mirror that lifecycle into root documentation.
