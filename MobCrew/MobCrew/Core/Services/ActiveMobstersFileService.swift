@@ -7,6 +7,7 @@ protocol FileManagerProtocol {
 
 extension FileManager: FileManagerProtocol {}
 
+@MainActor
 protocol ActiveMobstersFileServiceProtocol {
     func writeActiveMobsters(_ roster: Roster)
 }
