@@ -39,14 +39,19 @@ final class AppState {
         }
     }
 
-    private let persistenceService: PersistenceService
+    private let persistenceService: any PersistenceServiceProtocol
     private let notificationService: any NotificationServiceProtocol
     private let activeMobstersFileService: any ActiveMobstersFileServiceProtocol
     private let timerEngine: TimerEngine
     private var hasRequestedNotificationPermission = false
+    private var cycleID: UUID
+    private var isDeferringRosterPersistence = false
+    private var isRosterPersistencePending = false
+    private var needsActiveMobstersFileWrite = false
+    private var preservesUnknownSessionSnapshot = false
 
     init(
-        persistenceService: PersistenceService = PersistenceService(),
+        persistenceService: any PersistenceServiceProtocol = PersistenceService(),
         notificationService: any NotificationServiceProtocol = NotificationService.shared,
         activeMobstersFileService: any ActiveMobstersFileServiceProtocol = ActiveMobstersFileService(),
         timerEngine: TimerEngine = TimerEngine()
@@ -72,9 +77,11 @@ final class AppState {
         self.breakDuration = loadedBreakDuration
         self.breaksEnabled = loadedBreaksEnabled
         self.timerState = timerEngine.state
-        timerEngine.reset(duration: loadedDuration)
+        self.cycleID = UUID()
 
         setupBindings()
+        setupRosterPersistence()
+        restoreSession()
     }
 
     var isOnBreak: Bool {
@@ -161,6 +168,217 @@ final class AppState {
         })
     }
 
+    private func setupRosterPersistence() {
+        roster.setMutationHandler { [weak self] in
+            self?.handleRosterMutation()
+        }
+    }
+
+    private func handleRosterMutation() {
+        guard !isDeferringRosterPersistence else { return }
+        _ = persistRosterThenSession(writeActiveFile: true)
+    }
+
+    private func withDeferredRosterPersistence(_ mutation: () -> Void) {
+        precondition(!isDeferringRosterPersistence)
+        isDeferringRosterPersistence = true
+        defer { isDeferringRosterPersistence = false }
+        mutation()
+    }
+
+    @discardableResult
+    private func persistRosterThenSession(writeActiveFile: Bool) -> Bool {
+        isRosterPersistencePending = true
+        needsActiveMobstersFileWrite = needsActiveMobstersFileWrite || writeActiveFile
+        return saveCurrentSessionSnapshot()
+    }
+
+    @discardableResult
+    private func saveCurrentSessionSnapshot() -> Bool {
+        guard persistPendingRosterIfNeeded() else { return false }
+        guard !preservesUnknownSessionSnapshot else { return true }
+        guard let snapshot = currentSessionSnapshot() else { return false }
+        let didSave = persistenceService.saveSessionSnapshot(snapshot)
+        return didSave
+    }
+
+    private func persistPendingRosterIfNeeded() -> Bool {
+        guard isRosterPersistencePending else { return true }
+        guard persistenceService.saveRoster(roster) else { return false }
+        isRosterPersistencePending = false
+        if needsActiveMobstersFileWrite {
+            activeMobstersFileService.writeActiveMobsters(roster)
+            needsActiveMobstersFileWrite = false
+        }
+        return true
+    }
+
+    private func currentSessionSnapshot() -> PersistedSessionSnapshot? {
+        let timing: PersistedSessionTiming
+        if sessionPhase.isRunning {
+            guard let wallDeadline = timerEngine.runningWallDeadline else {
+                assertionFailure("Running session phase has no wall deadline")
+                return nil
+            }
+            timing = .running(wallDeadline: wallDeadline)
+        } else {
+            guard let exactRemaining = timerEngine.frozenExactRemaining else {
+                assertionFailure("Non-running session phase has an active timer deadline")
+                return nil
+            }
+            timing = .frozen(exactRemaining: exactRemaining)
+        }
+
+        return PersistedSessionSnapshot(
+            version: PersistedSessionSnapshot.currentVersion,
+            phase: sessionPhase,
+            cycleID: cycleID,
+            totalSeconds: timerState.totalSeconds,
+            timing: timing,
+            turnsSinceBreak: turnsSinceBreak
+        )
+    }
+
+    private func restoreSession() {
+        switch persistenceService.loadSessionSnapshot() {
+        case .missing, .invalid:
+            prepareFreshRegularSession()
+            _ = saveCurrentSessionSnapshot()
+        case .unknownNewer:
+            preservesUnknownSessionSnapshot = true
+            prepareFreshRegularSession()
+        case .current(let snapshot):
+            restoreCurrentSessionSnapshot(snapshot)
+        }
+    }
+
+    private func restoreCurrentSessionSnapshot(_ snapshot: PersistedSessionSnapshot) {
+        guard isValid(snapshot) else {
+            prepareFreshRegularSession()
+            _ = saveCurrentSessionSnapshot()
+            return
+        }
+
+        turnsSinceBreak = snapshot.turnsSinceBreak
+        cycleID = snapshot.cycleID
+
+        let runningRestoreResult: RunningTimerRestoreResult?
+        switch snapshot.timing {
+        case .frozen:
+            runningRestoreResult = nil
+        case .running(let wallDeadline):
+            sessionPhase = snapshot.phase
+            let result = timerEngine.restoreRunning(
+                totalSeconds: snapshot.totalSeconds,
+                wallDeadline: wallDeadline
+            )
+            guard result != .invalid else {
+                prepareFreshRegularSession()
+                _ = saveCurrentSessionSnapshot()
+                return
+            }
+            runningRestoreResult = result
+        }
+
+        if let receipt = roster.lastRegularCycleResolution,
+           receipt.cycleID == snapshot.cycleID,
+           snapshot.phase.isRegular {
+            switch receipt.resolution {
+            case .completed where snapshot.phase == .regularRunning:
+                sessionPhase = .regularRunning
+                completeRegularTurn(cycleAlreadyResolved: true, repairActiveFile: true)
+                return
+            case .skipped:
+                prepareFreshRegularSession(turnsSinceBreak: snapshot.turnsSinceBreak)
+                _ = persistRosterThenSession(writeActiveFile: true)
+                return
+            case .completed:
+                prepareFreshRegularSession()
+                _ = persistRosterThenSession(writeActiveFile: true)
+                return
+            }
+        }
+
+        if snapshot.phase == .breakDue, !breaksEnabled {
+            prepareFreshRegularSession()
+            _ = saveCurrentSessionSnapshot()
+            return
+        }
+
+        switch snapshot.timing {
+        case .frozen(let exactRemaining):
+            if snapshot.phase == .regularIdle {
+                prepareFreshRegularSession(turnsSinceBreak: snapshot.turnsSinceBreak)
+                _ = saveCurrentSessionSnapshot()
+                return
+            }
+            guard timerEngine.restoreFrozen(
+                totalSeconds: snapshot.totalSeconds,
+                exactRemaining: exactRemaining
+            ) else {
+                prepareFreshRegularSession()
+                _ = saveCurrentSessionSnapshot()
+                return
+            }
+            sessionPhase = snapshot.phase
+            _ = saveCurrentSessionSnapshot()
+        case .running:
+            guard let runningRestoreResult else {
+                assertionFailure("Running snapshot has no staged restoration result")
+                prepareFreshRegularSession()
+                _ = saveCurrentSessionSnapshot()
+                return
+            }
+            switch runningRestoreResult {
+            case .restored:
+                guard persistRosterThenSession(writeActiveFile: true) else {
+                    prepareFreshRegularSession()
+                    return
+                }
+                _ = timerEngine.armRefreshPublisher()
+            case .expired:
+                if snapshot.phase == .regularRunning {
+                    completeRegularTurn()
+                } else {
+                    completeBreak()
+                }
+            case .invalid:
+                assertionFailure("Invalid running restoration reached reconciliation")
+                prepareFreshRegularSession()
+                _ = saveCurrentSessionSnapshot()
+            }
+        }
+    }
+
+    private func isValid(_ snapshot: PersistedSessionSnapshot) -> Bool {
+        guard snapshot.version == PersistedSessionSnapshot.currentVersion else { return false }
+        guard (1...PersistedSessionSnapshot.maximumCycleSeconds).contains(snapshot.totalSeconds) else {
+            return false
+        }
+        guard snapshot.turnsSinceBreak >= 0, snapshot.turnsSinceBreak < Int.max else { return false }
+
+        switch snapshot.timing {
+        case .frozen(let exactRemaining):
+            guard !snapshot.phase.isRunning else { return false }
+            guard exactRemaining.isFinite, exactRemaining > 0 else { return false }
+            guard exactRemaining <= TimeInterval(snapshot.totalSeconds) else { return false }
+            if snapshot.phase == .regularIdle || snapshot.phase == .breakDue {
+                guard exactRemaining == TimeInterval(snapshot.totalSeconds) else { return false }
+            }
+        case .running(let wallDeadline):
+            guard snapshot.phase.isRunning else { return false }
+            guard wallDeadline.timeIntervalSinceReferenceDate.isFinite else { return false }
+        }
+        return true
+    }
+
+    private func prepareFreshRegularSession(turnsSinceBreak: Int = 0) {
+        sessionPhase = .regularIdle
+        self.turnsSinceBreak = turnsSinceBreak
+        cycleID = UUID()
+        timerEngine.reset(duration: timerDuration)
+    }
+
     private func handleTimerComplete() {
         switch sessionPhase {
         case .regularRunning:
@@ -172,11 +390,21 @@ final class AppState {
         }
     }
 
-    private func completeRegularTurn() {
+    private func completeRegularTurn(
+        cycleAlreadyResolved: Bool = false,
+        repairActiveFile: Bool = false
+    ) {
+        let completedCycleID = cycleID
         sessionPhase = .regularIdle
         let shouldAdvanceRoles = roster.activeMobsters.count >= 2
-        if shouldAdvanceRoles {
-            roster.advanceTurn()
+        if !cycleAlreadyResolved {
+            withDeferredRosterPersistence {
+                roster.resolveRegularCycle(
+                    id: completedCycleID,
+                    resolution: .completed,
+                    advanceRoles: shouldAdvanceRoles
+                )
+            }
         }
         if breaksEnabled {
             turnsSinceBreak += 1
@@ -190,10 +418,11 @@ final class AppState {
         } else {
             timerEngine.reset(duration: timerDuration)
         }
+        cycleID = UUID()
 
-        if shouldAdvanceRoles {
-            updateActiveMobstersFile()
-        }
+        guard persistRosterThenSession(
+            writeActiveFile: shouldAdvanceRoles || repairActiveFile
+        ) else { return }
         if sessionPhase == .breakDue {
             sendBreakDueNotification()
         } else {
@@ -216,7 +445,9 @@ final class AppState {
     private func completeBreak() {
         sessionPhase = .regularIdle
         turnsSinceBreak = 0
+        cycleID = UUID()
         timerEngine.reset(duration: timerDuration)
+        guard saveCurrentSessionSnapshot() else { return }
         sendBreakCompleteNotification()
     }
 
@@ -257,6 +488,7 @@ final class AppState {
             return
         }
         currentTip = Tip.random()
+        _ = saveCurrentSessionSnapshot()
         requestNotificationPermissionIfNeeded()
     }
 
@@ -274,6 +506,7 @@ final class AppState {
         switch timerEngine.pause() {
         case .paused:
             sessionPhase = pausedPhase
+            _ = saveCurrentSessionSnapshot()
         case .completed:
             break
         case .inactive:
@@ -300,19 +533,24 @@ final class AppState {
             sessionPhase = pausedPhase
             return
         }
+        _ = saveCurrentSessionSnapshot()
     }
 
     func resetTimer() {
         guard sessionPhase.isRegular else { return }
         sessionPhase = .regularIdle
+        cycleID = UUID()
         timerEngine.reset(duration: timerDuration)
+        _ = saveCurrentSessionSnapshot()
     }
 
     func setTimerDuration(minutes: Int) {
         guard Self.timerDurationMinutesRange.contains(minutes) else { return }
         timerDuration = minutes * 60
         if sessionPhase == .regularIdle {
+            cycleID = UUID()
             timerEngine.reset(duration: timerDuration)
+            _ = saveCurrentSessionSnapshot()
         }
     }
 
@@ -325,8 +563,10 @@ final class AppState {
         turnsSinceBreak = 0
         if sessionPhase == .breakDue {
             sessionPhase = .regularIdle
+            cycleID = UUID()
             timerEngine.reset(duration: timerDuration)
         }
+        _ = saveCurrentSessionSnapshot()
     }
 
     func takeBreak() {
@@ -338,22 +578,24 @@ final class AppState {
             sessionPhase = .breakDue
             return
         }
+        _ = saveCurrentSessionSnapshot()
     }
 
     func skipBreak() {
         guard sessionPhase.isBreak else { return }
         sessionPhase = .regularIdle
         turnsSinceBreak = 0
+        cycleID = UUID()
         timerEngine.reset(duration: timerDuration)
+        _ = saveCurrentSessionSnapshot()
     }
 
     func saveRoster() {
-        persistenceService.saveRoster(roster)
-        activeMobstersFileService.writeActiveMobsters(roster)
+        _ = persistRosterThenSession(writeActiveFile: true)
     }
 
-    func updateActiveMobstersFile() {
-        activeMobstersFileService.writeActiveMobsters(roster)
+    func flushPersistence() {
+        _ = persistRosterThenSession(writeActiveFile: true)
     }
 
     private func requestNotificationPermissionIfNeeded() {
@@ -366,17 +608,26 @@ final class AppState {
     func skipTurn() {
         guard canSkipTurn else { return }
 
+        let skippedCycleID = cycleID
         sessionPhase = .regularIdle
         timerEngine.reset(duration: timerDuration)
-        roster.advanceTurn()
+        withDeferredRosterPersistence {
+            roster.resolveRegularCycle(
+                id: skippedCycleID,
+                resolution: .skipped,
+                advanceRoles: true
+            )
+        }
+        cycleID = UUID()
         sessionPhase = .regularRunning
         guard timerEngine.start() else {
             sessionPhase = .regularIdle
+            timerEngine.reset(duration: timerDuration)
             return
         }
         currentTip = Tip.random()
+        guard persistRosterThenSession(writeActiveFile: true) else { return }
         requestNotificationPermissionIfNeeded()
-        updateActiveMobstersFile()
     }
 
     static func previewing(_ sessionPhase: SessionPhase) -> AppState {

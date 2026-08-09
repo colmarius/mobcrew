@@ -86,6 +86,14 @@ path. Do not disable Gatekeeper or strip quarantine attributes as part of app-le
 
 - [ ] Quit and relaunch after changing the active order, bench, current role, turn duration, break
       enabled state/cadence/duration, Notifications, and Show Tips; those values are restored.
+- [ ] Quit during a running turn, wait briefly, and relaunch; the same cycle resumes with elapsed
+      wall time deducted. Quit long enough for its deadline to pass; relaunch completes that cycle
+      once, advances roles only when allowed, and does not repeat the advance on another relaunch.
+- [ ] Quit during a paused turn or paused break; relaunch restores the exact displayed remainder
+      without auto-starting or deducting time spent away.
+- [ ] Quit while a break is due; relaunch restores **Take Break** / **Skip Break** without starting it.
+- [ ] Quit during a running break long enough for its deadline to pass; relaunch returns to regular
+      idle, resets cadence, does not rotate roles, and sends at most one enabled completion alert.
 - [ ] The current active names are written locally to
       `~/Library/Application Support/MobCrew/active-mobsters` after roster/role changes.
 

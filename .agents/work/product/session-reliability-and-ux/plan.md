@@ -145,8 +145,11 @@ validation; it must not recreate the website or treat unchecked manual steps as 
     - Missing, corrupt, unknown-newer-version, impossible-state, missing-deadline, non-positive/excessive
       duration, remaining-over-total, and negative-cadence snapshots fall back safely without erasing
       valid roster/settings.
-  - Notes: Keep the snapshot separate from roster/settings. An old binary may ignore it and lose only
-    in-flight state; a later roll-forward must not replay a stale completion.
+  - Notes: Keep the snapshot separate from roster/settings. Current-schema writes use an atomic roster
+    resolution receipt so an interrupted write cannot replay completion. A snapshot-unaware rollback
+    binary can ignore the isolated snapshot without corrupting roster/settings, but if it changes
+    session state without writing any compatibility marker, a later binary cannot distinguish that
+    stale snapshot from a crash; do not claim unconditional replay prevention across that case.
 
 ### Task 7: Verify and correct global-hotkey permission setup
 
@@ -311,6 +314,8 @@ validation; it must not recreate the website or treat unchecked manual steps as 
 - Add new UserDefaults/session-snapshot fields with versioned decoding and safe defaults.
 - Decode absence of `breaksEnabled` as enabled; preserve existing roster and settings keys.
 - Keep runtime snapshots isolated so rollback loses only in-flight state, never roster/settings.
-- Prevent stale snapshots left by a rollback from replaying completion after a later roll-forward.
+- Use roster resolution receipts to prevent stale completion replay across interrupted current-schema
+  writes. A snapshot-unaware rollback that writes no compatibility marker is an explicit limitation:
+  its later stale snapshot cannot always be distinguished from a crash during roll-forward.
 - Do not ship permission-flow or login-item changes until verified in a normally signed app on a logged-in Mac.
 - Release, commit, push, and PR actions require separate authorization.

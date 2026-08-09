@@ -2,6 +2,7 @@ import Testing
 import Foundation
 @testable import MobCrew
 
+@MainActor
 @Suite("PersistenceService Tests")
 struct PersistenceServiceTests {
 
@@ -231,5 +232,144 @@ struct PersistenceServiceTests {
 
         #expect(loaded.activeMobsters.count == 2)
         #expect(loaded.activeMobsters[0].name == "Bob")
+    }
+
+    // MARK: - Session Snapshot Persistence
+
+    @Test("session snapshots round-trip every authoritative phase")
+    func sessionSnapshotRoundTripsEveryPhase() {
+        let defaults = makeTestUserDefaults()
+        let service = PersistenceService(userDefaults: defaults)
+        let deadline = Date(timeIntervalSinceReferenceDate: 2_000)
+
+        for phase in SessionPhase.allCases {
+            let timing: PersistedSessionTiming = phase.isRunning
+                ? .running(wallDeadline: deadline)
+                : .frozen(exactRemaining: 42.25)
+            let snapshot = PersistedSessionSnapshot(
+                version: PersistedSessionSnapshot.currentVersion,
+                phase: phase,
+                cycleID: UUID(),
+                totalSeconds: 60,
+                timing: timing,
+                turnsSinceBreak: 3
+            )
+
+            #expect(service.saveSessionSnapshot(snapshot))
+            guard case .current(let loaded) = service.loadSessionSnapshot() else {
+                Issue.record("Expected current session snapshot for \(phase)")
+                continue
+            }
+            #expect(loaded == snapshot)
+        }
+    }
+
+    @Test("session snapshot loader distinguishes missing corrupt and unknown newer data")
+    func sessionSnapshotLoadClassification() throws {
+        let defaults = makeTestUserDefaults()
+        let service = PersistenceService(userDefaults: defaults)
+
+        guard case .missing = service.loadSessionSnapshot() else {
+            Issue.record("Expected missing snapshot")
+            return
+        }
+
+        defaults.set(Data("not json".utf8), forKey: "mobcrew.sessionSnapshot")
+        guard case .invalid = service.loadSessionSnapshot() else {
+            Issue.record("Expected invalid snapshot")
+            return
+        }
+
+        let newerData = try JSONSerialization.data(withJSONObject: [
+            "version": PersistedSessionSnapshot.currentVersion + 1,
+            "future": "preserve me"
+        ])
+        defaults.set(newerData, forKey: "mobcrew.sessionSnapshot")
+        guard case .unknownNewer(let rawData) = service.loadSessionSnapshot() else {
+            Issue.record("Expected unknown newer snapshot")
+            return
+        }
+        #expect(rawData == newerData)
+    }
+
+    @Test("session snapshot loader rejects missing timing and unknown phase")
+    func sessionSnapshotRejectsIncompleteOrUnknownState() throws {
+        let defaults = makeTestUserDefaults()
+        let service = PersistenceService(userDefaults: defaults)
+        let cycleID = UUID().uuidString
+        let invalidPayloads: [[String: Any]] = [
+            [
+                "version": PersistedSessionSnapshot.currentVersion,
+                "phase": "regularRunning",
+                "cycleID": cycleID,
+                "totalSeconds": 60,
+                "turnsSinceBreak": 0
+            ],
+            [
+                "version": PersistedSessionSnapshot.currentVersion,
+                "phase": "futurePhase",
+                "cycleID": cycleID,
+                "totalSeconds": 60,
+                "timing": ["frozen": ["exactRemaining": 60]],
+                "turnsSinceBreak": 0
+            ]
+        ]
+
+        for payload in invalidPayloads {
+            defaults.set(
+                try JSONSerialization.data(withJSONObject: payload),
+                forKey: "mobcrew.sessionSnapshot"
+            )
+            guard case .invalid = service.loadSessionSnapshot() else {
+                Issue.record("Expected invalid snapshot for payload \(payload)")
+                continue
+            }
+        }
+    }
+
+    @Test("roster receipt round-trips and remains optional for old data") throws {
+        let defaults = makeTestUserDefaults()
+        let service = PersistenceService(userDefaults: defaults)
+        let cycleID = UUID()
+        let roster = Roster(
+            activeMobsters: [Mobster(name: "Alice"), Mobster(name: "Bob")],
+            lastRegularCycleResolution: RegularCycleResolutionReceipt(
+                cycleID: cycleID,
+                resolution: .completed
+            )
+        )
+
+        service.saveRoster(roster)
+        #expect(service.loadRoster().lastRegularCycleResolution?.cycleID == cycleID)
+
+        let oldRosterJSON: [String: Any] = [
+            "activeMobsters": [],
+            "inactiveMobsters": [],
+            "nextDriverIndex": 0
+        ]
+        defaults.set(
+            try JSONSerialization.data(withJSONObject: oldRosterJSON),
+            forKey: "mobcrew.roster"
+        )
+        #expect(service.loadRoster().lastRegularCycleResolution == nil)
+    }
+
+    @Test("malformed optional receipt does not erase a valid roster") throws {
+        let defaults = makeTestUserDefaults()
+        let service = PersistenceService(userDefaults: defaults)
+        let roster = Roster(activeMobsters: [Mobster(name: "Alice")])
+        service.saveRoster(roster)
+        let data = defaults.data(forKey: "mobcrew.roster")!
+        var json = try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        json["lastRegularCycleResolution"] = ["resolution": "unknown"]
+        defaults.set(
+            try JSONSerialization.data(withJSONObject: json),
+            forKey: "mobcrew.roster"
+        )
+
+        let loaded = service.loadRoster()
+
+        #expect(loaded.activeMobsters.map(\.name) == ["Alice"])
+        #expect(loaded.lastRegularCycleResolution == nil)
     }
 }

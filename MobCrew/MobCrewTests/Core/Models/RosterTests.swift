@@ -2,6 +2,7 @@ import Testing
 import Foundation
 @testable import MobCrew
 
+@MainActor
 @Suite("Roster Tests")
 struct RosterTests {
 
@@ -480,5 +481,53 @@ struct RosterTests {
 
         let inactiveOrderAfter = roster.inactiveMobsters.map(\.id)
         #expect(inactiveOrderAfter == inactiveOrderBefore, "Inactive mobsters should remain in same order")
+    }
+
+    // MARK: - Mutation Persistence Hook
+
+    @Test("compound and invalid mutations notify once only after invariants are restored")
+    func mutationHandlerObservesFinalStateOnce() {
+        let alice = Mobster(name: "Alice")
+        let bob = Mobster(name: "Bob")
+        let roster = Roster(activeMobsters: [alice, bob])
+        var observedStates: [([UUID], [UUID])] = []
+        roster.setMutationHandler {
+            observedStates.append((
+                roster.activeMobsters.map(\.id),
+                roster.inactiveMobsters.map(\.id)
+            ))
+        }
+
+        roster.benchMobster(at: 0)
+        roster.benchMobster(at: 99)
+
+        #expect(observedStates.count == 1)
+        #expect(observedStates[0].0 == [bob.id])
+        #expect(observedStates[0].1 == [alice.id])
+    }
+
+    @Test("regular cycle resolution stores its receipt with the role advance")
+    func regularCycleResolutionIsAtomicMutation() {
+        let alice = Mobster(name: "Alice")
+        let bob = Mobster(name: "Bob")
+        let roster = Roster(activeMobsters: [alice, bob])
+        let cycleID = UUID()
+        var mutationCount = 0
+        roster.setMutationHandler {
+            mutationCount += 1
+        }
+
+        roster.resolveRegularCycle(
+            id: cycleID,
+            resolution: .completed,
+            advanceRoles: true
+        )
+
+        #expect(mutationCount == 1)
+        #expect(roster.driver?.id == bob.id)
+        #expect(roster.lastRegularCycleResolution == RegularCycleResolutionReceipt(
+            cycleID: cycleID,
+            resolution: .completed
+        ))
     }
 }

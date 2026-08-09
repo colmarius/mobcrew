@@ -24,7 +24,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
+    func applicationWillResignActive(_ notification: Notification) {
+        appState?.flushPersistence()
+    }
+
     func applicationWillTerminate(_ notification: Notification) {
+        appState?.flushPersistence()
         floatingTimerController?.hide()
         GlobalHotkeyService.shared.unregister()
     }

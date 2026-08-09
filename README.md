@@ -20,6 +20,7 @@ interrupting the session.
   permission)
 - **Menu bar** - Quick access from the menu bar
 - **Auto-rotation** - Automatic driver/navigator swap when timer ends
+- **Session recovery** - Running, paused, and pending-break state survives relaunch
 - **Programming tips** - Optional mob-programming quotations while the timer runs
 
 ## Requirements
@@ -57,9 +58,9 @@ Do not disable Gatekeeper or remove quarantine attributes to install the app.
 
 ### Privacy, updates, and support
 
-The current app code uses no account, telemetry, or network service. Roster and settings data are
-stored locally in macOS user defaults, and the active roster is also written to MobCrew's local
-Application Support folder.
+The current app code uses no account, telemetry, or network service. Roster, settings, and current
+session state are stored locally in macOS user defaults, and the active roster is also written to
+MobCrew's local Application Support folder.
 
 MobCrew does not currently update itself. To update, download a newer release and replace the copy
 in Applications. For help or bug reports, use [GitHub Issues](https://github.com/colmarius/mobcrew/issues).

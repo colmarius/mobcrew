@@ -16,15 +16,6 @@ struct MobCrewApp: App {
                     configureAppDelegate()
                 }
         }
-        .onChange(of: appState.roster.activeMobsters) { _, _ in
-            appState.saveRoster()
-        }
-        .onChange(of: appState.roster.inactiveMobsters) { _, _ in
-            appState.saveRoster()
-        }
-        .onChange(of: appState.roster.nextDriverIndex) { _, _ in
-            appState.saveRoster()
-        }
         
         MenuBarExtra("MobCrew", systemImage: "stopwatch") {
             MenuBarView(appState: appState)

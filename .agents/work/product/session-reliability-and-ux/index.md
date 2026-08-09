@@ -28,8 +28,8 @@ session phase and identity-preserving roster operations; Task 3 then separated c
 from current-cycle progress and aligned both controls. Task 4 replaced delivered-tick subtraction
 with deadline-based elapsed time, and Task 5 made explicit break prompts disable-able without hidden
 cadence. Tasks 1-5 passed focused and full native tests on the available Mac runner. Task 6 versioned
-session recovery is now active. Exact Xcode 26.6+ qualification remains outstanding because the
-runner currently has 26.2.
+session recovery is implemented with deterministic coverage and awaits native compilation/testing.
+Exact Xcode 26.6+ qualification remains outstanding because the runner currently has 26.2.
 
 ## Artifacts
 
@@ -42,7 +42,7 @@ runner currently has 26.2.
 
 ## Next Action
 
-- Implement [Task 6: Persist and recover a versioned session snapshot](plan.md#task-6-persist-and-recover-a-versioned-session-snapshot), beginning with versioned decoding, recovery ordering, and idempotence tests.
+- Compile and run focused native recovery tests for [Task 6](plan.md#task-6-persist-and-recover-a-versioned-session-snapshot), fix only observed Task 6 regressions, then run the full suite before checking it complete.
 
 ## Open Questions
 

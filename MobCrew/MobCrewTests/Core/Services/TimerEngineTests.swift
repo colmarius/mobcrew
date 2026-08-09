@@ -280,7 +280,9 @@ struct TimerEngineTests {
         #expect(fixture.engine.state.totalSeconds == 10)
         #expect(fixture.engine.runningWallDeadline == wallDeadline)
         #expect(fixture.wallClock.readCount == 1)
+        #expect(fixture.engine.isRefreshPublisherArmed == false)
         #expect(fixture.engine.armRefreshPublisher())
+        #expect(fixture.engine.isRefreshPublisherArmed)
         #expect(fixture.engine.armRefreshPublisher() == false)
 
         fixture.monotonicClock.advance(by: 5)
@@ -356,6 +358,42 @@ struct TimerEngineTests {
 
         fixture.monotonicClock.advance(by: 1)
         #expect(fixture.engine.refresh() == .completed)
+    }
+
+    @Test("frozen restore preserves exact remainder without arming")
+    func frozenRestorePreservesExactRemainder() {
+        let fixture = makeFixture(duration: 7)
+
+        #expect(fixture.engine.restoreFrozen(totalSeconds: 10, exactRemaining: 4.25))
+
+        #expect(fixture.engine.isRunning == false)
+        #expect(fixture.engine.state.totalSeconds == 10)
+        #expect(fixture.engine.secondsRemaining == 5)
+        #expect(fixture.engine.frozenExactRemaining == 4.25)
+        #expect(fixture.engine.armRefreshPublisher() == false)
+    }
+
+    @Test("invalid frozen restore leaves prepared state unchanged")
+    func invalidFrozenRestoreDoesNotMutate() {
+        let invalidCases: [(Int, TimeInterval)] = [
+            (0, 1),
+            (10, 0),
+            (10, -1),
+            (10, 11),
+            (10, .infinity)
+        ]
+
+        for (total, remaining) in invalidCases {
+            let fixture = makeFixture(duration: 7)
+
+            #expect(fixture.engine.restoreFrozen(
+                totalSeconds: total,
+                exactRemaining: remaining
+            ) == false)
+            #expect(fixture.engine.state.totalSeconds == 7)
+            #expect(fixture.engine.secondsRemaining == 7)
+            #expect(fixture.engine.frozenExactRemaining == 7)
+        }
     }
 
     @Test("refresh after pause is inactive even if the old deadline passes")

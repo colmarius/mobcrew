@@ -83,6 +83,10 @@ final class TimerEngine {
         activeRun == nil ? frozenRemaining : nil
     }
 
+    var isRefreshPublisherArmed: Bool {
+        timerCancellable != nil
+    }
+
     init(
         state: TimerState = TimerState(),
         monotonicClock: any MonotonicClockProtocol = SystemMonotonicClock(),
@@ -188,6 +192,25 @@ final class TimerEngine {
             wallDeadline: wallDeadline
         )
         return .restored
+    }
+
+    @discardableResult
+    func restoreFrozen(
+        totalSeconds: Int,
+        exactRemaining: TimeInterval
+    ) -> Bool {
+        guard activeRun == nil else { return false }
+        guard totalSeconds > 0 else { return false }
+        guard exactRemaining.isFinite, exactRemaining > 0 else { return false }
+        guard exactRemaining <= TimeInterval(totalSeconds) else { return false }
+        guard exactRemaining < Double(Int.max) else { return false }
+
+        frozenRemaining = exactRemaining
+        state.restore(
+            totalSeconds: totalSeconds,
+            secondsRemaining: Int(ceil(exactRemaining))
+        )
+        return true
     }
 
     @discardableResult

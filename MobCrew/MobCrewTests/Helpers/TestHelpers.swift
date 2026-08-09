@@ -6,6 +6,7 @@ enum TestHelpers {
         Mobster(name: name)
     }
 
+    @MainActor
     static func makeRoster(mobsterNames: [String] = []) -> Roster {
         let roster = Roster()
         for name in mobsterNames {

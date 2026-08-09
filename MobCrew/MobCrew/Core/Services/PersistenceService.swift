@@ -1,12 +1,100 @@
 import Foundation
 
+struct RegularCycleResolutionReceipt: Codable, Equatable {
+    enum Resolution: String, Codable, Equatable {
+        case completed
+        case skipped
+    }
+
+    let cycleID: UUID
+    let resolution: Resolution
+}
+
 struct PersistedRoster: Codable {
     let activeMobsters: [Mobster]
     let inactiveMobsters: [Mobster]
     let nextDriverIndex: Int
+    let lastRegularCycleResolution: RegularCycleResolutionReceipt?
+
+    init(
+        activeMobsters: [Mobster],
+        inactiveMobsters: [Mobster],
+        nextDriverIndex: Int,
+        lastRegularCycleResolution: RegularCycleResolutionReceipt? = nil
+    ) {
+        self.activeMobsters = activeMobsters
+        self.inactiveMobsters = inactiveMobsters
+        self.nextDriverIndex = nextDriverIndex
+        self.lastRegularCycleResolution = lastRegularCycleResolution
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case activeMobsters
+        case inactiveMobsters
+        case nextDriverIndex
+        case lastRegularCycleResolution
+    }
+
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        activeMobsters = try container.decode([Mobster].self, forKey: .activeMobsters)
+        inactiveMobsters = try container.decode([Mobster].self, forKey: .inactiveMobsters)
+        nextDriverIndex = try container.decode(Int.self, forKey: .nextDriverIndex)
+        lastRegularCycleResolution = try? container.decode(
+            RegularCycleResolutionReceipt.self,
+            forKey: .lastRegularCycleResolution
+        )
+    }
 }
 
-final class PersistenceService {
+enum PersistedSessionTiming: Codable, Equatable {
+    case frozen(exactRemaining: TimeInterval)
+    case running(wallDeadline: Date)
+}
+
+struct PersistedSessionSnapshot: Codable, Equatable {
+    static let currentVersion = 1
+    static let maximumCycleSeconds = 60 * 60
+
+    let version: Int
+    let phase: SessionPhase
+    let cycleID: UUID
+    let totalSeconds: Int
+    let timing: PersistedSessionTiming
+    let turnsSinceBreak: Int
+}
+
+enum SessionSnapshotLoadResult {
+    case missing
+    case current(PersistedSessionSnapshot)
+    case unknownNewer(rawData: Data)
+    case invalid
+}
+
+@MainActor
+protocol PersistenceServiceProtocol {
+    @discardableResult
+    func saveRoster(_ roster: Roster) -> Bool
+    func loadRoster() -> Roster
+    func saveTimerDuration(_ duration: Int)
+    func loadTimerDuration() -> Int?
+    func saveBreakInterval(_ interval: Int)
+    func loadBreakInterval() -> Int?
+    func saveBreakDuration(_ duration: Int)
+    func loadBreakDuration() -> Int?
+    func saveBreaksEnabled(_ enabled: Bool)
+    func loadBreaksEnabled() -> Bool?
+    func saveNotificationsEnabled(_ enabled: Bool)
+    func loadNotificationsEnabled() -> Bool?
+    func saveShowTips(_ show: Bool)
+    func loadShowTips() -> Bool?
+    @discardableResult
+    func saveSessionSnapshot(_ snapshot: PersistedSessionSnapshot) -> Bool
+    func loadSessionSnapshot() -> SessionSnapshotLoadResult
+}
+
+@MainActor
+final class PersistenceService: PersistenceServiceProtocol {
     private let userDefaults: UserDefaults
     
     private enum Keys {
@@ -17,6 +105,7 @@ final class PersistenceService {
         static let breaksEnabled = "mobcrew.breaksEnabled"
         static let notificationsEnabled = "mobcrew.notificationsEnabled"
         static let showTips = "mobcrew.showTips"
+        static let sessionSnapshot = "mobcrew.sessionSnapshot"
     }
     
     init(userDefaults: UserDefaults = .standard) {
@@ -25,18 +114,22 @@ final class PersistenceService {
     
     // MARK: - Roster Persistence
     
-    func saveRoster(_ roster: Roster) {
+    @discardableResult
+    func saveRoster(_ roster: Roster) -> Bool {
         let persisted = PersistedRoster(
             activeMobsters: roster.activeMobsters,
             inactiveMobsters: roster.inactiveMobsters,
-            nextDriverIndex: roster.nextDriverIndex
+            nextDriverIndex: roster.nextDriverIndex,
+            lastRegularCycleResolution: roster.lastRegularCycleResolution
         )
         
         do {
             let data = try JSONEncoder().encode(persisted)
             userDefaults.set(data, forKey: Keys.roster)
+            return true
         } catch {
             print("Failed to save roster: \(error)")
+            return false
         }
     }
     
@@ -50,7 +143,8 @@ final class PersistenceService {
             return Roster(
                 activeMobsters: persisted.activeMobsters,
                 inactiveMobsters: persisted.inactiveMobsters,
-                nextDriverIndex: persisted.nextDriverIndex
+                nextDriverIndex: persisted.nextDriverIndex,
+                lastRegularCycleResolution: persisted.lastRegularCycleResolution
             )
         } catch {
             print("Failed to load roster: \(error)")
@@ -124,5 +218,43 @@ final class PersistenceService {
             return nil
         }
         return userDefaults.bool(forKey: Keys.showTips)
+    }
+
+    // MARK: - Session Snapshot Persistence
+
+    @discardableResult
+    func saveSessionSnapshot(_ snapshot: PersistedSessionSnapshot) -> Bool {
+        do {
+            let data = try JSONEncoder().encode(snapshot)
+            userDefaults.set(data, forKey: Keys.sessionSnapshot)
+            return true
+        } catch {
+            print("Failed to save session snapshot: \(error)")
+            return false
+        }
+    }
+
+    func loadSessionSnapshot() -> SessionSnapshotLoadResult {
+        guard let data = userDefaults.data(forKey: Keys.sessionSnapshot) else {
+            return .missing
+        }
+
+        struct VersionEnvelope: Decodable {
+            let version: Int
+        }
+
+        guard let envelope = try? JSONDecoder().decode(VersionEnvelope.self, from: data) else {
+            return .invalid
+        }
+        if envelope.version > PersistedSessionSnapshot.currentVersion {
+            return .unknownNewer(rawData: data)
+        }
+        guard envelope.version == PersistedSessionSnapshot.currentVersion else {
+            return .invalid
+        }
+        guard let snapshot = try? JSONDecoder().decode(PersistedSessionSnapshot.self, from: data) else {
+            return .invalid
+        }
+        return .current(snapshot)
     }
 }

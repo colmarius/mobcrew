@@ -5,8 +5,10 @@ Updated: 2026-08-09
 ## Current Slice
 
 - Tasks 1-5 are implemented, natively tested, checked off in the active plan, and pushed.
-- Task 6 is next: add a versioned semantic session snapshot with ordered roster/snapshot writes,
-  deadline reconciliation, and idempotent expired-state recovery.
+- Task 6 implementation and deterministic coverage are authored locally: versioned semantic session
+  snapshots, ordered roster/snapshot writes, deadline reconciliation, and idempotent expired-state
+  recovery. Native compilation and focused/full macOS test evidence are the next gate before Task 6
+  can be checked complete.
 
 ## Observed Evidence
 
@@ -78,6 +80,21 @@ Updated: 2026-08-09
 - Task 5 required no fixes. `git diff --check` and documentation validation passed. The disposable
   worktree and temporary logs were removed; the user's primary checkout and unrelated bundles were
   preserved exactly, and no temporary local or remote branch was created.
+- Oracle review for Task 6 rejected driver identity alone as a recovery anchor. The implementation
+  instead stores a regular-cycle UUID in the session snapshot and atomically stores its completed or
+  skipped resolution receipt in the roster blob; recovery writes roster/receipt before session state.
+- Session snapshot V1 stores the six-case phase, cycle UUID, cycle total, exact frozen remainder or
+  running wall deadline, and break cadence. Running restoration converts wall time once to a fresh
+  monotonic deadline, persists recovered state, and only then arms refresh delivery.
+- Missing, corrupt, structurally impossible, and out-of-range current snapshots normalize to fresh
+  regular idle without clearing valid roster/settings. Unknown newer snapshot bytes remain untouched
+  by all writes from the older process while ordinary roster/settings persistence continues.
+- Recovery tests cover future and expired deadlines, paused/due states, zero/one/multiple and edited
+  rosters, repeated construction, interrupted roster/session ordering, write failure, break completion,
+  malformed payloads, lifecycle flushes, and publisher-arm ordering. Native evidence is still pending.
+- Rollback is intentionally documented without an impossible guarantee: a snapshot-unaware binary
+  that changes session state but writes no compatibility marker cannot later be distinguished from a
+  crash. Snapshot isolation still ensures rollback does not corrupt existing roster/settings.
 
 ## Verification Status
 

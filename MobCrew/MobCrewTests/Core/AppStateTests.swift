@@ -8,6 +8,7 @@ private final class AppStateNotificationSpy: NotificationServiceProtocol {
         case permissionRequested
         case timerCompleted(driver: String, navigator: String)
         case breakDue(duration: Int)
+        case breakCompleted
     }
 
     var events: [Event] = []
@@ -24,7 +25,9 @@ private final class AppStateNotificationSpy: NotificationServiceProtocol {
         events.append(.breakDue(duration: duration))
     }
 
-    func sendBreakComplete() {}
+    func sendBreakComplete() {
+        events.append(.breakCompleted)
+    }
 }
 
 @MainActor
@@ -46,6 +49,55 @@ private final class AppStateMonotonicClock: MonotonicClockProtocol {
 
 private final class AppStateWallClock: WallClockProtocol {
     var now = Date(timeIntervalSinceReferenceDate: 1_000)
+}
+
+@MainActor
+private final class RecordingPersistenceService: PersistenceServiceProtocol {
+    enum Event: Equatable {
+        case roster
+        case session
+    }
+
+    let base: PersistenceService
+    var events: [Event] = []
+    var failsRosterSave = false
+    var failsSessionSave = false
+    var onSessionSave: (() -> Void)?
+
+    init(userDefaults: UserDefaults) {
+        self.base = PersistenceService(userDefaults: userDefaults)
+    }
+
+    func saveRoster(_ roster: Roster) -> Bool {
+        events.append(.roster)
+        guard !failsRosterSave else { return false }
+        return base.saveRoster(roster)
+    }
+
+    func loadRoster() -> Roster { base.loadRoster() }
+    func saveTimerDuration(_ duration: Int) { base.saveTimerDuration(duration) }
+    func loadTimerDuration() -> Int? { base.loadTimerDuration() }
+    func saveBreakInterval(_ interval: Int) { base.saveBreakInterval(interval) }
+    func loadBreakInterval() -> Int? { base.loadBreakInterval() }
+    func saveBreakDuration(_ duration: Int) { base.saveBreakDuration(duration) }
+    func loadBreakDuration() -> Int? { base.loadBreakDuration() }
+    func saveBreaksEnabled(_ enabled: Bool) { base.saveBreaksEnabled(enabled) }
+    func loadBreaksEnabled() -> Bool? { base.loadBreaksEnabled() }
+    func saveNotificationsEnabled(_ enabled: Bool) { base.saveNotificationsEnabled(enabled) }
+    func loadNotificationsEnabled() -> Bool? { base.loadNotificationsEnabled() }
+    func saveShowTips(_ show: Bool) { base.saveShowTips(show) }
+    func loadShowTips() -> Bool? { base.loadShowTips() }
+
+    func saveSessionSnapshot(_ snapshot: PersistedSessionSnapshot) -> Bool {
+        events.append(.session)
+        onSessionSave?()
+        guard !failsSessionSave else { return false }
+        return base.saveSessionSnapshot(snapshot)
+    }
+
+    func loadSessionSnapshot() -> SessionSnapshotLoadResult {
+        base.loadSessionSnapshot()
+    }
 }
 
 @MainActor
@@ -99,6 +151,8 @@ struct AppStateTests {
         if let timerDuration {
             persistenceService.saveTimerDuration(timerDuration)
         }
+        persistenceService.saveBreakInterval(breakInterval)
+        persistenceService.saveBreakDuration(breakDuration)
         let monotonicClock = AppStateMonotonicClock()
         let wallClock = AppStateWallClock()
         let timerEngine = TimerEngine(
@@ -113,8 +167,6 @@ struct AppStateTests {
             activeMobstersFileService: activeMobstersWriter,
             timerEngine: timerEngine
         )
-        appState.breakInterval = breakInterval
-        appState.breakDuration = breakDuration
         return Fixture(
             appState: appState,
             timerEngine: timerEngine,
@@ -380,6 +432,7 @@ struct AppStateTests {
             setActiveRosterSize(max(1, rosterSize), in: fixture.appState)
             fixture.appState.startTimer()
             setActiveRosterSize(rosterSize, in: fixture.appState)
+            fixture.activeMobstersWriter.writeCount = 0
             let driverBeforeCompletion = fixture.appState.roster.driver?.id
 
             elapse(1, in: fixture)
@@ -563,6 +616,706 @@ struct AppStateTests {
         #expect(second.appState.timerDuration == 1200)
         #expect(second.appState.timerState.totalSeconds == 1200)
         #expect(second.appState.timerState.secondsRemaining == 1200)
+    }
+
+    // MARK: - Session Snapshot Recovery
+
+    @Test("start and pause persist one cycle with running then exact frozen timing")
+    func startAndPausePersistCurrentCycle() {
+        let defaults = makeTestUserDefaults()
+        let service = PersistenceService(userDefaults: defaults)
+        let fixture = makeFixture(userDefaults: defaults, timerDuration: 10)
+        setActiveRosterSize(1, in: fixture.appState)
+
+        fixture.appState.startTimer()
+        guard case .current(let running) = service.loadSessionSnapshot() else {
+            Issue.record("Expected running snapshot")
+            return
+        }
+        #expect(running.phase == .regularRunning)
+        guard case .running(let deadline) = running.timing else {
+            Issue.record("Expected running timing")
+            return
+        }
+        #expect(deadline == fixture.wallClock.now.addingTimeInterval(10))
+
+        fixture.monotonicClock.advance(by: 0.25)
+        fixture.appState.pauseTimer()
+        guard case .current(let paused) = service.loadSessionSnapshot() else {
+            Issue.record("Expected paused snapshot")
+            return
+        }
+        #expect(paused.phase == .regularPaused)
+        #expect(paused.cycleID == running.cycleID)
+        guard case .frozen(let exactRemaining) = paused.timing else {
+            Issue.record("Expected frozen timing")
+            return
+        }
+        #expect(abs(exactRemaining - 9.75) < 0.000_001)
+    }
+
+    @Test("future regular deadline restores running from wall time")
+    func futureRegularDeadlineRestoresRunning() {
+        let defaults = makeTestUserDefaults()
+        let service = PersistenceService(userDefaults: defaults)
+        service.saveTimerDuration(10)
+        service.saveRoster(Roster(activeMobsters: [Mobster(name: "Alice")]))
+        let cycleID = UUID()
+        service.saveSessionSnapshot(PersistedSessionSnapshot(
+            version: 1,
+            phase: .regularRunning,
+            cycleID: cycleID,
+            totalSeconds: 10,
+            timing: .running(wallDeadline: Date(timeIntervalSinceReferenceDate: 1_005)),
+            turnsSinceBreak: 2
+        ))
+
+        let fixture = makeFixture(userDefaults: defaults, timerDuration: nil)
+
+        #expect(fixture.appState.sessionPhase == .regularRunning)
+        #expect(fixture.appState.turnsSinceBreak == 2)
+        #expect(fixture.appState.timerState.totalSeconds == 10)
+        #expect(fixture.appState.timerState.secondsRemaining == 5)
+        #expect(fixture.timerEngine.isRunning)
+        guard case .current(let restored) = service.loadSessionSnapshot() else {
+            Issue.record("Expected restored snapshot")
+            return
+        }
+        #expect(restored.cycleID == cycleID)
+        fixture.appState.pauseTimer()
+    }
+
+    @Test("future recovery persists normalized state before arming refresh delivery")
+    func restoredPublisherArmsAfterPersistence() {
+        let defaults = makeTestUserDefaults()
+        let persistence = RecordingPersistenceService(userDefaults: defaults)
+        persistence.base.saveTimerDuration(10)
+        persistence.base.saveRoster(Roster(activeMobsters: [Mobster(name: "Alice")]))
+        persistence.base.saveSessionSnapshot(PersistedSessionSnapshot(
+            version: 1,
+            phase: .regularRunning,
+            cycleID: UUID(),
+            totalSeconds: 10,
+            timing: .running(wallDeadline: Date(timeIntervalSinceReferenceDate: 1_005)),
+            turnsSinceBreak: 0
+        ))
+        let timerEngine = TimerEngine(
+            monotonicClock: AppStateMonotonicClock(),
+            wallClock: AppStateWallClock()
+        )
+        var publisherStatesDuringSessionSave: [Bool] = []
+        persistence.onSessionSave = {
+            publisherStatesDuringSessionSave.append(timerEngine.isRefreshPublisherArmed)
+        }
+
+        let appState = AppState(
+            persistenceService: persistence,
+            notificationService: AppStateNotificationSpy(),
+            activeMobstersFileService: ActiveMobstersWriterSpy(),
+            timerEngine: timerEngine
+        )
+
+        #expect(publisherStatesDuringSessionSave == [false])
+        #expect(timerEngine.isRefreshPublisherArmed)
+        appState.pauseTimer()
+    }
+
+    @Test("future running break restores without changing roles")
+    func futureRunningBreakRestores() {
+        let defaults = makeTestUserDefaults()
+        let service = PersistenceService(userDefaults: defaults)
+        service.saveTimerDuration(10)
+        let alice = Mobster(name: "Alice")
+        let bob = Mobster(name: "Bob")
+        service.saveRoster(Roster(activeMobsters: [alice, bob]))
+        service.saveSessionSnapshot(PersistedSessionSnapshot(
+            version: 1,
+            phase: .breakRunning,
+            cycleID: UUID(),
+            totalSeconds: 60,
+            timing: .running(wallDeadline: Date(timeIntervalSinceReferenceDate: 1_005)),
+            turnsSinceBreak: 5
+        ))
+
+        let fixture = makeFixture(userDefaults: defaults, timerDuration: nil)
+
+        #expect(fixture.appState.sessionPhase == .breakRunning)
+        #expect(fixture.appState.timerState.totalSeconds == 60)
+        #expect(fixture.appState.timerState.secondsRemaining == 5)
+        #expect(fixture.appState.roster.driver?.id == alice.id)
+        #expect(fixture.timerEngine.isRefreshPublisherArmed)
+        fixture.appState.pauseTimer()
+    }
+
+    @Test("paused regular and break states restore exact remainder without auto-starting")
+    func frozenSessionPhasesRestoreWithoutStarting() {
+        let cases: [(SessionPhase, TimeInterval, Bool)] = [
+            (.regularPaused, 4.25, true),
+            (.breakDue, 60, true),
+            (.breakPaused, 30.25, false)
+        ]
+
+        for (phase, remaining, breaksEnabled) in cases {
+            let defaults = makeTestUserDefaults()
+            let service = PersistenceService(userDefaults: defaults)
+            service.saveTimerDuration(10)
+            service.saveBreaksEnabled(breaksEnabled)
+            service.saveSessionSnapshot(PersistedSessionSnapshot(
+                version: 1,
+                phase: phase,
+                cycleID: UUID(),
+                totalSeconds: phase == .regularPaused ? 10 : 60,
+                timing: .frozen(exactRemaining: remaining),
+                turnsSinceBreak: 2
+            ))
+
+            let fixture = makeFixture(userDefaults: defaults, timerDuration: nil)
+
+            #expect(fixture.appState.sessionPhase == phase)
+            #expect(fixture.appState.timerState.secondsRemaining == Int(ceil(remaining)))
+            #expect(fixture.timerEngine.isRunning == false)
+        }
+    }
+
+    @Test("break due normalizes to regular idle when breaks are disabled")
+    func disabledBreakDueSnapshotNormalizes() {
+        let defaults = makeTestUserDefaults()
+        let service = PersistenceService(userDefaults: defaults)
+        service.saveTimerDuration(10)
+        service.saveBreaksEnabled(false)
+        service.saveSessionSnapshot(PersistedSessionSnapshot(
+            version: 1,
+            phase: .breakDue,
+            cycleID: UUID(),
+            totalSeconds: 60,
+            timing: .frozen(exactRemaining: 60),
+            turnsSinceBreak: 5
+        ))
+
+        let fixture = makeFixture(userDefaults: defaults, timerDuration: nil)
+
+        #expect(fixture.appState.sessionPhase == .regularIdle)
+        #expect(fixture.appState.turnsSinceBreak == 0)
+        #expect(fixture.appState.timerState.totalSeconds == 10)
+        #expect(fixture.appState.timerState.secondsRemaining == 10)
+    }
+
+    @Test("expired regular deadline completes and remains idempotent after reconstruction")
+    func expiredRegularDeadlineCompletesOnce() {
+        let defaults = makeTestUserDefaults()
+        let service = PersistenceService(userDefaults: defaults)
+        service.saveTimerDuration(10)
+        service.saveBreakInterval(2)
+        service.saveBreakDuration(60)
+        let alice = Mobster(name: "Alice")
+        let bob = Mobster(name: "Bob")
+        service.saveRoster(Roster(activeMobsters: [alice, bob]))
+        let cycleID = UUID()
+        service.saveSessionSnapshot(PersistedSessionSnapshot(
+            version: 1,
+            phase: .regularRunning,
+            cycleID: cycleID,
+            totalSeconds: 10,
+            timing: .running(wallDeadline: Date(timeIntervalSinceReferenceDate: 1_000)),
+            turnsSinceBreak: 1
+        ))
+
+        let first = makeFixture(
+            userDefaults: defaults,
+            timerDuration: nil,
+            breakInterval: 2,
+            breakDuration: 60
+        )
+
+        #expect(first.appState.sessionPhase == .breakDue)
+        #expect(first.appState.turnsSinceBreak == 2)
+        #expect(first.appState.roster.driver?.id == bob.id)
+        #expect(first.timerEngine.isRunning == false)
+        #expect(first.notifications.events == [.breakDue(duration: 60)])
+        #expect(service.loadRoster().lastRegularCycleResolution == RegularCycleResolutionReceipt(
+            cycleID: cycleID,
+            resolution: .completed
+        ))
+
+        let second = makeFixture(
+            userDefaults: defaults,
+            timerDuration: nil,
+            breakInterval: 2,
+            breakDuration: 60
+        )
+
+        #expect(second.appState.sessionPhase == .breakDue)
+        #expect(second.appState.turnsSinceBreak == 2)
+        #expect(second.appState.roster.driver?.id == bob.id)
+        #expect(second.notifications.events.isEmpty)
+    }
+
+    @Test("receipt prevents duplicate advance across roster then snapshot interruption")
+    func receiptReconcilesInterruptedRegularCompletion() {
+        let defaults = makeTestUserDefaults()
+        let service = PersistenceService(userDefaults: defaults)
+        service.saveTimerDuration(10)
+        service.saveBreakInterval(10)
+        let alice = Mobster(name: "Alice")
+        let bob = Mobster(name: "Bob")
+        let charlie = Mobster(name: "Charlie")
+        let cycleID = UUID()
+        let roster = Roster(activeMobsters: [alice, bob, charlie])
+        roster.resolveRegularCycle(
+            id: cycleID,
+            resolution: .completed,
+            advanceRoles: true
+        )
+        service.saveRoster(roster)
+        let staleSnapshot = PersistedSessionSnapshot(
+            version: 1,
+            phase: .regularRunning,
+            cycleID: cycleID,
+            totalSeconds: 10,
+            timing: .running(wallDeadline: Date(timeIntervalSinceReferenceDate: 1_000)),
+            turnsSinceBreak: 0
+        )
+        service.saveSessionSnapshot(staleSnapshot)
+
+        let first = makeFixture(
+            userDefaults: defaults,
+            timerDuration: nil,
+            breakInterval: 10
+        )
+        #expect(first.appState.roster.driver?.id == bob.id)
+        #expect(first.appState.turnsSinceBreak == 1)
+
+        service.saveSessionSnapshot(staleSnapshot)
+        let second = makeFixture(
+            userDefaults: defaults,
+            timerDuration: nil,
+            breakInterval: 10
+        )
+        #expect(second.appState.roster.driver?.id == bob.id)
+        #expect(second.appState.turnsSinceBreak == 1)
+    }
+
+    @Test("completion receipts reconcile zero and one participant without replaying cadence")
+    func receiptReconcilesSmallRosters() {
+        for activeMobsters in [[], [Mobster(name: "Alice")]] {
+            let defaults = makeTestUserDefaults()
+            let service = PersistenceService(userDefaults: defaults)
+            service.saveTimerDuration(10)
+            service.saveBreakInterval(10)
+            let cycleID = UUID()
+            let roster = Roster(activeMobsters: activeMobsters)
+            roster.resolveRegularCycle(
+                id: cycleID,
+                resolution: .completed,
+                advanceRoles: false
+            )
+            service.saveRoster(roster)
+            let staleSnapshot = PersistedSessionSnapshot(
+                version: 1,
+                phase: .regularRunning,
+                cycleID: cycleID,
+                totalSeconds: 10,
+                timing: .running(wallDeadline: Date(timeIntervalSinceReferenceDate: 1_000)),
+                turnsSinceBreak: 0
+            )
+            service.saveSessionSnapshot(staleSnapshot)
+
+            let first = makeFixture(
+                userDefaults: defaults,
+                timerDuration: nil,
+                breakInterval: 10
+            )
+            #expect(first.appState.roster.activeMobsters.map(\.id) == activeMobsters.map(\.id))
+            #expect(first.appState.turnsSinceBreak == 1)
+
+            service.saveSessionSnapshot(staleSnapshot)
+            let second = makeFixture(
+                userDefaults: defaults,
+                timerDuration: nil,
+                breakInterval: 10
+            )
+            #expect(second.appState.roster.activeMobsters.map(\.id) == activeMobsters.map(\.id))
+            #expect(second.appState.turnsSinceBreak == 1)
+        }
+    }
+
+    @Test("expired recovery advances the current roster after the starting driver was removed")
+    func expiredRecoveryUsesCurrentRosterAssignment() {
+        let defaults = makeTestUserDefaults()
+        let service = PersistenceService(userDefaults: defaults)
+        service.saveTimerDuration(10)
+        service.saveBreakInterval(10)
+        let bob = Mobster(name: "Bob")
+        let charlie = Mobster(name: "Charlie")
+        service.saveRoster(Roster(activeMobsters: [bob, charlie]))
+        service.saveSessionSnapshot(PersistedSessionSnapshot(
+            version: 1,
+            phase: .regularRunning,
+            cycleID: UUID(),
+            totalSeconds: 10,
+            timing: .running(wallDeadline: Date(timeIntervalSinceReferenceDate: 1_000)),
+            turnsSinceBreak: 0
+        ))
+
+        let fixture = makeFixture(
+            userDefaults: defaults,
+            timerDuration: nil,
+            breakInterval: 10
+        )
+
+        #expect(fixture.appState.roster.driver?.id == charlie.id)
+        #expect(fixture.appState.turnsSinceBreak == 1)
+    }
+
+    @Test("interrupted skip receipt cannot replay as completion")
+    func skipReceiptConsumesStaleSnapshotWithoutCompletion() {
+        let defaults = makeTestUserDefaults()
+        let service = PersistenceService(userDefaults: defaults)
+        service.saveTimerDuration(10)
+        let alice = Mobster(name: "Alice")
+        let bob = Mobster(name: "Bob")
+        let cycleID = UUID()
+        let roster = Roster(activeMobsters: [alice, bob])
+        roster.resolveRegularCycle(
+            id: cycleID,
+            resolution: .skipped,
+            advanceRoles: true
+        )
+        service.saveRoster(roster)
+        service.saveSessionSnapshot(PersistedSessionSnapshot(
+            version: 1,
+            phase: .regularIdle,
+            cycleID: cycleID,
+            totalSeconds: 10,
+            timing: .frozen(exactRemaining: 10),
+            turnsSinceBreak: 3
+        ))
+
+        let fixture = makeFixture(userDefaults: defaults, timerDuration: nil)
+
+        #expect(fixture.appState.sessionPhase == .regularIdle)
+        #expect(fixture.appState.roster.driver?.id == bob.id)
+        #expect(fixture.appState.turnsSinceBreak == 3)
+        #expect(fixture.notifications.events.isEmpty)
+    }
+
+    @Test("matching receipts cannot bypass invalid running deadlines")
+    func receiptDoesNotBypassDeadlineValidation() {
+        for resolution in [
+            RegularCycleResolutionReceipt.Resolution.completed,
+            .skipped
+        ] {
+            let defaults = makeTestUserDefaults()
+            let service = PersistenceService(userDefaults: defaults)
+            service.saveTimerDuration(10)
+            let alice = Mobster(name: "Alice")
+            let bob = Mobster(name: "Bob")
+            let cycleID = UUID()
+            let roster = Roster(activeMobsters: [alice, bob])
+            roster.resolveRegularCycle(
+                id: cycleID,
+                resolution: resolution,
+                advanceRoles: true
+            )
+            service.saveRoster(roster)
+            service.saveSessionSnapshot(PersistedSessionSnapshot(
+                version: 1,
+                phase: .regularRunning,
+                cycleID: cycleID,
+                totalSeconds: 10,
+                timing: .running(wallDeadline: Date(timeIntervalSinceReferenceDate: 1_011)),
+                turnsSinceBreak: 4
+            ))
+
+            let fixture = makeFixture(userDefaults: defaults, timerDuration: nil)
+
+            #expect(fixture.appState.sessionPhase == .regularIdle)
+            #expect(fixture.appState.turnsSinceBreak == 0)
+            #expect(fixture.appState.roster.driver?.id == bob.id)
+            #expect(fixture.appState.timerState.secondsRemaining == 10)
+            #expect(fixture.notifications.events.isEmpty)
+        }
+    }
+
+    @Test("expired running break completes once without advancing roles")
+    func expiredBreakCompletesOnce() {
+        let defaults = makeTestUserDefaults()
+        let service = PersistenceService(userDefaults: defaults)
+        service.saveTimerDuration(10)
+        let alice = Mobster(name: "Alice")
+        let bob = Mobster(name: "Bob")
+        service.saveRoster(Roster(activeMobsters: [alice, bob]))
+        service.saveSessionSnapshot(PersistedSessionSnapshot(
+            version: 1,
+            phase: .breakRunning,
+            cycleID: UUID(),
+            totalSeconds: 60,
+            timing: .running(wallDeadline: Date(timeIntervalSinceReferenceDate: 1_000)),
+            turnsSinceBreak: 5
+        ))
+
+        let first = makeFixture(userDefaults: defaults, timerDuration: nil)
+
+        #expect(first.appState.sessionPhase == .regularIdle)
+        #expect(first.appState.turnsSinceBreak == 0)
+        #expect(first.appState.roster.driver?.id == alice.id)
+        #expect(first.notifications.events == [.breakCompleted])
+
+        let second = makeFixture(userDefaults: defaults, timerDuration: nil)
+        #expect(second.appState.roster.driver?.id == alice.id)
+        #expect(second.notifications.events.isEmpty)
+    }
+
+    @Test("invalid session snapshots fall back without erasing roster or settings")
+    func invalidSessionSnapshotsFallBackSafely() {
+        let invalidSnapshots = [
+            PersistedSessionSnapshot(
+                version: 1,
+                phase: .regularRunning,
+                cycleID: UUID(),
+                totalSeconds: 10,
+                timing: .frozen(exactRemaining: 10),
+                turnsSinceBreak: 0
+            ),
+            PersistedSessionSnapshot(
+                version: 1,
+                phase: .regularPaused,
+                cycleID: UUID(),
+                totalSeconds: 0,
+                timing: .frozen(exactRemaining: 1),
+                turnsSinceBreak: 0
+            ),
+            PersistedSessionSnapshot(
+                version: 1,
+                phase: .regularPaused,
+                cycleID: UUID(),
+                totalSeconds: PersistedSessionSnapshot.maximumCycleSeconds + 1,
+                timing: .frozen(exactRemaining: 1),
+                turnsSinceBreak: 0
+            ),
+            PersistedSessionSnapshot(
+                version: 1,
+                phase: .regularPaused,
+                cycleID: UUID(),
+                totalSeconds: 10,
+                timing: .frozen(exactRemaining: 11),
+                turnsSinceBreak: 0
+            ),
+            PersistedSessionSnapshot(
+                version: 1,
+                phase: .regularPaused,
+                cycleID: UUID(),
+                totalSeconds: 10,
+                timing: .frozen(exactRemaining: 5),
+                turnsSinceBreak: -1
+            ),
+            PersistedSessionSnapshot(
+                version: 1,
+                phase: .regularRunning,
+                cycleID: UUID(),
+                totalSeconds: 10,
+                timing: .running(wallDeadline: Date(timeIntervalSinceReferenceDate: 1_011)),
+                turnsSinceBreak: 0
+            )
+        ]
+
+        for invalidSnapshot in invalidSnapshots {
+            let defaults = makeTestUserDefaults()
+            let service = PersistenceService(userDefaults: defaults)
+            service.saveTimerDuration(10)
+            service.saveRoster(Roster(activeMobsters: [Mobster(name: "Alice")]))
+            service.saveSessionSnapshot(invalidSnapshot)
+
+            let fixture = makeFixture(userDefaults: defaults, timerDuration: nil)
+
+            #expect(fixture.appState.sessionPhase == .regularIdle)
+            #expect(fixture.appState.timerState.totalSeconds == 10)
+            #expect(fixture.appState.timerState.secondsRemaining == 10)
+            #expect(fixture.appState.roster.activeMobsters.map(\.name) == ["Alice"])
+            #expect(service.loadTimerDuration() == 10)
+        }
+    }
+
+    @Test("unknown newer snapshot survives all writes by this older process")
+    func unknownNewerSnapshotIsPreserved() throws {
+        let defaults = makeTestUserDefaults()
+        let service = PersistenceService(userDefaults: defaults)
+        service.saveTimerDuration(10)
+        let rawData = try JSONSerialization.data(withJSONObject: [
+            "version": PersistedSessionSnapshot.currentVersion + 1,
+            "futureState": "opaque"
+        ])
+        defaults.set(rawData, forKey: "mobcrew.sessionSnapshot")
+
+        let fixture = makeFixture(userDefaults: defaults, timerDuration: nil)
+        #expect(defaults.data(forKey: "mobcrew.sessionSnapshot") == rawData)
+
+        fixture.appState.flushPersistence()
+        #expect(defaults.data(forKey: "mobcrew.sessionSnapshot") == rawData)
+
+        fixture.appState.resetTimer()
+        fixture.appState.roster.addMobster(name: "Alice")
+        #expect(defaults.data(forKey: "mobcrew.sessionSnapshot") == rawData)
+        #expect(service.loadRoster().activeMobsters.map(\.name) == ["Alice"])
+    }
+
+    @Test("roster and completion writes always order roster before session without intermediates")
+    func rosterThenSessionWriteOrdering() {
+        let defaults = makeTestUserDefaults()
+        let persistence = RecordingPersistenceService(userDefaults: defaults)
+        persistence.saveTimerDuration(1)
+        persistence.saveBreakInterval(10)
+        let monotonicClock = AppStateMonotonicClock()
+        let timerEngine = TimerEngine(
+            monotonicClock: monotonicClock,
+            wallClock: AppStateWallClock()
+        )
+        let appState = AppState(
+            persistenceService: persistence,
+            notificationService: AppStateNotificationSpy(),
+            activeMobstersFileService: ActiveMobstersWriterSpy(),
+            timerEngine: timerEngine
+        )
+        persistence.events.removeAll()
+
+        appState.roster.addMobster(name: "Alice")
+        #expect(persistence.events == [.roster, .session])
+
+        persistence.events.removeAll()
+        appState.roster.addMobster(name: "Bob")
+        appState.startTimer()
+        persistence.events.removeAll()
+        monotonicClock.advance(by: 1)
+        timerEngine.refresh()
+
+        #expect(persistence.events == [.roster, .session])
+    }
+
+    @Test("failed roster write blocks later snapshots until the roster retry succeeds")
+    func rosterWriteFailureStopsOrderedPersistence() {
+        let defaults = makeTestUserDefaults()
+        let persistence = RecordingPersistenceService(userDefaults: defaults)
+        persistence.saveTimerDuration(1)
+        persistence.saveBreakInterval(10)
+        let monotonicClock = AppStateMonotonicClock()
+        let timerEngine = TimerEngine(
+            monotonicClock: monotonicClock,
+            wallClock: AppStateWallClock()
+        )
+        let activeWriter = ActiveMobstersWriterSpy()
+        let appState = AppState(
+            persistenceService: persistence,
+            notificationService: AppStateNotificationSpy(),
+            activeMobstersFileService: activeWriter,
+            timerEngine: timerEngine
+        )
+        appState.roster.addMobster(name: "Alice")
+        appState.roster.addMobster(name: "Bob")
+        appState.startTimer()
+        guard case .current(let runningSnapshot) = persistence.loadSessionSnapshot() else {
+            Issue.record("Expected running snapshot")
+            return
+        }
+        persistence.events.removeAll()
+        activeWriter.writeCount = 0
+        persistence.failsRosterSave = true
+
+        monotonicClock.advance(by: 1)
+        timerEngine.refresh()
+
+        #expect(persistence.events == [.roster])
+        #expect(activeWriter.writeCount == 0)
+        guard case .current(let stillPersisted) = persistence.loadSessionSnapshot() else {
+            Issue.record("Expected prior running snapshot")
+            return
+        }
+        #expect(stillPersisted == runningSnapshot)
+
+        persistence.events.removeAll()
+        appState.startTimer()
+        #expect(persistence.events == [.roster])
+        guard case .current(let blockedSnapshot) = persistence.loadSessionSnapshot() else {
+            Issue.record("Expected prior running snapshot while roster remains pending")
+            return
+        }
+        #expect(blockedSnapshot == runningSnapshot)
+
+        persistence.events.removeAll()
+        persistence.failsRosterSave = false
+        appState.pauseTimer()
+        #expect(persistence.events == [.roster, .session])
+        #expect(activeWriter.writeCount == 1)
+        let persistedRoster = persistence.loadRoster()
+        #expect(persistedRoster.driver?.name == "Bob")
+        #expect(persistedRoster.lastRegularCycleResolution?.resolution == .completed)
+        guard case .current(let pausedSnapshot) = persistence.loadSessionSnapshot() else {
+            Issue.record("Expected paused successor snapshot")
+            return
+        }
+        #expect(pausedSnapshot.phase == .regularPaused)
+        #expect(pausedSnapshot.turnsSinceBreak == 1)
+        #expect(pausedSnapshot.cycleID != runningSnapshot.cycleID)
+    }
+
+    @Test("session write failure recovers a durable receipt without duplicate completion")
+    func sessionWriteFailureReconcilesReceipt() {
+        let defaults = makeTestUserDefaults()
+        let persistence = RecordingPersistenceService(userDefaults: defaults)
+        persistence.saveTimerDuration(1)
+        persistence.saveBreakInterval(10)
+        let monotonicClock = AppStateMonotonicClock()
+        let timerEngine = TimerEngine(
+            monotonicClock: monotonicClock,
+            wallClock: AppStateWallClock()
+        )
+        let notifications = AppStateNotificationSpy()
+        let activeWriter = ActiveMobstersWriterSpy()
+        let appState = AppState(
+            persistenceService: persistence,
+            notificationService: notifications,
+            activeMobstersFileService: activeWriter,
+            timerEngine: timerEngine
+        )
+        appState.roster.addMobster(name: "Alice")
+        appState.roster.addMobster(name: "Bob")
+        appState.startTimer()
+        persistence.events.removeAll()
+        notifications.events.removeAll()
+        activeWriter.writeCount = 0
+        persistence.failsSessionSave = true
+
+        monotonicClock.advance(by: 1)
+        timerEngine.refresh()
+
+        #expect(persistence.events == [.roster, .session])
+        #expect(activeWriter.writeCount == 1)
+        #expect(notifications.events.isEmpty)
+        #expect(persistence.loadRoster().driver?.name == "Bob")
+        guard case .current(let staleRunning) = persistence.loadSessionSnapshot() else {
+            Issue.record("Expected stale running snapshot")
+            return
+        }
+        #expect(staleRunning.phase == .regularRunning)
+
+        persistence.failsSessionSave = false
+        let recovered = makeFixture(
+            userDefaults: defaults,
+            timerDuration: nil,
+            breakInterval: 10
+        )
+        #expect(recovered.appState.sessionPhase == .regularIdle)
+        #expect(recovered.appState.turnsSinceBreak == 1)
+        #expect(recovered.appState.roster.driver?.name == "Bob")
+        #expect(recovered.notifications.events.count == 1)
+
+        let repeated = makeFixture(
+            userDefaults: defaults,
+            timerDuration: nil,
+            breakInterval: 10
+        )
+        #expect(repeated.appState.turnsSinceBreak == 1)
+        #expect(repeated.appState.roster.driver?.name == "Bob")
+        #expect(repeated.notifications.events.isEmpty)
     }
 
     // MARK: - Roster Persistence
