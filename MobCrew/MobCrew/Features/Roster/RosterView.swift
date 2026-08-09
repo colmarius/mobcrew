@@ -11,16 +11,8 @@ struct RosterView: View {
             if roster.activeMobsters.isEmpty && roster.inactiveMobsters.isEmpty {
                 emptyStateSection
             } else {
-                if !roster.activeMobsters.isEmpty {
-                    activeSection
-                }
-                
-                if !roster.inactiveMobsters.isEmpty {
-                    inactiveSection
-                }
+                rosterList
             }
-            
-            Spacer()
         }
         .padding()
     }
@@ -54,66 +46,72 @@ struct RosterView: View {
             }
             .disabled(newMobsterName.trimmingCharacters(in: .whitespaces).isEmpty)
             .buttonStyle(.borderless)
+            .help("Add participant to the active roster")
+            .accessibilityLabel("Add participant")
+            .accessibilityHint("Adds the entered name to the active rotation.")
         }
     }
     
-    private var activeSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Text("Active")
-                    .font(.headline)
-                    .foregroundStyle(.secondary)
-                
-                Spacer()
-                
-                Button(action: { roster.shuffle() }) {
-                    Image(systemName: "shuffle")
-                        .font(.body)
+    private var rosterList: some View {
+        List {
+            if !roster.activeMobsters.isEmpty {
+                Section {
+                    ForEach(Array(roster.activeMobsters.enumerated()), id: \.element.id) { index, mobster in
+                        MobsterRow(
+                            mobster: mobster,
+                            role: role(for: index),
+                            isActive: true,
+                            onRemove: { removeActiveMobster(id: mobster.id) },
+                            onToggleActive: { benchMobster(id: mobster.id) },
+                            onMoveUp: index > 0
+                                ? { moveActiveMobster(id: mobster.id, by: -1) }
+                                : nil,
+                            onMoveDown: index < roster.activeMobsters.count - 1
+                                ? { moveActiveMobster(id: mobster.id, by: 1) }
+                                : nil
+                        )
+                        .listRowInsets(EdgeInsets())
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
+                    }
+                    .onMove { source, destination in
+                        roster.moveMobster(from: source, to: destination)
+                    }
+                } header: {
+                    HStack {
+                        Text("Active")
+                        Spacer()
+                        Button(action: { roster.shuffle() }) {
+                            Image(systemName: "shuffle")
+                        }
+                        .buttonStyle(.borderless)
+                        .disabled(roster.activeMobsters.count < 2)
+                        .help("Shuffle roster order")
+                        .accessibilityLabel("Shuffle active roster")
+                        .accessibilityHint("Randomizes active participants and makes the first person Driver.")
+                    }
                 }
-                .buttonStyle(.borderless)
-                .disabled(roster.activeMobsters.count < 2)
-                .help("Shuffle roster order")
             }
-            
-            List {
-                ForEach(Array(roster.activeMobsters.enumerated()), id: \.element.id) { index, mobster in
-                    MobsterRow(
-                        mobster: mobster,
-                        role: role(for: index),
-                        isActive: true,
-                        onRemove: { removeMobster(at: index) },
-                        onToggleActive: { roster.benchMobster(at: index) }
-                    )
-                    .listRowInsets(EdgeInsets())
-                    .listRowSeparator(.hidden)
-                    .listRowBackground(Color.clear)
-                }
-                .onMove { source, destination in
-                    roster.moveMobster(from: source, to: destination)
+
+            if !roster.inactiveMobsters.isEmpty {
+                Section("Benched") {
+                    ForEach(roster.inactiveMobsters) { mobster in
+                        MobsterRow(
+                            mobster: mobster,
+                            role: nil,
+                            isActive: false,
+                            onRemove: { removeInactiveMobster(id: mobster.id) },
+                            onToggleActive: { activateMobster(id: mobster.id) }
+                        )
+                        .listRowInsets(EdgeInsets())
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
+                    }
                 }
             }
-            .listStyle(.plain)
-            .frame(minHeight: CGFloat(roster.activeMobsters.count) * 44)
-            .scrollDisabled(true)
         }
-    }
-    
-    private var inactiveSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Benched")
-                .font(.headline)
-                .foregroundStyle(.secondary)
-            
-            ForEach(Array(roster.inactiveMobsters.enumerated()), id: \.element.id) { index, mobster in
-                MobsterRow(
-                    mobster: mobster,
-                    role: nil,
-                    isActive: false,
-                    onRemove: { removeInactiveMobster(at: index) },
-                    onToggleActive: { roster.rotateIn(at: index) }
-                )
-            }
-        }
+        .listStyle(.plain)
+        .accessibilityLabel("Roster")
     }
     
     private func role(for index: Int) -> MobsterRole? {
@@ -138,11 +136,28 @@ struct RosterView: View {
         newMobsterName = ""
     }
     
-    private func removeMobster(at index: Int) {
+    private func moveActiveMobster(id: UUID, by offset: Int) {
+        guard let source = roster.activeMobsters.firstIndex(where: { $0.id == id }) else { return }
+        roster.moveActiveMobster(at: source, to: source + offset)
+    }
+
+    private func benchMobster(id: UUID) {
+        guard let index = roster.activeMobsters.firstIndex(where: { $0.id == id }) else { return }
+        roster.benchMobster(at: index)
+    }
+
+    private func activateMobster(id: UUID) {
+        guard let index = roster.inactiveMobsters.firstIndex(where: { $0.id == id }) else { return }
+        roster.rotateIn(at: index)
+    }
+
+    private func removeActiveMobster(id: UUID) {
+        guard let index = roster.activeMobsters.firstIndex(where: { $0.id == id }) else { return }
         roster.removeActiveMobster(at: index)
     }
-    
-    private func removeInactiveMobster(at index: Int) {
+
+    private func removeInactiveMobster(id: UUID) {
+        guard let index = roster.inactiveMobsters.firstIndex(where: { $0.id == id }) else { return }
         roster.removeInactiveMobster(at: index)
     }
 }

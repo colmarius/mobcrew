@@ -22,6 +22,8 @@ interrupting the session.
 - **Session recovery** - Running, paused, and pending-break state survives relaunch
 - **Honest system status** - General settings reports Notification authorization and Launch at Login
   registration separately from MobCrew preferences
+- **Accessible session controls** - Contextual VoiceOver semantics, transition announcements, keyboard
+  roster ordering, and scrolling for larger active and benched rosters
 - **Programming tips** - Optional mob-programming quotations while the timer runs
 
 ## Requirements

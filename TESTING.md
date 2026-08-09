@@ -111,8 +111,18 @@ version, display arrangement, and assistive technology used; a missing environme
 gate, not evidence that the configuration is unsupported.
 
 - [ ] Complete the primary timer, roster, Settings, and break journeys using only the keyboard.
-- [ ] With VoiceOver, controls have meaningful names, states, and a logical traversal order.
-- [ ] At increased display scaling/zoom, text remains readable and controls do not overlap or clip.
+- [ ] At exactly 600×450 with at least 12 active and 8 benched participants, scroll to every row by
+      mouse, keyboard, and VoiceOver; moving a row does not change the current Driver's identity.
+- [ ] With Full Keyboard Access, activate participant Move Up/Down, bench/activate, and remove controls;
+      with VoiceOver, verify person-specific labels and named Move Up/Down actions.
+- [ ] With VoiceOver, timer, reset, skip, break progress, role, menu, and floating controls expose
+      contextual names, values, hints, and a logical traversal order. The duration Stepper remains adjustable.
+- [ ] With VoiceOver running, a Driver handoff, break due, and break completion each announce once;
+      ordinary countdown ticks and restoration do not announce.
+- [ ] With increased text size/display scaling, all names and action controls remain reachable without
+      overlap or clipping, including the narrow roster pane and floating panel.
+- [ ] Under Increase Contrast and Differentiate Without Color, Driver and Navigator remain distinguishable
+      by visible words and consistent blue/green role semantics across main, roster, and floating surfaces.
 - [ ] Important text and state indicators remain distinguishable in light and dark appearances.
 - [ ] Move the main and floating windows between multiple displays and disconnect/reconnect a
       display; both windows remain reachable.

@@ -20,12 +20,16 @@ struct MenuBarView: View {
                     )
                 }
                 .disabled(!appState.canPerformPrimaryAction)
+                .accessibilityLabel(appState.primaryActionAccessibilityLabel)
+                .accessibilityHint(appState.primaryActionAccessibilityHint)
                 .keyboardShortcut(.space, modifiers: [])
                 
                 Button(action: { appState.performSkipAction() }) {
                     Label(appState.skipActionLabel, systemImage: "forward.fill")
                 }
                 .disabled(!appState.canPerformSkipAction)
+                .accessibilityLabel(appState.skipActionAccessibilityLabel)
+                .accessibilityHint(appState.skipActionAccessibilityHint)
                 .keyboardShortcut(.rightArrow, modifiers: .command)
             }
             
@@ -54,6 +58,9 @@ private struct RoleRow: View {
                 .font(.caption)
                 .fontWeight(.medium)
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(role)
+        .accessibilityValue(name ?? "Not assigned")
     }
 }
 

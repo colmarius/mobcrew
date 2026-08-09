@@ -52,6 +52,15 @@ private final class AppStateWallClock: WallClockProtocol {
 }
 
 @MainActor
+private final class AppStateAccessibilityAnnouncementSpy {
+    var messages: [String] = []
+
+    func announce(_ message: String) {
+        messages.append(message)
+    }
+}
+
+@MainActor
 private final class RecordingPersistenceService: PersistenceServiceProtocol {
     enum Event: Equatable {
         case roster
@@ -110,6 +119,7 @@ struct AppStateTests {
         let activeMobstersWriter: ActiveMobstersWriterSpy
         let monotonicClock: AppStateMonotonicClock
         let wallClock: AppStateWallClock
+        let accessibilityAnnouncements: AppStateAccessibilityAnnouncementSpy
     }
 
     private enum Command: CaseIterable {
@@ -133,6 +143,7 @@ struct AppStateTests {
         let tipID: UUID
         let notificationEvents: [AppStateNotificationSpy.Event]
         let activeMobstersWriteCount: Int
+        let accessibilityAnnouncements: [String]
     }
 
     private func makeTestUserDefaults() -> UserDefaults {
@@ -161,11 +172,13 @@ struct AppStateTests {
         )
         let notifications = AppStateNotificationSpy()
         let activeMobstersWriter = ActiveMobstersWriterSpy()
+        let accessibilityAnnouncements = AppStateAccessibilityAnnouncementSpy()
         let appState = AppState(
             persistenceService: persistenceService,
             notificationService: notifications,
             activeMobstersFileService: activeMobstersWriter,
-            timerEngine: timerEngine
+            timerEngine: timerEngine,
+            accessibilityAnnouncer: accessibilityAnnouncements.announce
         )
         return Fixture(
             appState: appState,
@@ -173,7 +186,8 @@ struct AppStateTests {
             notifications: notifications,
             activeMobstersWriter: activeMobstersWriter,
             monotonicClock: monotonicClock,
-            wallClock: wallClock
+            wallClock: wallClock,
+            accessibilityAnnouncements: accessibilityAnnouncements
         )
     }
 
@@ -230,6 +244,7 @@ struct AppStateTests {
         setActiveRosterSize(rosterSize, in: fixture.appState)
         fixture.notifications.events.removeAll()
         fixture.activeMobstersWriter.writeCount = 0
+        fixture.accessibilityAnnouncements.messages.removeAll()
         #expect(fixture.appState.sessionPhase == phase)
         return fixture
     }
@@ -245,7 +260,8 @@ struct AppStateTests {
             turnsSinceBreak: fixture.appState.turnsSinceBreak,
             tipID: fixture.appState.currentTip.id,
             notificationEvents: fixture.notifications.events,
-            activeMobstersWriteCount: fixture.activeMobstersWriter.writeCount
+            activeMobstersWriteCount: fixture.activeMobstersWriter.writeCount,
+            accessibilityAnnouncements: fixture.accessibilityAnnouncements.messages
         )
     }
 
@@ -335,6 +351,99 @@ struct AppStateTests {
         #expect(fixture.appState.sessionPhase == .regularRunning)
         #expect(fixture.notifications.events.isEmpty)
         fixture.appState.pauseTimer()
+    }
+
+    @Test("timer accessibility semantics include phase, readable time, and role context")
+    func timerAccessibilitySemantics() {
+        let fixture = makeFixture(timerDuration: 125)
+        fixture.appState.roster.addMobster(name: "Alice")
+        fixture.appState.roster.addMobster(name: "Bob")
+
+        #expect(fixture.appState.timerAccessibilityLabel == "Turn timer")
+        #expect(fixture.appState.timerAccessibilityValue == "2 minutes, 5 seconds remaining")
+        #expect(fixture.appState.timerAccessibilityHint.contains("Alice"))
+        #expect(fixture.appState.timerAccessibilityHint.contains("Bob"))
+        #expect(fixture.appState.primaryActionAccessibilityLabel == "Start turn timer")
+        #expect(fixture.appState.skipActionAccessibilityLabel.contains("Bob"))
+
+        fixture.appState.startTimer()
+        #expect(fixture.appState.primaryActionAccessibilityLabel == "Pause turn timer")
+        fixture.appState.pauseTimer()
+        #expect(fixture.appState.primaryActionAccessibilityLabel == "Resume turn timer")
+
+        let breakFixture = prepare(phase: .breakDue, rosterSize: 2)
+        #expect(breakFixture.appState.timerAccessibilityLabel == "Break timer")
+        #expect(breakFixture.appState.primaryActionAccessibilityLabel == "Take break")
+        #expect(breakFixture.appState.skipActionAccessibilityLabel == "Skip break")
+    }
+
+    @Test("driver handoff announces once while ordinary timer ticks remain silent")
+    func driverHandoffAnnouncement() {
+        let fixture = makeFixture(timerDuration: 2, breakInterval: 5)
+        fixture.appState.roster.addMobster(name: "Alice")
+        fixture.appState.roster.addMobster(name: "Bob")
+        fixture.appState.startTimer()
+        fixture.accessibilityAnnouncements.messages.removeAll()
+
+        elapse(1, in: fixture)
+        #expect(fixture.accessibilityAnnouncements.messages.isEmpty)
+
+        elapse(1, in: fixture)
+        fixture.timerEngine.refresh()
+
+        #expect(fixture.accessibilityAnnouncements.messages == [
+            "Turn complete. Driver Bob. Navigator Alice."
+        ])
+    }
+
+    @Test("break due and break complete each announce once")
+    func breakTransitionAnnouncements() {
+        let fixture = makeFixture(timerDuration: 1, breakInterval: 1, breakDuration: 1)
+        fixture.appState.roster.addMobster(name: "Alice")
+        fixture.appState.roster.addMobster(name: "Bob")
+        fixture.appState.startTimer()
+        fixture.accessibilityAnnouncements.messages.removeAll()
+
+        elapse(1, in: fixture)
+        fixture.timerEngine.refresh()
+
+        #expect(fixture.accessibilityAnnouncements.messages == [
+            "Break due. Driver Bob is next. Navigator Alice."
+        ])
+
+        fixture.accessibilityAnnouncements.messages.removeAll()
+        fixture.appState.takeBreak()
+        elapse(1, in: fixture)
+        fixture.timerEngine.refresh()
+
+        #expect(fixture.accessibilityAnnouncements.messages == [
+            "Break complete. Driver Bob. Navigator Alice."
+        ])
+    }
+
+    @Test("manual skip announces the new driver once")
+    func skipTurnAnnouncement() {
+        let fixture = makeFixture()
+        fixture.appState.roster.addMobster(name: "Alice")
+        fixture.appState.roster.addMobster(name: "Bob")
+        fixture.appState.startTimer()
+        fixture.accessibilityAnnouncements.messages.removeAll()
+
+        fixture.appState.skipTurn()
+
+        #expect(fixture.accessibilityAnnouncements.messages == [
+            "Turn skipped. Driver Bob. Navigator Alice."
+        ])
+        fixture.appState.pauseTimer()
+    }
+
+    @Test("manual break skip does not announce a completion or role change")
+    func skipBreakDoesNotAnnounce() {
+        let fixture = prepare(phase: .breakDue, rosterSize: 2)
+
+        fixture.appState.skipBreak()
+
+        #expect(fixture.accessibilityAnnouncements.messages.isEmpty)
     }
 
     // MARK: - Transition Matrix
@@ -846,6 +955,7 @@ struct AppStateTests {
         #expect(first.appState.roster.driver?.id == bob.id)
         #expect(first.timerEngine.isRunning == false)
         #expect(first.notifications.events == [.breakDue(duration: 60)])
+        #expect(first.accessibilityAnnouncements.messages.isEmpty)
         #expect(service.loadRoster().lastRegularCycleResolution == RegularCycleResolutionReceipt(
             cycleID: cycleID,
             resolution: .completed
@@ -862,6 +972,7 @@ struct AppStateTests {
         #expect(second.appState.turnsSinceBreak == 2)
         #expect(second.appState.roster.driver?.id == bob.id)
         #expect(second.notifications.events.isEmpty)
+        #expect(second.accessibilityAnnouncements.messages.isEmpty)
     }
 
     @Test("receipt prevents duplicate advance across roster then snapshot interruption")
@@ -1074,10 +1185,12 @@ struct AppStateTests {
         #expect(first.appState.turnsSinceBreak == 0)
         #expect(first.appState.roster.driver?.id == alice.id)
         #expect(first.notifications.events == [.breakCompleted])
+        #expect(first.accessibilityAnnouncements.messages.isEmpty)
 
         let second = makeFixture(userDefaults: defaults, timerDuration: nil)
         #expect(second.appState.roster.driver?.id == alice.id)
         #expect(second.notifications.events.isEmpty)
+        #expect(second.accessibilityAnnouncements.messages.isEmpty)
     }
 
     @Test("invalid session snapshots fall back without erasing roster or settings")

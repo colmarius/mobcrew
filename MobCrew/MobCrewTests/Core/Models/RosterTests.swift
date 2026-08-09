@@ -424,6 +424,55 @@ struct RosterTests {
         #expect(roster.navigator?.id == charlie.id)
     }
 
+    @Test("keyboard move up reorders one position and preserves driver identity")
+    func moveActiveMobsterUpPreservesDriver() {
+        let alice = Mobster(name: "Alice")
+        let bob = Mobster(name: "Bob")
+        let charlie = Mobster(name: "Charlie")
+        let roster = Roster(
+            activeMobsters: [alice, bob, charlie],
+            nextDriverIndex: 1
+        )
+
+        roster.moveActiveMobster(at: 2, to: 1)
+
+        #expect(roster.activeMobsters.map(\.id) == [alice.id, charlie.id, bob.id])
+        #expect(roster.driver?.id == bob.id)
+        #expect(roster.navigator?.id == alice.id)
+    }
+
+    @Test("keyboard move down reorders one position and preserves driver identity")
+    func moveActiveMobsterDownPreservesDriver() {
+        let alice = Mobster(name: "Alice")
+        let bob = Mobster(name: "Bob")
+        let charlie = Mobster(name: "Charlie")
+        let roster = Roster(
+            activeMobsters: [alice, bob, charlie],
+            nextDriverIndex: 2
+        )
+
+        roster.moveActiveMobster(at: 0, to: 1)
+
+        #expect(roster.activeMobsters.map(\.id) == [bob.id, alice.id, charlie.id])
+        #expect(roster.driver?.id == charlie.id)
+        #expect(roster.navigator?.id == bob.id)
+    }
+
+    @Test("keyboard move rejects non-adjacent and out-of-range destinations")
+    func moveActiveMobsterRejectsInvalidDestinations() {
+        let alice = Mobster(name: "Alice")
+        let bob = Mobster(name: "Bob")
+        let charlie = Mobster(name: "Charlie")
+        let roster = Roster(activeMobsters: [alice, bob, charlie])
+
+        roster.moveActiveMobster(at: 0, to: 2)
+        roster.moveActiveMobster(at: 0, to: -1)
+        roster.moveActiveMobster(at: 2, to: 3)
+
+        #expect(roster.activeMobsters.map(\.id) == [alice.id, bob.id, charlie.id])
+        #expect(roster.driver?.id == alice.id)
+    }
+
     // MARK: - shuffle
 
     @Test("shuffle preserves members and establishes the first participant as driver")

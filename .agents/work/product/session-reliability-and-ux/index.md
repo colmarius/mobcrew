@@ -34,6 +34,9 @@ resulting AX-removal and registration-status implementation passed focused, full
 validation using Xcode 26.6 / Swift 6.3. Task 8 now has a service-backed implementation and focused
 tests for truthful Notification and Launch at Login status; Xcode 26.6 focused/full tests and live
 Settings inspection passed. Task 9 accessibility and large-roster reachability is now active.
+The implementation now has single-List roster reachability, identity-preserving Move Up/Down paths,
+contextual semantics across core surfaces, and injected one-shot transition announcements; exact
+Xcode and logged-in accessibility validation remain before acceptance.
 
 ## Artifacts
 
@@ -46,9 +49,9 @@ Settings inspection passed. Task 9 accessibility and large-roster reachability i
 
 ## Next Action
 
-- Begin [Task 9](plan.md#task-9-make-core-controls-accessible-and-large-rosters-reachable) by
-  rechecking control semantics, roster scrolling/reordering, and transition sites; add model and
-  accessibility-state tests before changing the main, roster, break, menu, and floating surfaces.
+- Verify [Task 9](plan.md#task-9-make-core-controls-accessible-and-large-rosters-reachable) on the
+  live Xcode 26.6 Mac: run focused AppState/Roster tests, inspect 12 active plus 8 benched rows at
+  600×450, then record VoiceOver, Full Keyboard Access, contrast/color, and increased-text results.
 
 ## Open Questions
 

@@ -109,6 +109,25 @@ required, request it contextually, remember dismissal, bound polling, and show s
 Notification and login-item settings must distinguish user preference from macOS authorization or
 registration state and offer recovery actions.
 
+### Task 9 accessibility APIs
+
+Apple's macOS 14+ `AccessibilityNotification.Announcement` provides the native cross-platform
+announcement path and posts with `AccessibilityNotification.Announcement(message).post()`. The app
+should call it only at semantic transitions, behind an injected closure for exact-once tests; timer
+refreshes must only update displayed state. SwiftUI's named accessibility actions are the supported
+way to expose reorder operations to VoiceOver and Switch Control, while ordinary `Button` controls
+remain the Full Keyboard Access path. Native `List` and `Stepper` behavior should remain intact rather
+than being replaced by nested custom scroll containers or a grouped static accessibility element.
+
+Sources:
+
+- [AccessibilityNotification.Announcement](https://developer.apple.com/documentation/accessibility/accessibilitynotification/announcement)
+  — announcement purpose, macOS 14 availability, priority, and `.post()` usage.
+- [accessibilityAction(named:_:)](https://developer.apple.com/documentation/swiftui/view/accessibilityaction(named:_:))
+  — named assistive-technology actions.
+- [Build accessible apps with SwiftUI and UIKit](https://developer.apple.com/videos/play/wwdc2023/10036/)
+  — Apple examples for notifications, priority, and assistive interaction.
+
 ## Product recommendations
 
 - Allow a timer with one active participant as an intentional solo fallback, but require at least two

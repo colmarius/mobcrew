@@ -16,17 +16,21 @@ struct BreakScreenView: View {
                 Spacer()
                 
                 Text(appState.sessionPhase == .breakDue ? "Break Due" : "Break Time!")
-                    .font(.system(size: 48, weight: .bold, design: .rounded))
+                    .font(.system(.largeTitle, design: .rounded, weight: .bold))
                     .foregroundStyle(.primary)
                 
                 Text(formatTime(appState.timerState.secondsRemaining))
-                    .font(.system(size: 80, weight: .light, design: .monospaced))
+                    .font(.system(.largeTitle, design: .monospaced, weight: .light))
                     .foregroundStyle(.primary)
+                    .accessibilityLabel(appState.timerAccessibilityLabel)
+                    .accessibilityValue(appState.timerAccessibilityValue)
+                    .accessibilityHint(appState.timerAccessibilityHint)
                 
                 ProgressView(value: appState.timerState.progress)
                     .progressViewStyle(.linear)
                     .frame(maxWidth: 300)
                     .tint(.teal)
+                    .accessibilityHidden(true)
                 
                 Spacer()
                 
@@ -39,6 +43,9 @@ struct BreakScreenView: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .disabled(!appState.canPerformPrimaryAction)
+                    .help(appState.primaryActionLabel)
+                    .accessibilityLabel(appState.primaryActionAccessibilityLabel)
+                    .accessibilityHint(appState.primaryActionAccessibilityHint)
 
                     Button(action: { appState.performSkipAction() }) {
                         Text(appState.skipActionLabel)
@@ -48,6 +55,9 @@ struct BreakScreenView: View {
                     }
                     .buttonStyle(.bordered)
                     .disabled(!appState.canPerformSkipAction)
+                    .help(appState.skipActionLabel)
+                    .accessibilityLabel(appState.skipActionAccessibilityLabel)
+                    .accessibilityHint(appState.skipActionAccessibilityHint)
                     .keyboardShortcut(.escape, modifiers: [])
                 }
                 

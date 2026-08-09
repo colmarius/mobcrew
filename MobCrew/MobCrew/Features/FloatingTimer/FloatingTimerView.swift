@@ -37,6 +37,9 @@ private struct FloatingNormalView: View {
         Text(appState.timerState.displayTime)
             .font(.system(size: 36, weight: .bold, design: .monospaced))
             .foregroundStyle(.white)
+            .accessibilityLabel(appState.timerAccessibilityLabel)
+            .accessibilityValue(appState.timerAccessibilityValue)
+            .accessibilityHint(appState.timerAccessibilityHint)
         
         VStack(spacing: 6) {
             RoleLabel(role: "Driver", name: appState.roster.driver?.name, isDriver: true)
@@ -61,7 +64,8 @@ private struct FloatingNormalView: View {
         .buttonStyle(.plain)
         .disabled(!appState.canPerformPrimaryAction)
         .help(appState.primaryActionLabel)
-        .accessibilityLabel(appState.primaryActionLabel)
+        .accessibilityLabel(appState.primaryActionAccessibilityLabel)
+        .accessibilityHint(appState.primaryActionAccessibilityHint)
     }
 }
 
@@ -80,6 +84,9 @@ private struct FloatingBreakView: View {
         Text(appState.timerState.displayTime)
             .font(.system(size: 36, weight: .bold, design: .monospaced))
             .foregroundStyle(.white)
+            .accessibilityLabel(appState.timerAccessibilityLabel)
+            .accessibilityValue(appState.timerAccessibilityValue)
+            .accessibilityHint(appState.timerAccessibilityHint)
         
         Button(action: { appState.performPrimaryAction() }) {
             Label(appState.primaryActionLabel, systemImage: appState.primaryActionSystemImage)
@@ -92,6 +99,9 @@ private struct FloatingBreakView: View {
         }
         .buttonStyle(.plain)
         .disabled(!appState.canPerformPrimaryAction)
+        .help(appState.primaryActionLabel)
+        .accessibilityLabel(appState.primaryActionAccessibilityLabel)
+        .accessibilityHint(appState.primaryActionAccessibilityHint)
 
         Button(action: { appState.performSkipAction() }) {
             Text(appState.skipActionLabel)
@@ -103,6 +113,9 @@ private struct FloatingBreakView: View {
                 .clipShape(Capsule())
         }
         .buttonStyle(.plain)
+        .help(appState.skipActionLabel)
+        .accessibilityLabel(appState.skipActionAccessibilityLabel)
+        .accessibilityHint(appState.skipActionAccessibilityHint)
     }
 }
 
@@ -115,7 +128,7 @@ private struct RoleLabel: View {
         HStack(spacing: 6) {
             Text(role)
                 .font(.system(size: isDriver ? 11 : 10, weight: .semibold))
-                .foregroundStyle(isDriver ? .green : .blue)
+                .foregroundStyle(isDriver ? .blue : .green)
                 .frame(width: 60, alignment: .trailing)
             
             Text(name ?? "—")
@@ -124,6 +137,9 @@ private struct RoleLabel: View {
                 .lineLimit(1)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(role)
+        .accessibilityValue(name ?? "Not assigned")
     }
 }
 

@@ -111,6 +111,16 @@ final class Roster {
         onDidMutate?()
     }
 
+    func moveActiveMobster(at source: Int, to destination: Int) {
+        guard activeMobsters.indices.contains(source) else { return }
+        guard activeMobsters.indices.contains(destination) else { return }
+        guard abs(source - destination) == 1 else { return }
+        let currentDriverID = driver?.id
+        activeMobsters.swapAt(source, destination)
+        restoreDriver(withID: currentDriverID)
+        onDidMutate?()
+    }
+
     func setMutationHandler(_ handler: @escaping () -> Void) {
         onDidMutate = handler
     }

@@ -1,4 +1,5 @@
 import Foundation
+import Accessibility
 
 @MainActor
 @Observable
@@ -43,6 +44,7 @@ final class AppState {
     private let notificationService: any NotificationServiceProtocol
     private let activeMobstersFileService: any ActiveMobstersFileServiceProtocol
     private let timerEngine: TimerEngine
+    private let accessibilityAnnouncer: @MainActor (String) -> Void
     private var hasRequestedNotificationPermission = false
     private var cycleID: UUID
     private var isDeferringRosterPersistence = false
@@ -54,12 +56,16 @@ final class AppState {
         persistenceService: any PersistenceServiceProtocol = PersistenceService(),
         notificationService: any NotificationServiceProtocol = NotificationService.shared,
         activeMobstersFileService: any ActiveMobstersFileServiceProtocol = ActiveMobstersFileService(),
-        timerEngine: TimerEngine = TimerEngine()
+        timerEngine: TimerEngine = TimerEngine(),
+        accessibilityAnnouncer: @escaping @MainActor (String) -> Void = {
+            AccessibilityNotification.Announcement($0).post()
+        }
     ) {
         self.persistenceService = persistenceService
         self.notificationService = notificationService
         self.activeMobstersFileService = activeMobstersFileService
         self.timerEngine = timerEngine
+        self.accessibilityAnnouncer = accessibilityAnnouncer
 
         let loadedRoster = persistenceService.loadRoster()
         let loadedDuration = persistenceService.loadTimerDuration() ?? 420 // 7 minutes default
@@ -156,6 +162,87 @@ final class AppState {
 
     var skipActionLabel: String {
         sessionPhase.isBreak ? "Skip Break" : "Skip Turn"
+    }
+
+    var timerAccessibilityLabel: String {
+        sessionPhase.isBreak ? "Break timer" : "Turn timer"
+    }
+
+    var timerAccessibilityValue: String {
+        Self.accessibilityDuration(timerState.secondsRemaining)
+    }
+
+    var timerAccessibilityHint: String {
+        let state: String
+        switch sessionPhase {
+        case .regularIdle:
+            state = "Ready to start."
+        case .regularRunning:
+            state = "Turn in progress."
+        case .regularPaused:
+            state = "Turn paused."
+        case .breakDue:
+            state = "Break ready to start."
+        case .breakRunning:
+            state = "Break in progress."
+        case .breakPaused:
+            state = "Break paused."
+        }
+        return "\(state) \(currentRoleSummary)"
+    }
+
+    var primaryActionAccessibilityLabel: String {
+        switch sessionPhase {
+        case .regularIdle:
+            "Start turn timer"
+        case .regularRunning:
+            "Pause turn timer"
+        case .regularPaused:
+            "Resume turn timer"
+        case .breakDue:
+            "Take break"
+        case .breakRunning:
+            "Pause break timer"
+        case .breakPaused:
+            "Resume break timer"
+        }
+    }
+
+    var primaryActionAccessibilityHint: String {
+        switch sessionPhase {
+        case .regularIdle:
+            "Starts the configured turn. \(currentRoleSummary)"
+        case .regularRunning:
+            "Pauses the current turn without resetting it."
+        case .regularPaused:
+            "Continues the paused turn."
+        case .breakDue:
+            "Starts the optional break timer."
+        case .breakRunning:
+            "Pauses the break without resetting it."
+        case .breakPaused:
+            "Continues the paused break."
+        }
+    }
+
+    var skipActionAccessibilityLabel: String {
+        if sessionPhase.isBreak {
+            return "Skip break"
+        }
+        if let nextDriver = roster.navigator?.name {
+            return "Skip turn to \(nextDriver) as driver"
+        }
+        return "Skip turn"
+    }
+
+    var skipActionAccessibilityHint: String {
+        sessionPhase.isBreak
+            ? "Returns to the turn timer without advancing roles."
+            : "Advances roles and immediately starts a fresh turn."
+    }
+
+    var resetTimerAccessibilityHint: String {
+        "Resets this turn to \(Self.accessibilityDuration(timerDuration)) without advancing roles."
     }
 
     var canPerformSkipAction: Bool {
@@ -286,7 +373,11 @@ final class AppState {
             switch receipt.resolution {
             case .completed where snapshot.phase == .regularRunning:
                 sessionPhase = .regularRunning
-                completeRegularTurn(cycleAlreadyResolved: true, repairActiveFile: true)
+                completeRegularTurn(
+                    cycleAlreadyResolved: true,
+                    repairActiveFile: true,
+                    announceTransition: false
+                )
                 return
             case .skipped:
                 prepareFreshRegularSession(turnsSinceBreak: snapshot.turnsSinceBreak)
@@ -338,9 +429,9 @@ final class AppState {
                 _ = timerEngine.armRefreshPublisher()
             case .expired:
                 if snapshot.phase == .regularRunning {
-                    completeRegularTurn()
+                    completeRegularTurn(announceTransition: false)
                 } else {
-                    completeBreak()
+                    completeBreak(announceTransition: false)
                 }
             case .invalid:
                 assertionFailure("Invalid running restoration reached reconciliation")
@@ -392,7 +483,8 @@ final class AppState {
 
     private func completeRegularTurn(
         cycleAlreadyResolved: Bool = false,
-        repairActiveFile: Bool = false
+        repairActiveFile: Bool = false,
+        announceTransition: Bool = true
     ) {
         let completedCycleID = cycleID
         sessionPhase = .regularIdle
@@ -424,8 +516,14 @@ final class AppState {
             writeActiveFile: shouldAdvanceRoles || repairActiveFile
         ) else { return }
         if sessionPhase == .breakDue {
+            if announceTransition {
+                accessibilityAnnouncer(breakDueAnnouncement)
+            }
             sendBreakDueNotification()
         } else {
+            if announceTransition {
+                accessibilityAnnouncer("Turn complete. \(currentRoleSummary)")
+            }
             sendTimerCompleteNotification()
         }
     }
@@ -442,12 +540,15 @@ final class AppState {
         notificationService.sendBreakDue(duration: breakDuration)
     }
 
-    private func completeBreak() {
+    private func completeBreak(announceTransition: Bool = true) {
         sessionPhase = .regularIdle
         turnsSinceBreak = 0
         cycleID = UUID()
         timerEngine.reset(duration: timerDuration)
         guard saveCurrentSessionSnapshot() else { return }
+        if announceTransition {
+            accessibilityAnnouncer("Break complete. \(currentRoleSummary)")
+        }
         sendBreakCompleteNotification()
     }
 
@@ -627,7 +728,43 @@ final class AppState {
         }
         currentTip = Tip.random()
         guard persistRosterThenSession(writeActiveFile: true) else { return }
+        accessibilityAnnouncer("Turn skipped. \(currentRoleSummary)")
         requestNotificationPermissionIfNeeded()
+    }
+
+    private var currentRoleSummary: String {
+        guard let driver = roster.driver?.name else {
+            return "No active participants."
+        }
+        guard let navigator = roster.navigator?.name else {
+            return "Driver \(driver)."
+        }
+        return "Driver \(driver). Navigator \(navigator)."
+    }
+
+    private var breakDueAnnouncement: String {
+        guard let driver = roster.driver?.name else {
+            return "Break due."
+        }
+        guard let navigator = roster.navigator?.name else {
+            return "Break due. Driver \(driver) is next."
+        }
+        return "Break due. Driver \(driver) is next. Navigator \(navigator)."
+    }
+
+    private static func accessibilityDuration(_ seconds: Int) -> String {
+        let minutes = seconds / 60
+        let remainingSeconds = seconds % 60
+        var components: [String] = []
+        if minutes > 0 {
+            components.append("\(minutes) \(minutes == 1 ? "minute" : "minutes")")
+        }
+        if remainingSeconds > 0 || components.isEmpty {
+            components.append(
+                "\(remainingSeconds) \(remainingSeconds == 1 ? "second" : "seconds")"
+            )
+        }
+        return components.joined(separator: ", ") + " remaining"
     }
 
     static func previewing(_ sessionPhase: SessionPhase) -> AppState {

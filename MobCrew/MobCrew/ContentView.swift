@@ -58,6 +58,9 @@ struct ContentView: View {
                     Text(driver.name)
                         .font(.title3)
                 }
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel("Driver")
+                .accessibilityValue(driver.name)
             }
             
             if let navigator = appState.roster.navigator {
@@ -72,6 +75,9 @@ struct ContentView: View {
                     Text(navigator.name)
                         .font(.title3)
                 }
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel("Navigator")
+                .accessibilityValue(navigator.name)
             }
         }
     }
@@ -79,12 +85,17 @@ struct ContentView: View {
     private var timerDisplay: some View {
         VStack(spacing: 4) {
             Text(appState.timerState.displayTime)
-                .font(.system(size: 64, weight: .light, design: .monospaced))
+                .font(.system(.largeTitle, design: .monospaced, weight: .light))
+                .fontWeight(.light)
                 .foregroundStyle(appState.isRunning ? .primary : .secondary)
+                .accessibilityLabel(appState.timerAccessibilityLabel)
+                .accessibilityValue(appState.timerAccessibilityValue)
+                .accessibilityHint(appState.timerAccessibilityHint)
             
             ProgressView(value: appState.timerState.progress)
                 .progressViewStyle(.linear)
                 .frame(maxWidth: 200)
+                .accessibilityHidden(true)
             
             if appState.breaksEnabled {
                 BreakProgressView(
@@ -106,28 +117,31 @@ struct ContentView: View {
             .buttonStyle(.borderedProminent)
             .disabled(!appState.canPerformPrimaryAction)
             .help(appState.primaryActionLabel)
-            .accessibilityLabel(appState.primaryActionLabel)
+            .accessibilityLabel(appState.primaryActionAccessibilityLabel)
+            .accessibilityHint(appState.primaryActionAccessibilityHint)
             .keyboardShortcut(.return, modifiers: .command)
             
             Button(action: { appState.resetTimer() }) {
                 Image(systemName: "arrow.counterclockwise")
                     .font(.title2)
-                    .frame(width: 40, height: 40)
+                    .frame(width: 44, height: 44)
             }
             .buttonStyle(.bordered)
             .disabled(!appState.canResetTimer)
             .help("Reset Timer")
-            .accessibilityLabel("Reset Timer")
+            .accessibilityLabel("Reset turn timer")
+            .accessibilityHint(appState.resetTimerAccessibilityHint)
             
             Button(action: { appState.performSkipAction() }) {
                 Image(systemName: "forward.fill")
                     .font(.title2)
-                    .frame(width: 40, height: 40)
+                    .frame(width: 44, height: 44)
             }
             .buttonStyle(.bordered)
             .disabled(!appState.canPerformSkipAction)
             .help(appState.skipActionLabel)
-            .accessibilityLabel(appState.skipActionLabel)
+            .accessibilityLabel(appState.skipActionAccessibilityLabel)
+            .accessibilityHint(appState.skipActionAccessibilityHint)
             .keyboardShortcut("s", modifiers: [.command, .shift])
         }
     }
@@ -145,6 +159,9 @@ struct ContentView: View {
                 Text("\(appState.timerDuration / 60) min")
                     .monospacedDigit()
             }
+            .accessibilityLabel("Turn duration")
+            .accessibilityValue("\(appState.timerDuration / 60) minutes")
+            .accessibilityHint("Changes the configured duration. An active or paused turn keeps its current progress.")
         }
         .font(.callout)
     }

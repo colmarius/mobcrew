@@ -5,9 +5,9 @@ Updated: 2026-08-09
 ## Current Slice
 
 - Tasks 1-8 are implemented, natively tested, checked off in the active plan, and pushed.
-- Task 9 is next: make core timer, break, participant, menu, and floating controls explicitly
-  accessible; add identity-preserving keyboard reordering, transition announcements, and bounded
-  scrolling so 12 active plus 8 benched participants remain reachable in a 600×450 window.
+- Task 9 implementation is ready for native verification: core surfaces have contextual semantics,
+  roster reordering has keyboard/VoiceOver actions, one native List owns active and benched scrolling,
+  and injected announcements cover only meaningful session transitions.
 
 ## Observed Evidence
 
@@ -161,6 +161,20 @@ Updated: 2026-08-09
   and alternate notification states remain represented by deterministic injected-double tests rather
   than live mutation. The detached worktree and temporary files were removed, no temporary branch was
   created, and remote heads remained only `main` and the authorized audit branch.
+- Task 9 source inspection reconfirmed that active List scrolling was disabled, benched rows sat outside
+  any scroll container, row actions were generic icons, role badges exposed only D/N with reversed colors,
+  duration accessibility grouping risked hiding native Stepper behavior, and no transition announcer existed.
+- The implementation uses one native List with Active and Benched sections, preserving drag reorder while
+  adding stable-UUID Move Up/Down buttons and named accessibility actions. The model allows only adjacent
+  moves, preserves the current Driver UUID, recomputes Navigator relative to that Driver, and persists via
+  the existing model-owned mutation handler.
+- Driver/Navigator words are visible in roster badges and remain in participant semantics; all core timer,
+  reset, skip, break, participant, menu, and floating controls now have contextual labels, values, hints,
+  and role context. Driver remains blue and Navigator green across the main, roster, and floating surfaces.
+- AppState posts macOS 14+ `AccessibilityNotification.Announcement` through one injected MainActor closure.
+  Natural handoff, break due, break complete, and manual turn skip each emit one contextual message; ordinary
+  ticks, manual break skip, and restoration reconciliation emit none. Deterministic tests cover these paths,
+  readable timer state, and move invariants. Xcode compilation and logged-in accessibility checks remain open.
 
 ## Verification Status
 

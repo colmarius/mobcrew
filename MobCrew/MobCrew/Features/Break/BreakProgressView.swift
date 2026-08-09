@@ -12,6 +12,10 @@ struct BreakProgressView: View {
                     .foregroundStyle(index < turnsSinceBreak ? .green : .gray.opacity(0.5))
             }
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Break cadence")
+        .accessibilityValue("\(turnsSinceBreak) of \(breakInterval) turns completed")
+        .accessibilityHint("\(max(0, breakInterval - turnsSinceBreak)) turns remain before a break is due.")
     }
 }
 
