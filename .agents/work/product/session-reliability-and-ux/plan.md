@@ -26,7 +26,7 @@ validation; it must not recreate the website or treat unchecked manual steps as 
 
 ### Task 1: Make session actions phase-aware and consistent
 
-- [ ] **Task 1: Make session actions phase-aware and consistent**
+- [x] **Task 1: Make session actions phase-aware and consistent**
   - Scope: `MobCrew/MobCrew/Core/AppState.swift`, `MobCrew/MobCrew/Core/Models/TimerState.swift`,
     `MobCrew/MobCrew/App/MobCrewApp.swift`, `MobCrew/MobCrew/ContentView.swift`,
     `MobCrew/MobCrew/Features/MenuBar/MenuBarView.swift`, floating/break views, AppState/break tests
@@ -48,7 +48,7 @@ validation; it must not recreate the website or treat unchecked manual steps as 
 
 ### Task 2: Enforce roster mutation invariants
 
-- [ ] **Task 2: Enforce roster mutation invariants**
+- [x] **Task 2: Enforce roster mutation invariants**
   - Scope: `MobCrew/MobCrew/Core/Models/Roster.swift`,
     `MobCrew/MobCrew/Features/Roster/RosterView.swift`, Roster and persistence tests
   - Depends on: none

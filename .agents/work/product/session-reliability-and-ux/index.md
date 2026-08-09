@@ -20,12 +20,13 @@ A 2026-08-08 independent source-validated review confirmed all findings and cita
 scene-observed roster-persistence defect to Tasks 2/6, and fixed the break-cadence-while-disabled
 ambiguity in Task 5.
 The branch was rebased onto `origin/main` at `50659f0` on 2026-08-09. That mainline work changed no
-app source or unit tests, so Tasks 1-9 remain open; it did complete the current-state public
+app source or unit tests, so Tasks 1-9 were initially open; it did complete the current-state public
 documentation overhaul, narrowing Task 10 to behavior-change deltas and final observed validation.
 Saved teams, cloud sync, forced full-screen breaks, and other speculative expansion are out of scope.
-Implementation began on the rebased audit branch. Task 1's authoritative session phase, guarded
-commands, shared surface capabilities, and hermetic transition coverage are pushed but awaiting a
-Mac test gate; independent Task 2 roster invariants are the current implementation slice.
+Implementation is active on the rebased audit branch. Tasks 1-2 established the authoritative
+session phase and identity-preserving roster operations; their 87 focused tests and the full
+107-test suite passed on the available Mac runner. Task 3 duration semantics are now the active
+slice. Exact Xcode 26.6+ qualification remains outstanding because the runner currently has 26.2.
 
 ## Artifacts
 
@@ -38,8 +39,7 @@ Mac test gate; independent Task 2 roster invariants are the current implementati
 
 ## Next Action
 
-- Run the focused Mac build/test gate for Tasks 1-2, fix any failures, record observed evidence, and
-  check off only the accepted tasks before advancing to Task 3.
+- Implement [Task 3: Unify configured duration and current-cycle semantics](plan.md#task-3-unify-configured-duration-and-current-cycle-semantics), then run its focused Mac gate.
 
 ## Open Questions
 

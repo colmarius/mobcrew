@@ -4,11 +4,9 @@ Updated: 2026-08-09
 
 ## Current Slice
 
-- Task 1 implementation is pushed and awaiting native compilation/test evidence.
-- Task 2 makes roster collections and driver index externally read-only, routes permanent removal
-  through model operations, and preserves driver UUID through removal, reactivation, and reordering.
-- Focused Task 2 coverage exercises before/current/after removal, removal to empty, reactivation,
-  reorder, shuffle, malformed indices, and persistence round trips.
+- Tasks 1-2 are implemented, natively tested, checked off in the active plan, and pushed.
+- Task 3 is next: separate configured turn duration from the current cycle, preserve running/paused
+  progress when configuration changes, apply idle changes immediately, and align both surfaces to 1–60 minutes.
 
 ## Observed Evidence
 
@@ -30,10 +28,18 @@ Updated: 2026-08-09
   inferred. Independent Task 2 implementation proceeded without changing the unverified Task 1 contract.
 - Task 2 source inspection confirms all production active/inactive collection and driver-index
   writes now live inside `Roster`; `RosterView` permanent removal uses model-owned operations.
+- The Mac runner protected an unrelated dirty checkout by testing in `/tmp/mobcrew-session-native-verify`
+  from exact pushed commit `41119581cf31f849e5c9669850fdc198df44971b`.
+- The first focused compile exposed a Swift 6 actor-isolation mismatch in the injected active-roster
+  writer. Commit `ac2c6a51cb378cf8600cec9ad2040220a11c7019` isolated the protocol and its service tests to
+  `@MainActor`; no product behavior changed.
+- Focused `xcodebuild test` passed 87/87 across `AppStateTests`, `BreakLogicTests`,
+  `TimerEngineTests`, `NotificationServiceTests`, `RosterTests`, and `PersistenceServiceTests`.
+- Full `xcodebuild test -project MobCrew/MobCrew.xcodeproj -scheme MobCrew -destination 'platform=macOS'`
+  passed 107/107 with 0 failures and 0 skips, including app/test build, link, and signing.
 
 ## Verification Status
 
-- The Linux orb does not contain `swift` and cannot run the macOS Xcode target. Task 1 native
-  compilation and focused `AppStateTests`, `BreakLogicTests`, `TimerEngineTests`, and
-  `NotificationServiceTests` remain unverified. `RosterTests` and `PersistenceServiceTests` join
-  that focused Mac gate for Task 2; neither plan checkbox is complete yet.
+- Tasks 1-2 passed their focused and full native test gates on macOS using Xcode 26.2 (build 17C52).
+- The project specifies Xcode 26.6+ / Swift 6.3, so the exact-toolchain rerun remains unverified and
+  must be repeated before final qualification. No manual UI or accessibility behavior was claimed.
