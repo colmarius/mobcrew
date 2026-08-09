@@ -45,7 +45,8 @@ expanded layout. The first Full Keyboard Access attempt exposed that Tab skipped
 participant buttons inside the List; an explicit activation-focus correction compiles, passes focused
 tests, and user testing now confirms the roster accepts keyboard focus and traversal. Task 9 awaits only
 spoken VoiceOver/announcement and display-option observations. Task 10's preparatory truth audit
-corrected the remaining wording; its final gate depends on Task 9.
+corrected the remaining wording, and the exact latest branch passed its full Xcode 26.6 suite. Task 10's
+manual-result reconciliation still depends on Task 9.
 
 ## Artifacts
 
@@ -59,6 +60,5 @@ corrected the remaining wording; its final gate depends on Task 9.
 ## Next Action
 
 - Finish [Task 9](plan.md#task-9-make-core-controls-accessible-and-large-rosters-reachable) spoken
-  VoiceOver/announcement, Increase Contrast, and Differentiate Without Color checks. In parallel, run
-  Task 10's final full Xcode 26.6 suite and reconcile the remaining explicit manual results. Older macOS
-  coverage is not required.
+  VoiceOver/announcement, Increase Contrast, and Differentiate Without Color checks, then reconcile
+  Task 10's remaining explicit manual results. Older macOS coverage is not required.

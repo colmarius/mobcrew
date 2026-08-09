@@ -14,7 +14,8 @@ Updated: 2026-08-09
   participant controls. Explicit activation focus now compiles, passes focused tests, and passes user
   keyboard-focus/traversal inspection. VoiceOver and display-option checks remain.
 - Task 10's final documentation-truth audit is implemented, but its phase gate remains open until Task 9
-  completes and the latest exact branch passes the full native suite/manual result reconciliation.
+  completes and the manual result reconciliation is explicit. The latest exact branch now passes the
+  full native suite.
 
 ## Observed Evidence
 
@@ -259,6 +260,14 @@ Updated: 2026-08-09
   data, saved state, and all `/tmp/mobcrew-task9-fka-*` artifacts. The primary checkout remained clean
   and unchanged; remote heads remained only `main` and the audit branch. Task 9's manual, responsive,
   and FKA verification threads are archived.
+- Task 10's exact phase-boundary command at commit `7c67fbd4319bace3c205aa1c9836196146148219`
+  exited 0 with `** TEST SUCCEEDED **` under Xcode 26.6 (17F113), Swift 6.3.3, language mode 6:
+  177 concrete executions / 174 logical tests passed, with no failures, skips, or expected failures.
+  Compile output included the responsive views, participant activation focus, and corrected Settings text.
+- `git diff --check` passed in the detached Mac worktree. The verifier removed its worktree, logs,
+  xcresult, and DerivedData; no xcodebuild/xctest or temporary branch remains. The user's primary checkout
+  was concurrently fast-forwarded by another actor to the tested commit and remained clean; the verifier
+  did not alter or revert it. Remote heads remain only `main` and the authorized audit branch.
 
 ## Verification Status
 
@@ -277,4 +286,7 @@ Updated: 2026-08-09
   live Settings inspection also confirmed independent actual/preference status and unclipped recovery UI.
 - Task 9 passed 85 focused and all 177 executed project test cases using Xcode 26.6 / Swift 6.3.3.
   The responsive follow-up also passed 85/85 focused tests and logged-in native geometry/AX/increased-text
-  checks; interactive VoiceOver, Full Keyboard Access, and display-option acceptance awaits user assistance.
+  checks; Full Keyboard Access passes user inspection after the focus correction. Spoken VoiceOver,
+  announcements, and display-option acceptance await user assistance.
+- Task 10's final exact-branch native suite passed all 177 executions using Xcode 26.6 / Swift 6.3.3;
+  static docs validation and `git diff --check` pass. Explicit remaining manual results are still open.
