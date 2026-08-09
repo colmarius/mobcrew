@@ -136,14 +136,9 @@ struct ContentView: View {
             Stepper(
                 value: Binding(
                     get: { appState.timerDuration / 60 },
-                    set: { newMinutes in
-                        appState.timerDuration = newMinutes * 60
-                        if !appState.isRunning {
-                            appState.resetTimer()
-                        }
-                    }
+                    set: { appState.setTimerDuration(minutes: $0) }
                 ),
-                in: 1...30
+                in: AppState.timerDurationMinutesRange
             ) {
                 Text("\(appState.timerDuration / 60) min")
                     .monospacedDigit()

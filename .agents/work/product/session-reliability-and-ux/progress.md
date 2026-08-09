@@ -5,8 +5,11 @@ Updated: 2026-08-09
 ## Current Slice
 
 - Tasks 1-2 are implemented, natively tested, checked off in the active plan, and pushed.
-- Task 3 is next: separate configured turn duration from the current cycle, preserve running/paused
-  progress when configuration changes, apply idle changes immediately, and align both surfaces to 1–60 minutes.
+- Task 3 implementation is ready for its native gate: configured duration is AppState-owned and
+  externally read-only, while TimerState retains current-cycle total/remaining duration.
+- Both duration steppers use one guarded AppState operation and the same 1–60 minute range; focused
+  tests cover idle/running/paused semantics, explicit Reset, next-turn application, break isolation,
+  invalid range values, and persistence.
 
 ## Observed Evidence
 
@@ -37,9 +40,13 @@ Updated: 2026-08-09
   `TimerEngineTests`, `NotificationServiceTests`, `RosterTests`, and `PersistenceServiceTests`.
 - Full `xcodebuild test -project MobCrew/MobCrew.xcodeproj -scheme MobCrew -destination 'platform=macOS'`
   passed 107/107 with 0 failures and 0 skips, including app/test build, link, and signing.
+- Task 3 Linux inspection found no remaining production or test assignment to the now read-only
+  configured duration outside AppState initialization/operation. Documentation validation passed
+  after reconciling the shared range and lifecycle semantics in `TESTING.md`.
 
 ## Verification Status
 
 - Tasks 1-2 passed their focused and full native test gates on macOS using Xcode 26.2 (build 17C52).
+- Task 3 AppState tests and full-suite regression coverage remain pending on the Mac runner.
 - The project specifies Xcode 26.6+ / Swift 6.3, so the exact-toolchain rerun remains unverified and
   must be repeated before final qualification. No manual UI or accessibility behavior was claimed.

@@ -39,7 +39,7 @@ slice. Exact Xcode 26.6+ qualification remains outstanding because the runner cu
 
 ## Next Action
 
-- Implement [Task 3: Unify configured duration and current-cycle semantics](plan.md#task-3-unify-configured-duration-and-current-cycle-semantics), then run its focused Mac gate.
+- Run the focused Mac gate for [Task 3: Unify configured duration and current-cycle semantics](plan.md#task-3-unify-configured-duration-and-current-cycle-semantics), fix any failures, and record evidence before advancing to Task 4.
 
 ## Open Questions
 

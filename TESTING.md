@@ -8,9 +8,12 @@ Reset or use a fresh test account when a journey depends on first-run permission
 - [ ] A fresh profile starts with a 7-minute turn duration.
 - [ ] Start begins the countdown, Pause freezes it, Resume continues it, Reset restores the
       configured duration, and the progress bar tracks the remaining time.
-- [ ] The main-window duration stepper accepts 1-30 minutes.
-- [ ] **Settings → General → Turn duration** accepts 1-60 minutes, and the main-window value reflects
-      the saved setting even when it is above the main stepper's adjustment range.
+- [ ] The main-window and **Settings → General → Turn duration** steppers both accept 1-60 minutes
+      and remain synchronized.
+- [ ] Changing duration while idle updates the displayed countdown immediately; changing it while
+      running or paused preserves current progress and applies to the next turn.
+- [ ] Reset applies the configured duration and returns the turn timer to idle; duration changes
+      never alter a due, running, or paused break countdown.
 - [ ] Notification and programming-tip settings can be enabled and disabled.
 - [ ] A programming tip appears while the timer runs only when **Show Tips** is enabled.
 

@@ -40,8 +40,8 @@ private struct GeneralSettingsTab: View {
             Section("Timer") {
                 Stepper(value: Binding(
                     get: { appState.timerDuration / 60 },
-                    set: { appState.timerDuration = $0 * 60 }
-                ), in: 1...60) {
+                    set: { appState.setTimerDuration(minutes: $0) }
+                ), in: AppState.timerDurationMinutesRange) {
                     HStack {
                         Text("Turn duration")
                         Spacer()

@@ -3,10 +3,12 @@ import Foundation
 @MainActor
 @Observable
 final class AppState {
+    static let timerDurationMinutesRange = 1...60
+
     let roster: Roster
     let timerState: TimerState
     private(set) var sessionPhase: SessionPhase = .regularIdle
-    var timerDuration: Int {
+    private(set) var timerDuration: Int {
         didSet {
             persistenceService.saveTimerDuration(timerDuration)
         }
@@ -282,6 +284,14 @@ final class AppState {
         guard sessionPhase.isRegular else { return }
         sessionPhase = .regularIdle
         timerEngine.reset(duration: timerDuration)
+    }
+
+    func setTimerDuration(minutes: Int) {
+        guard Self.timerDurationMinutesRange.contains(minutes) else { return }
+        timerDuration = minutes * 60
+        if sessionPhase == .regularIdle {
+            timerEngine.reset(duration: timerDuration)
+        }
     }
 
     func takeBreak() {

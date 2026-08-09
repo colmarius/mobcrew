@@ -74,13 +74,15 @@ struct AppStateTests {
 
     private func makeFixture(
         userDefaults: UserDefaults? = nil,
-        timerDuration: Int = 420,
+        timerDuration: Int? = 420,
         breakInterval: Int = 5,
         breakDuration: Int = 300
     ) -> Fixture {
         let defaults = userDefaults ?? makeTestUserDefaults()
         let persistenceService = PersistenceService(userDefaults: defaults)
-        persistenceService.saveTimerDuration(timerDuration)
+        if let timerDuration {
+            persistenceService.saveTimerDuration(timerDuration)
+        }
         let timerEngine = TimerEngine()
         let notifications = AppStateNotificationSpy()
         let activeMobstersWriter = ActiveMobstersWriterSpy()
@@ -378,26 +380,131 @@ struct AppStateTests {
 
     // MARK: - Timer Duration Persistence
 
-    @Test("changing timer duration triggers save")
-    func changingTimerDurationTriggersSave() {
+    @Test("changing configured duration while idle updates the displayed cycle and persistence")
+    func idleDurationChangeAppliesImmediately() {
         let defaults = makeTestUserDefaults()
         let service = PersistenceService(userDefaults: defaults)
         let fixture = makeFixture(userDefaults: defaults)
 
-        fixture.appState.timerDuration = 900
+        fixture.appState.setTimerDuration(minutes: 15)
 
         #expect(service.loadTimerDuration() == 900)
+        #expect(fixture.appState.timerDuration == 900)
+        #expect(fixture.appState.timerState.totalSeconds == 900)
+        #expect(fixture.appState.timerState.secondsRemaining == 900)
+        #expect(fixture.appState.sessionPhase == .regularIdle)
+    }
+
+    @Test("changing configured duration while running preserves current progress")
+    func runningDurationChangeAppliesNextCycle() {
+        let fixture = makeFixture(timerDuration: 300)
+        setActiveRosterSize(1, in: fixture.appState)
+        fixture.appState.startTimer()
+        fixture.timerEngine.processTick()
+
+        fixture.appState.setTimerDuration(minutes: 10)
+
+        #expect(fixture.appState.timerDuration == 600)
+        #expect(fixture.appState.timerState.totalSeconds == 300)
+        #expect(fixture.appState.timerState.secondsRemaining == 299)
+        #expect(fixture.appState.sessionPhase == .regularRunning)
+        fixture.appState.pauseTimer()
+    }
+
+    @Test("changing configured duration while paused preserves current progress")
+    func pausedDurationChangeAppliesNextCycle() {
+        let fixture = makeFixture(timerDuration: 300)
+        setActiveRosterSize(1, in: fixture.appState)
+        fixture.appState.startTimer()
+        fixture.timerEngine.processTick()
+        fixture.appState.pauseTimer()
+
+        fixture.appState.setTimerDuration(minutes: 10)
+
+        #expect(fixture.appState.timerDuration == 600)
+        #expect(fixture.appState.timerState.totalSeconds == 300)
+        #expect(fixture.appState.timerState.secondsRemaining == 299)
+        #expect(fixture.appState.sessionPhase == .regularPaused)
+    }
+
+    @Test("explicit reset applies configured duration from running and paused")
+    func resetAppliesConfiguredDuration() {
+        for shouldPause in [false, true] {
+            let fixture = makeFixture(timerDuration: 300)
+            setActiveRosterSize(1, in: fixture.appState)
+            fixture.appState.startTimer()
+            fixture.timerEngine.processTick()
+            if shouldPause {
+                fixture.appState.pauseTimer()
+            }
+            fixture.appState.setTimerDuration(minutes: 10)
+
+            fixture.appState.resetTimer()
+
+            #expect(fixture.appState.sessionPhase == .regularIdle)
+            #expect(fixture.appState.timerState.totalSeconds == 600)
+            #expect(fixture.appState.timerState.secondsRemaining == 600)
+        }
+    }
+
+    @Test("next turn uses a configured duration changed during the current turn")
+    func nextTurnUsesConfiguredDuration() {
+        let fixture = makeFixture(timerDuration: 300)
+        setActiveRosterSize(2, in: fixture.appState)
+        fixture.appState.startTimer()
+        fixture.timerEngine.processTick()
+        fixture.appState.setTimerDuration(minutes: 10)
+
+        fixture.appState.skipTurn()
+
+        #expect(fixture.appState.sessionPhase == .regularRunning)
+        #expect(fixture.appState.timerState.totalSeconds == 600)
+        #expect(fixture.appState.timerState.secondsRemaining == 600)
+        fixture.appState.pauseTimer()
+    }
+
+    @Test("configured duration changes do not alter any break countdown")
+    func durationChangeDoesNotAffectBreak() {
+        for phase in [SessionPhase.breakDue, .breakRunning, .breakPaused] {
+            let fixture = prepare(phase: phase, rosterSize: 2)
+            let totalBeforeChange = fixture.appState.timerState.totalSeconds
+            let remainingBeforeChange = fixture.appState.timerState.secondsRemaining
+
+            fixture.appState.setTimerDuration(minutes: 10)
+
+            #expect(fixture.appState.timerDuration == 600)
+            #expect(fixture.appState.sessionPhase == phase)
+            #expect(fixture.appState.timerState.totalSeconds == totalBeforeChange)
+            #expect(fixture.appState.timerState.secondsRemaining == remainingBeforeChange)
+            if phase == .breakRunning {
+                fixture.appState.pauseTimer()
+            }
+        }
+    }
+
+    @Test("configured duration rejects values outside the shared range")
+    func durationRangeIsEnforcedAtAppStateBoundary() {
+        let fixture = makeFixture(timerDuration: 420)
+
+        fixture.appState.setTimerDuration(minutes: 0)
+        fixture.appState.setTimerDuration(minutes: 61)
+
+        #expect(fixture.appState.timerDuration == 420)
+        #expect(fixture.appState.timerState.totalSeconds == 420)
+        #expect(fixture.appState.timerState.secondsRemaining == 420)
     }
 
     @Test("timer duration persists across AppState instances")
     func timerDurationPersistsAcrossInstances() {
         let defaults = makeTestUserDefaults()
         let first = makeFixture(userDefaults: defaults)
-        first.appState.timerDuration = 1200
+        first.appState.setTimerDuration(minutes: 20)
 
-        let second = makeFixture(userDefaults: defaults, timerDuration: 1200)
+        let second = makeFixture(userDefaults: defaults, timerDuration: nil)
 
         #expect(second.appState.timerDuration == 1200)
+        #expect(second.appState.timerState.totalSeconds == 1200)
+        #expect(second.appState.timerState.secondsRemaining == 1200)
     }
 
     // MARK: - Roster Persistence
