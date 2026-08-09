@@ -118,7 +118,7 @@ validation; it must not recreate the website or treat unchecked manual steps as 
 
 ### Task 6: Persist and recover a versioned session snapshot
 
-- [ ] **Task 6: Persist and recover a versioned session snapshot**
+- [x] **Task 6: Persist and recover a versioned session snapshot**
   - Scope: `MobCrew/MobCrew/Core/Services/PersistenceService.swift`, `MobCrew/MobCrew/Core/AppState.swift`,
     `MobCrew/MobCrew/App/MobCrewApp.swift` (scene `.onChange` persistence removal), app lifecycle
     hooks, roster persistence integration, persistence/AppState tests

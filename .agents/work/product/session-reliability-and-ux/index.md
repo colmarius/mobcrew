@@ -28,8 +28,8 @@ session phase and identity-preserving roster operations; Task 3 then separated c
 from current-cycle progress and aligned both controls. Task 4 replaced delivered-tick subtraction
 with deadline-based elapsed time, and Task 5 made explicit break prompts disable-able without hidden
 cadence. Tasks 1-5 passed focused and full native tests on the available Mac runner. Task 6 versioned
-session recovery is implemented with deterministic coverage and awaits native compilation/testing.
-Exact Xcode 26.6+ qualification remains outstanding because the runner currently has 26.2.
+session recovery now also passed focused and full native tests there. Task 7's logged-in Mac permission
+gate is next. Exact Xcode 26.6+ qualification remains outstanding because the runner currently has 26.2.
 
 ## Artifacts
 
@@ -42,7 +42,7 @@ Exact Xcode 26.6+ qualification remains outstanding because the runner currently
 
 ## Next Action
 
-- Compile and run focused native recovery tests for [Task 6](plan.md#task-6-persist-and-recover-a-versioned-session-snapshot), fix only observed Task 6 regressions, then run the full suite before checking it complete.
+- Execute [Task 7's logged-in Mac gate](plan.md#task-7-verify-and-correct-global-hotkey-permission-setup): record whether Carbon registration and delivery work with Accessibility denied, distinguish permission failure from shortcut conflict, and only then choose the smallest permission-flow correction.
 
 ## Open Questions
 

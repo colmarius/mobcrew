@@ -4,11 +4,9 @@ Updated: 2026-08-09
 
 ## Current Slice
 
-- Tasks 1-5 are implemented, natively tested, checked off in the active plan, and pushed.
-- Task 6 implementation and deterministic coverage are authored locally: versioned semantic session
-  snapshots, ordered roster/snapshot writes, deadline reconciliation, and idempotent expired-state
-  recovery. Native compilation and focused/full macOS test evidence are the next gate before Task 6
-  can be checked complete.
+- Tasks 1-6 are implemented, natively tested, checked off in the active plan, and pushed.
+- Task 7 is next: establish on the logged-in Mac whether the Carbon global hotkey actually requires
+  Accessibility permission, then preserve or remove the permission flow based on observed evidence.
 
 ## Observed Evidence
 
@@ -91,10 +89,24 @@ Updated: 2026-08-09
   by all writes from the older process while ordinary roster/settings persistence continues.
 - Recovery tests cover future and expired deadlines, paused/due states, zero/one/multiple and edited
   rosters, repeated construction, interrupted roster/session ordering, write failure, break completion,
-  malformed payloads, lifecycle flushes, and publisher-arm ordering. Native evidence is still pending.
+  malformed payloads, lifecycle flushes, and publisher-arm ordering; the focused native gate below passed.
 - Rollback is intentionally documented without an impossible guarantee: a snapshot-unaware binary
   that changes session state but writes no compatibility marker cannot later be distinguished from a
   crash. Snapshot isolation still ensures rollback does not corrupt existing roster/settings.
+- Oracle review of the Task 6 diff found two recovery blockers before checkpoint: later session-only
+  writes could bypass a failed roster write, and matching receipts could bypass the running deadline's
+  remaining-over-total validation. Pending roster durability now gates every snapshot write, and all
+  running snapshots are clock-validated before receipt reconciliation; focused failure tests cover both.
+- Task 6 verification used detached Mac worktree `/tmp/mobcrew-task6-verify.Tt8j8e` at exact pushed
+  commit `5ec4714db97dda7d3ccb785f6a7b16b911c7fda9`. The initial focused compile found two test
+  attributes missing function declarations; test-only commit `7730b224979aa2e1a98ba5859129db5846578908`
+  supplied those declarations and changed no production behavior.
+- Focused `AppStateTests`, `PersistenceServiceTests`, `TimerEngineTests`, `RosterTests`,
+  `BreakLogicTests`, and `ActiveMobstersFileServiceTests` then passed 134/134 with no failures or
+  skips. The full macOS suite passed 155/155 with no failures or skips; `git diff --check` passed.
+- The Task 6 disposable worktree and logs were removed. The user's primary checkout and unrelated
+  untracked bundles were preserved, and remote heads remained only the authorized audit branch and
+  `main`; no temporary branch was created.
 
 ## Verification Status
 
@@ -104,5 +116,8 @@ Updated: 2026-08-09
   compilation of the actor-isolated Combine publisher path.
 - Task 5 passed 53 focused and all 128 project tests on the same Xcode 26.2 runner, including Swift 6
   compilation of its AppState, notification protocol, persistence, Settings, and conditional cadence UI.
+- Task 6 passed 134 focused and all 155 project tests on the same Xcode 26.2 runner, including Swift 6
+  compilation of versioned Codable snapshots, actor-isolated roster persistence, recovery ordering,
+  restored Combine publisher arming, and deterministic failure reconciliation.
 - The project specifies Xcode 26.6+ / Swift 6.3, so the exact-toolchain rerun remains unverified and
   must be repeated before final qualification. No manual UI or accessibility behavior was claimed.
