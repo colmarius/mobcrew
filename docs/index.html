@@ -126,10 +126,11 @@
             <li>Data stays local</li>
           </ul>
           <p class="release-caveat">
-            <strong>Release trust note:</strong> the current v0.2.0 artifact is
+            <strong>Release trust note:</strong> the current v0.3.0 artifact is
             arm64-only, its app is ad-hoc signed rather than Developer ID
-            signed, and its outer DMG is unsigned. Exact notarization and
-            clean-Mac Gatekeeper behavior remain unverified.
+            signed, and its outer DMG is unsigned. Its exact browser-downloaded
+            bytes and quarantined first-launch path were qualified on Apple
+            silicon.
           </p>
         </div>
 
@@ -451,20 +452,20 @@
           <aside class="trust-card" aria-labelledby="trust-heading">
             <p class="card-label">Current distribution state</p>
             <h3 id="trust-heading">
-              Transparent while release qualification catches up.
+              Transparent about the current release.
             </h3>
             <p>
-              Direct inspection found that v0.2.0 contains an arm64 executable,
+              Direct inspection found that v0.3.0 contains an arm64 executable,
               a structurally valid ad-hoc app signature with no Developer ID
               identity or hardened runtime, an unsigned outer DMG, and no
               stapled tickets.
             </p>
             <p>
-              Exact notarization and Gatekeeper first-launch behavior on a clean
-              Mac remain unverified. That uncertainty is why MobCrew links to
-              the release page instead of promising a frictionless direct
-              download. Do not disable Gatekeeper or strip quarantine
-              attributes.
+              Its exact browser-downloaded bytes and quarantined first-launch
+              path were qualified on Apple silicon. Because the release is not
+              Developer ID signed or notarized, macOS may still require the
+              extra Privacy &amp; Security step. Do not disable Gatekeeper or
+              strip quarantine attributes.
             </p>
             <dl class="trust-facts">
               <div>
@@ -544,7 +545,7 @@
             <summary>Do I need Xcode or a specific Mac architecture?</summary>
             <p>
               Xcode is only for development; installing a release requires macOS
-              14 or later. The current v0.2.0 release contains an Apple-silicon
+              14 or later. The current v0.3.0 release contains an Apple-silicon
               (<code>arm64</code>) executable only; it does not include an Intel
               (<code>x86_64</code>) executable. Future artifacts are qualified
               independently.

@@ -30,7 +30,7 @@ interrupting the session.
 ## Requirements
 
 - macOS 14.0 or later
-- Apple silicon: the current `v0.2.0` release contains an `arm64` executable only
+- Apple silicon: the current `v0.3.0` release contains an `arm64` executable only
 
 The current release does not contain an Intel (`x86_64`) executable.
 
@@ -44,11 +44,12 @@ The current release does not contain an Intel (`x86_64`) executable.
    Settings → Privacy & Security**, review the blocked-app message, and choose **Open Anyway** only
    if the app is the MobCrew release you intended to download.
 
-Direct inspection of the browser-downloaded `v0.2.0` artifact found a structurally valid ad-hoc app
+Direct inspection of the browser-downloaded `v0.3.0` artifact found a structurally valid ad-hoc app
 signature, no Developer ID identity or hardened runtime, an unsigned outer DMG, and no stapled
-tickets. Exact notarization and Gatekeeper first-launch behavior on a clean Mac remain unverified;
-the first-launch message and whether the extra Privacy & Security step appears can therefore vary.
-Do not disable Gatekeeper or remove quarantine attributes to install the app.
+tickets. Its exact downloaded bytes and quarantined first-launch path were qualified on Apple
+silicon. Because the release is not Developer ID signed or notarized, macOS may still require the
+extra Privacy & Security step. Do not disable Gatekeeper or remove quarantine attributes to install
+the app.
 
 ### Optional permissions
 
