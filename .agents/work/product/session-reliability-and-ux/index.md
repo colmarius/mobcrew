@@ -1,6 +1,6 @@
 # MobCrew Session Reliability and UX Stabilization
 
-Status: blocked
+Status: completed
 Category: product
 Updated: 2026-08-09
 
@@ -37,9 +37,10 @@ code blocker. They confirmed one Task 10 documentation omission: the manual chec
 in-process sleep-across-deadline journey. `TESTING.md` now includes that journey and static validation
 passes. A final read-only Mac verifier found no new defect but could not complete the remaining direct
 observations because VoiceOver, Increase Contrast, and Differentiate Without Color were off and the
-verifier was not authorized to alter shared system settings. Tasks 9 and 10 therefore remain open and
-the work item remains blocked on those observations plus explicit per-journey reconciliation of the
-applicable `TESTING.md` checks. Tasks 11-12 remain explicitly deferred and non-blocking.
+verifier was not authorized to alter shared system settings. The owner accepted the implemented scope
+and directed work-item closeout without treating those observations as passed. They remain explicit,
+unchecked release-qualification journeys in `TESTING.md`; Tasks 11-12 remain explicitly deferred and
+non-blocking. The exact final candidate passed all 177 native executions before closeout.
 
 ## Artifacts
 
@@ -52,8 +53,4 @@ applicable `TESTING.md` checks. Tasks 11-12 remain explicitly deferred and non-b
 
 ## Next Action
 
-- On the logged-in Mac, enable VoiceOver and record spoken core-control semantics plus one-shot Driver
-  handoff, break-due, and break-complete announcements; then check Increase Contrast and Differentiate
-  Without Color one at a time. Reconcile every applicable `TESTING.md` journey as tested, unverified,
-  or explicitly non-applicable. Check Tasks 9-10 only when that evidence supports them, then commit the
-  completed snapshot and run the agent-work closeout helper. Older macOS coverage is not required.
+- None.

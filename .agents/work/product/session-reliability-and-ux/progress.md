@@ -9,11 +9,11 @@ Updated: 2026-08-09
   one native roster List, identity-preserving keyboard/VoiceOver Move actions, meaningful one-shot
   announcements, responsive panes, increased-text reachability, and user-confirmed Full Keyboard Access
   all pass their recorded gates. Spoken VoiceOver/announcement, Increase Contrast, and Differentiate
-  Without Color observations remain open, so Task 9 stays unchecked.
+  Without Color observations remain unverified and are retained in `TESTING.md`, not claimed as passed.
 - Task 10's documentation-truth audit and the final independent review are complete. The review found no
   code blocker and identified one missing in-process sleep-across-deadline checklist journey; that journey
-  is now in `TESTING.md` and static checks pass. Task 10 stays unchecked until every applicable manual
-  journey has an explicit observed, unverified, or non-applicable result.
+  is now in `TESTING.md` and static checks pass. The owner directed closeout with remaining logged-in
+  journeys preserved as unchecked downstream release qualification, so their evidence is not overstated.
 
 ## Observed Evidence
 
@@ -280,6 +280,15 @@ Updated: 2026-08-09
 - The verifier removed `/tmp/mobcrew-final-native-1Wyypm` and created no app, DerivedData, defaults,
   data, log, process, branch, or remote ref. The user's primary Mac checkout remained clean and unchanged.
   Remote heads remained only `main` and the authorized audit branch.
+- Exact candidate `abdabb9c02940c601efa1fa3b2aab0848ff73cc3` passed the full pre-push native gate
+  in detached worktree `/tmp/mobcrew-final-push-test-ngngza` using Xcode 26.6 (17F113) and Swift 6.3.3.
+  `xcodebuild test -project MobCrew/MobCrew.xcodeproj -scheme MobCrew -destination 'platform=macOS'`
+  exited 0 with `** TEST SUCCEEDED **`: 174 logical tests / 177 concrete executions passed, with zero
+  failures, skips, or expected failures. The verifier removed its worktree, DerivedData, result bundle,
+  logs, and processes without changing the user's primary checkout.
+- The owner then directed work-item completion and removal before shipping to `main`. Remaining spoken
+  VoiceOver/display-option and broader manual journeys stay unchecked in `TESTING.md`; closeout does not
+  represent them as observed evidence.
 
 ## Verification Status
 
@@ -301,5 +310,5 @@ Updated: 2026-08-09
   checks; Full Keyboard Access passes user inspection after the focus correction. Spoken VoiceOver,
   announcements, and display-option acceptance await user assistance.
 - Task 10's final exact-branch native suite passed all 177 executions using Xcode 26.6 / Swift 6.3.3;
-  static docs validation and `git diff --check` pass after the final sleep-journey correction. Explicit
-  remaining Task 9 observations and applicable manual-journey results are still open.
+  static docs validation and `git diff --check` pass after the final sleep-journey correction. The owner
+  accepted remaining manual observations as downstream release qualification and directed closeout.

@@ -211,7 +211,9 @@ validation; it must not recreate the website or treat unchecked manual steps as 
   - Notes: Rename and Undo are separated into non-blocking Task 12 so this task remains a coherent
     accessibility slice. Responsive geometry, Accessibility-tree coverage, increased text, and user
     Full Keyboard Access observation pass. Spoken VoiceOver semantics/announcements, Increase Contrast,
-    and Differentiate Without Color remain required direct observations, so this task stays unchecked.
+    and Differentiate Without Color remain unverified and are not claimed as passed. At closeout the
+    owner accepted them as downstream release-qualification checks retained in `TESTING.md`, so this
+    evidence-gated task remains visibly unchecked in the historical final snapshot.
 
 ### Task 10: Maintain documentation truth and run final validation
 
@@ -230,8 +232,9 @@ validation; it must not recreate the website or treat unchecked manual steps as 
     - No screenshot or marketing claim asserts behavior that was not observed.
   - Notes: Latest main already corrected the baseline public claims and expanded `TESTING.md`. This is
     the stabilization delta/release gate; Tasks 11-12 do not block it. Final review added the missing
-    in-process sleep-across-deadline journey and static documentation validation passes. The logged-in
-    release pass must still classify every applicable manual journey explicitly, so this task stays unchecked.
+    in-process sleep-across-deadline journey and static documentation validation passes. The owner
+    directed work-item closeout while retaining the unexecuted logged-in journeys as unchecked release
+    qualification; this evidence-gated task therefore remains visibly unchecked rather than overstated.
 
 ## Non-blocking follow-up tasks
 

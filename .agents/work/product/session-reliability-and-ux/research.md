@@ -277,3 +277,12 @@ reproduced its material findings against the source, tests, documentation, and p
 - Under the active plan, those Task 9 observations and Task 10's explicit result for each applicable
   `TESTING.md` journey block ship readiness. Older-macOS repetition, physical hotkey input, forced
   system-state mutation, and Tasks 11-12 remain accepted non-blocking deferrals.
+
+## Closeout decision
+
+After the exact final candidate passed the full Xcode 26.6 suite with 177/177 concrete executions,
+the owner directed this work item to close and its branch to ship to `main`. This accepts the completed
+implementation scope without converting unobserved manual checks into evidence. Spoken VoiceOver and
+announcement behavior, Increase Contrast, Differentiate Without Color, and remaining applicable manual
+journeys stay unchecked in `TESTING.md` for release-artifact qualification. Git history retains this
+final snapshot; the current tree removes the work-item folder under the agent-work closeout contract.
