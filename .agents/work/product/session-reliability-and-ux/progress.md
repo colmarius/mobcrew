@@ -9,7 +9,8 @@ Updated: 2026-08-09
   roster reordering has keyboard/VoiceOver actions, one native List owns active and benched scrolling,
   and injected announcements cover only meaningful session transitions. Xcode tests and initial native
   AX inspection pass. User inspection found the main panes did not consume expanded window space; the
-  responsive-layout correction and final interactive accessibility/display checks are in progress.
+  responsive-layout correction is pushed, but the Mac runner disconnected before rebuild and final
+  interactive accessibility/display checks.
 
 ## Observed Evidence
 
@@ -206,12 +207,15 @@ Updated: 2026-08-09
   short break; and inspect Increase Contrast, Differentiate Without Color, and increased text. Current
   macOS 26.5.2 coverage is sufficient; no older-version repetition remains.
 - Manual inspection of the retained isolated harness found an expanded main window still presented
-  intrinsic-width roster content and a timer pane capped at 300 points, leaving most available space
-  unused while long names wrapped or truncated. Task 9 therefore remains open.
+  fixed-width content. The harness itself fixed the SwiftUI root at 600×450 rather than only setting the
+  initial NSWindow size; production also capped the timer pane at 300 points and allowed the roster to
+  keep an intrinsic width, leaving space unused while long names wrapped or truncated. Task 9 remains open.
 - The correction removes the timer-pane maximum, gives both split panes and the single native List
   flexible width/height, and raises the minimum main content size to the acceptance baseline of
   600×450. Linux `git diff --check` and documentation validation pass; native build and resized-window
   inspection remain pending.
+- The Mac runner disappeared while the replacement-harness task was being created. No child thread was
+  created and the operation was not retried. Reconnection is the exact native-verification gate.
 
 ## Verification Status
 
