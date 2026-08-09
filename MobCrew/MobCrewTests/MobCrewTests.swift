@@ -17,7 +17,7 @@ struct GlobalHotkeyServiceTests {
 
     @Test("registration failures expose their Carbon status")
     func registrationFailureDescription() {
-        let duplicate = GlobalHotkeyRegistrationState.failed(eventHotKeyExistsErr)
+        let duplicate = GlobalHotkeyRegistrationState.failed(OSStatus(eventHotKeyExistsErr))
         let generic = GlobalHotkeyRegistrationState.failed(-50)
 
         #expect(duplicate.failureDescription?.contains("-9878") == true)
