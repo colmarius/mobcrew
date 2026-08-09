@@ -15,7 +15,7 @@ Reset or use a fresh test account when a journey depends on first-run permission
 - [ ] Reset applies the configured duration and returns the turn timer to idle; duration changes
       never alter a due, running, or paused break countdown.
 - [ ] Notification and programming-tip settings can be enabled and disabled.
-- [ ] A programming tip appears while the timer runs only when **Show Tips** is enabled.
+- [ ] A programming tip appears while the turn timer runs only when **Show Tips** is enabled.
 
 ## Roster and role states
 

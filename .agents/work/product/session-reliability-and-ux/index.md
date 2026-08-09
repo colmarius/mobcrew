@@ -42,7 +42,8 @@ widths when the window expanded, wasting available space and clipping long parti
 responsive layout correction is pushed and passed exact-toolchain focused tests plus native geometry,
 AX, splitter, minimum/expanded-window, and increased-text checks. User inspection confirms the normal
 expanded layout. Task 9 now awaits only interactive VoiceOver, Full Keyboard Access, and display-option
-observations before acceptance.
+observations before acceptance. Task 10's preparatory truth audit corrected the remaining shortcut,
+Tips, recovery, and local-session-data wording; its final native/manual gate still depends on Task 9.
 
 ## Artifacts
 

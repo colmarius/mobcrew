@@ -11,6 +11,8 @@ Updated: 2026-08-09
   AX inspection pass. User inspection found the main panes did not consume expanded window space; the
   pushed responsive correction now passes native geometry, splitter, AX, and increased-text checks.
   Interactive VoiceOver, Full Keyboard Access, and display-option checks remain.
+- Task 10's final documentation-truth audit is implemented, but its phase gate remains open until Task 9
+  completes and the latest exact branch passes the full native suite/manual result reconciliation.
 
 ## Observed Evidence
 
@@ -228,6 +230,10 @@ Updated: 2026-08-09
   shows both panes/List filling the window, readable long main-window names, and no visible overlap.
   The replacement harness now uses a valid one-minute turn seed, only sets the initial NSWindow content
   size, and remains open for interactive assistive-technology/display checks.
+- Task 10 source/docs comparison found four residual wording defects: the Settings shortcut omitted
+  Resume, Tips wording did not distinguish the turn timer, “Rotate and recover” omitted relaunch
+  recovery, and the local-data answer omitted the session snapshot. The smallest text-only corrections
+  now match implemented behavior; docs validation and the full native branch gate follow.
 
 ## Verification Status
 

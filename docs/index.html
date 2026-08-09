@@ -192,6 +192,8 @@
             <p>
               Advance roles automatically or skip on demand, with a configurable
               in-window Take Break or Skip Break choice after a chosen number of turns.
+              Running, paused, and pending-break sessions restore after relaunch,
+              reconciling elapsed time for active countdowns.
             </p>
           </li>
         </ol>
@@ -516,9 +518,9 @@
             <summary>Where does the data go?</summary>
             <p>
               The current app code has no account, telemetry, or network
-              service. Roster and settings data stay in local macOS user
-              defaults, and active names are also written to MobCrew's local
-              Application Support folder.
+              service. Roster, settings, and current session state stay in local
+              macOS user defaults, and active names are also written to MobCrew's
+              local Application Support folder.
             </p>
           </details>
           <details>

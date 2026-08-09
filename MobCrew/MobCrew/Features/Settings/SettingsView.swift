@@ -244,7 +244,7 @@ private struct ShortcutsSettingsTab: View {
                     description: GlobalHotkeyService.shortcut.actionDescription,
                     note: "Global"
                 )
-                ShortcutRow(shortcut: "⌘↩", description: "Start/Pause timer")
+                ShortcutRow(shortcut: "⌘↩", description: "Start/Pause/Resume turn timer")
                 ShortcutRow(shortcut: "⌘⇧S", description: "Skip turn")
                 ShortcutRow(shortcut: "⌘,", description: "Open Settings")
                 ShortcutRow(shortcut: "Esc", description: "Dismiss break screen")
