@@ -1,7 +1,37 @@
 import Testing
+import AppKit
 import Carbon
+import Foundation
 import ServiceManagement
 @testable import MobCrew
+
+@MainActor
+@Suite("Floating Timer Controller Tests")
+struct FloatingTimerControllerTests {
+    @Test("show preserves a user-moved window position")
+    func showPreservesMovedWindowPosition() {
+        let suiteName = "com.mobcrew.tests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let appState = AppState(
+            persistenceService: PersistenceService(userDefaults: defaults)
+        )
+        let controller = FloatingTimerController(appState: appState)
+        controller.show()
+        defer { controller.hide() }
+        let window = controller.window!
+        let movedOrigin = NSPoint(
+            x: window.frame.origin.x - 100,
+            y: window.frame.origin.y + 40
+        )
+        window.setFrameOrigin(movedOrigin)
+
+        controller.hide()
+        controller.show()
+
+        #expect(window.frame.origin == movedOrigin)
+    }
+}
 
 @MainActor
 @Suite("Global Hotkey Service Tests")

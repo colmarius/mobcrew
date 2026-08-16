@@ -3,7 +3,7 @@ import SwiftUI
 
 @MainActor
 final class FloatingTimerController {
-    private var window: FloatingTimerWindow?
+    private(set) var window: FloatingTimerWindow?
     private var hostingView: NSHostingView<FloatingTimerView>?
     
     private let appState: AppState
@@ -19,8 +19,8 @@ final class FloatingTimerController {
     func show() {
         if window == nil {
             createWindow()
+            positionWindow()
         }
-        positionWindow()
         window?.orderFront(nil)
     }
     
