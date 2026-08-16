@@ -11,7 +11,7 @@ frame-inspection evidence for the affected journeys.
 
 ## Tasks
 
-- [ ] **Task 1: Audit representative interaction journeys**
+- [x] **Task 1: Audit representative interaction journeys**
   - Scope: Main timer, roster, break flow, Settings, floating timer, menu bar, and keyboard controls
   - Depends on: none
   - Acceptance:
@@ -20,7 +20,7 @@ frame-inspection evidence for the affected journeys.
     - Record reproducible defects with exact steps, expected behavior, and observed behavior.
   - Notes: System permission and multi-display checks may be reported as unverified when the runner cannot safely reset or provide the required environment.
 
-- [ ] **Task 2: Fix reproducible interaction defects**
+- [x] **Task 2: Fix reproducible interaction defects**
   - Scope: `MobCrew/MobCrew/` and matching `MobCrew/MobCrewTests/` ownership paths identified by Task 1
   - Depends on: Task 1
   - Acceptance:
@@ -29,7 +29,7 @@ frame-inspection evidence for the affected journeys.
     - The app builds and the relevant automated tests pass on macOS.
   - Notes: Leave unrelated findings unchanged and identify them separately.
 
-- [ ] **Task 3: Verify corrected usability and produce evidence**
+- [ ] (blocked) **Task 3: Verify corrected usability and produce evidence**
   - Scope: Corrected native app, `.amp/in/artifacts/`, and work-item evidence
   - Depends on: Task 2
   - Acceptance:
