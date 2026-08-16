@@ -2,6 +2,8 @@ name: Build and Test
 
 on:
   push:
+    branches:
+      - main
   pull_request:
   workflow_dispatch:
 
@@ -18,6 +20,9 @@ jobs:
 
       - name: Validate public documentation
         run: python3 scripts/validate-docs.py
+
+      - name: Validate landing-page HTML
+        run: npx --yes html-validate@8 docs/index.html
 
   xcode:
     name: Xcode 26.6 / Swift 6

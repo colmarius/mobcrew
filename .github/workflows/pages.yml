@@ -24,6 +24,9 @@ jobs:
       - name: Validate static documentation
         run: python3 scripts/validate-docs.py
 
+      - name: Validate landing-page HTML
+        run: npx --yes html-validate@8 docs/index.html
+
       - name: Setup Pages
         uses: actions/configure-pages@v6
 

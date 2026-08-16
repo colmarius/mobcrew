@@ -1,5 +1,6 @@
 # Generated Amp orb portal manifests
 .amp/portals/
+.amp/portal-proxy.mjs
 
 # Xcode artifacts
 xcuserdata/

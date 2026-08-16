@@ -91,6 +91,7 @@ repository scripts:
 # Serve and validate the website
 ./scripts/serve-docs.sh
 python3 scripts/validate-docs.py
+npx --yes html-validate@8 docs/index.html
 ```
 
 MobCrew itself is a macOS-only Xcode target and uses AppKit, Carbon, and ServiceManagement. Linux
