@@ -295,6 +295,7 @@ kbd {
     gap: 0.5rem 1.35rem;
     margin-bottom: 1.35rem;
     padding: 0;
+    overflow: hidden;
     color: var(--muted);
     list-style: none;
     font-size: 0.95rem;
@@ -305,10 +306,12 @@ kbd {
     position: relative;
 }
 
-.trust-list li:not(:last-child)::after {
+/* Dot sits left of each item; overflow clipping on the list hides the dot
+   for items that start a wrapped line, so no separator ever dangles. */
+.trust-list li::before {
     position: absolute;
     top: 50%;
-    right: -0.8rem;
+    left: -0.8rem;
     width: 0.25rem;
     height: 0.25rem;
     border-radius: 50%;
@@ -738,7 +741,7 @@ kbd {
         gap: 0.5rem;
     }
 
-    .trust-list li::after {
+    .trust-list li::before {
         display: none;
     }
 }
