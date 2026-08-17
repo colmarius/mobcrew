@@ -1,8 +1,8 @@
 # Usability and Interaction Audit
 
-Status: blocked
+Status: completed
 Category: bugfix
-Updated: 2026-08-16
+Updated: 2026-08-17
 
 ## Why
 
@@ -12,8 +12,8 @@ interaction bugs, and provide inspected video evidence that the corrected journe
 ## Summary
 
 The macOS audit found and verified a floating-panel position bug; its exact fix and regression test
-are integrated. Native tests and the corrected interaction passed. The runner disconnected before
-the coordinating thread could transfer and independently inspect the recorded evidence.
+are integrated. Native tests and the corrected interaction passed. On 2026-08-17, the user explicitly
+waived transfer and independent review of the generated demo video and frames.
 
 ## Artifacts
 
@@ -26,8 +26,8 @@ the coordinating thread could transfer and independently inspect the recorded ev
 
 ## Next Action
 
-- Reconnect the macOS Amp runner, transfer the movie and contact sheet from [the native audit thread](https://ampcode.com/threads/T-01a00aeb-7fe6-7658-b8f4-62988266279a), and complete Task 3 in [plan.md](plan.md).
+- None.
 
 ## Open Questions
 
-- [ ] When will the macOS Amp runner be reconnected so its untracked evidence can be transferred?
+- None.

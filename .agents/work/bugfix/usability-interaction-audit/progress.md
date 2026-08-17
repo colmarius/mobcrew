@@ -2,8 +2,8 @@
 
 ## Current Slice
 
-Task 3 is blocked only on transferring the generated movie and contact sheet from the disconnected
-macOS runner for independent coordinator inspection.
+Implementation and verification are complete. The user explicitly waived transfer and independent
+review of the generated demo video and frames on 2026-08-17.
 
 ## Observed Evidence
 
@@ -17,12 +17,9 @@ macOS runner for independent coordinator inspection.
   26.6 / Swift 6.3.3. The full run reported 12 suites and 178 passing test-case lines.
 - The fixed 180×160 panel was not clipped: Take, Pause, Resume, and Skip Break controls were visible,
   inside the AX geometry, and interactive.
-- The runner reports a 74-second H.264 movie with 148 decoded frames and an all-frame visual review,
-  but this coordinating thread has not accepted that delegated evidence without the actual files.
 
 ## Remaining Verification
 
-- Transfer `.amp/in/artifacts/usability-demo.mov` and
-  `.amp/in/artifacts/usability-demo-contact-sheet.png` after the macOS runner reconnects.
-- Verify checksums and metadata, extract all 148 decoded frames locally, and inspect them before
-  completing the work item.
+- Demo-video transfer and frame review were skipped at the user's request.
+- Launch at Login and notification delivery remain unverified because the native audit intentionally
+  did not mutate login state or system permissions.
